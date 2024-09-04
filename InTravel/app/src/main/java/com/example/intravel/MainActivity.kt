@@ -94,13 +94,13 @@ class MainActivity : AppCompatActivity() {
 
     // 진행중 *첫화면*
     // cate 의 값이 Y 인 것만 불러오기
-    binding.btnIng.setOnClickListener {
-      for (i in 1..mainList.size){
-        if(mainList.get(i).tComplete == 'Y'){
-          // 새 리스트에 넣고 어댑터에 연결함
-        }
-      }
-    }
+//    binding.btnIng.setOnClickListener {
+//      for (i in 1..mainList.size){
+//        if(mainList.get(i).tComplete == 'Y'){
+//          // 새 리스트에 넣고 어댑터에 연결함
+//        }
+//      }
+//    }
 
     // 완료
     // cate 의 값이 N인 것만 불러오기

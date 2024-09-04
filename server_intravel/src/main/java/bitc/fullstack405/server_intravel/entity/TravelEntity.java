@@ -27,7 +27,9 @@ public class TravelEntity {
 
   private String endDate;
 
-  private char tComplete;
+  private Long dDay;
+
+  private char tComplete = 'N';
 
   private String cate;
 }

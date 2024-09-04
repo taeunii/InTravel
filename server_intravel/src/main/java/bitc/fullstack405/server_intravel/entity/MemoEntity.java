@@ -18,7 +18,9 @@ public class MemoEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long mId;
 
-  private String mContent;
+  private Long tId;
 
-  private char mComplete;
+  private String mTitle;
+
+  private String mContent;
 }

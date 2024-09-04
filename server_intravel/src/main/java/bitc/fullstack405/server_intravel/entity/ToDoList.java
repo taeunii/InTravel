@@ -18,7 +18,11 @@ public class ToDoList {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long tdId;
 
+  private Long tId;
+
   private String tdContent;
 
-  private char td_complete;
+  private char tdComplete;
+
+  private char tdImpo;
 }

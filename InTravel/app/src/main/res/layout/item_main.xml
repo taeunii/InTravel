@@ -6,7 +6,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/rectangle"
+    android:background="#FBEA04"
     android:layout_marginBottom="10dp"
     >
 

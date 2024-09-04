@@ -1,15 +1,13 @@
 package com.example.intravel.client
 
-import com.example.intravel.`interface`.TempInterface
-import com.google.gson.GsonBuilder
+import com.example.intravel.`interface`.MainInterface
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 
 object TempClient {
-  val retrofit:TempInterface = Retrofit.Builder()
-    .baseUrl("http://10.100.105.209:8811/")
+  val retrofit:MainInterface = Retrofit.Builder()
+    .baseUrl("http://10.100.105.2:8811/")
     .addConverterFactory(GsonConverterFactory.create())
     .build()
-    .create(TempInterface::class.java)
+    .create(MainInterface::class.java)
 }

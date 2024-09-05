@@ -29,8 +29,10 @@ class MainActivity_todolist : AppCompatActivity() {
         binding.todoListRecyclerView.adapter = todoListAdapter
         binding.todoListRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        for (i in 0..10) {
-            todoList.add(TodoList(0, "${i} 번째 todoList", 'Y', 'Y'))
+        binding.btnTodoListAdd.setOnClickListener {
+            todoListAdapter.todoList.add(TodoList(0, "", 'N', 'N'))
+            todoListAdapter.notifyItemInserted(todoListAdapter.todoList.size)
         }
+
     }
 }

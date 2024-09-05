@@ -2,14 +2,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <RadioButton
-        android:id="@+id/rdoComplete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnTodoListComplete"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:scaleType="centerInside"
+        android:src="@drawable/unchecked"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -17,15 +20,16 @@
         android:id="@+id/tdContent"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:inputType="text"
         android:text="Name"
-        app:layout_constraintStart_toEndOf="@+id/rdoComplete"
+        app:layout_constraintStart_toEndOf="@+id/btnTodoListComplete"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/btnImpo"
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnTodolistImpo"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="16dp"
@@ -33,11 +37,11 @@
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:scaleType="centerInside"
         android:src="@drawable/star_outline"
-        app:layout_constraintEnd_toStartOf="@+id/btnDelete"
+        app:layout_constraintEnd_toStartOf="@+id/btnTodolistDelete"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/btnDelete"
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnTodolistDelete"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="16dp"

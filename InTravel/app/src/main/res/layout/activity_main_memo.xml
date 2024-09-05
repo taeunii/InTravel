@@ -5,10 +5,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity_todolist">
+    tools:context=".MainActivity_memo">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/todoListRecyclerView"
+        android:id="@+id/memoRecyclerView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -17,7 +17,7 @@
         app:layout_constraintVertical_chainStyle="spread" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnTodoListAdd"
+        android:id="@+id/btnMemoAdd"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -28,6 +28,6 @@
         android:background="#FDF79B"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/todoListRecyclerView" />
+        app:layout_constraintTop_toBottomOf="@+id/memoRecyclerView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

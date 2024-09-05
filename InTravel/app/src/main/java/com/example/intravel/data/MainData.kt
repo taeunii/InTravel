@@ -1,6 +1,6 @@
 package com.example.intravel.data
 
-data class MainData(var tId:Int,
+data class MainData(var tId:Long,
                     var tTitle: String,
                     var createDate:String,
                     var startDate:String,

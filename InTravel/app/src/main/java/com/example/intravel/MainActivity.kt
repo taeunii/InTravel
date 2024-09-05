@@ -4,6 +4,7 @@ import android.content.DialogInterface
 import android.icu.util.Calendar
 import android.icu.util.TimeZone.SystemTimeZoneType
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -14,9 +15,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.intravel.adapter.MainAdapter
+import com.example.intravel.client.Client
 import com.example.intravel.data.MainData
 import com.example.intravel.databinding.ActivityMainBinding
 import com.example.intravel.databinding.CustomDdayBinding
+import retrofit2.Call
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.Date
@@ -34,13 +38,6 @@ class MainActivity : AppCompatActivity() {
       v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
       insets
     }
-    // 데이터 생성
-    val mainList = mutableListOf<MainData>()
-
-    // 어댑터 생성
-    val mainAdapter = MainAdapter(mainList)
-    binding.recyclerViewMain.adapter = mainAdapter
-    binding.recyclerViewMain.layoutManager = LinearLayoutManager(this)
 
     // 오늘 날짜 시스템에서 받아오기
     val format = "yyyy.MM.dd." // 포맷 설정
@@ -79,34 +76,98 @@ class MainActivity : AppCompatActivity() {
     binding.titleToday.text = todayDate
     binding.titleDate.text = korDate
 
-    // 데이터 추가
+    // 데이터 생성
+    var mainList = mutableListOf<MainData>()
+    var ingList = mutableListOf<MainData>() // db 연결전 테스트용
+    // db 연결 전에는 데이터 분리해서 넣고 사용함, 연결하고 나서는 상관 없을듯 ?
+
+    // db 연결 전 테스트용 데이터 추가
     // + 버튼 누르면 값 디비에 추가 후 리스폰된 값 받아서 화면에 띄움
     // Y 진행중, N 완료됨
     mainList.add(MainData(0,"일본 여행",todayDate,"2024.08.14","2024.08.20","동생",-6,'Y'))
-    mainList.add(MainData(0,"경주 여행",todayDate,"2024.08.14","2024.08.20","친구",-13,'Y'))
-    mainList.add(MainData(0,"전주 여행",todayDate,"2024.08.14","2024.08.20","동생",+2,'Y'))
+    mainList.add(MainData(0,"경주 여행",todayDate,"2024.01.14","2024.01.20","친구",-13,'Y'))
+    mainList.add(MainData(0,"전주 여행",todayDate,"2024.07.03","2024.07.05","동생",+2,'N'))
+
+    // 어댑터 생성
+    var mainAdapter = MainAdapter(mainList)
+    binding.recyclerViewMain.adapter = mainAdapter
+    binding.recyclerViewMain.layoutManager = LinearLayoutManager(this)
 
     // 전체보기
     // 데이터 리스트 불러와서 리사이클러뷰에 붙이기
-    binding.btnList.setOnClickListener { 
-      
-    }
+    binding.btnList.setOnClickListener {
+      mainAdapter.mainList = mainList
+      mainAdapter.notifyDataSetChanged()
+
+      // db 연결버전
+//      Client.retrofit.findAll().enqueue(object:retrofit2.Callback<List<MainData>>{
+//        override fun onResponse(call: Call<List<MainData>>, response: Response<List<MainData>>) {
+//          mainAdapter.mainList.clear()
+//          mainAdapter.mainList = response.body() as MutableList<MainData>
+//          mainAdapter.notifyDataSetChanged()
+//        }
+//
+//        override fun onFailure(call: Call<List<MainData>>, t: Throwable) {
+//          TODO("Not yet implemented")
+//        }
+//      })// findAll
+    } // btnList
 
     // 진행중 *첫화면*
-    // cate 의 값이 Y 인 것만 불러오기
-//    binding.btnIng.setOnClickListener {
-//      for (i in 1..mainList.size){
-//        if(mainList.get(i).tComplete == 'Y'){
-//          // 새 리스트에 넣고 어댑터에 연결함
+    // cate 의 값이 Y 인 것만 데이터로 보내기
+    binding.btnIng.setOnClickListener {
+      ingList.clear()
+      for(i in 0..mainList.size-1){ // 인덱스는 0부터 시작하니까 크기-1 까지임 ㅠ
+        if (mainList.get(i).tComplete=='Y'){
+          ingList.add(mainList.get(i))
+        }
+      }
+      mainAdapter.mainList = ingList // 어댑터에 있는 데이터 바꿔야함
+      mainAdapter.notifyDataSetChanged()
+
+        // db연결 버전
+//      Client.retrofit.findComplete('Y').enqueue(object:retrofit2.Callback<List<MainData>>{
+//        override fun onResponse(call: Call<List<MainData>>, response: Response<List<MainData>>) {
+//          mainAdapter.mainList.clear() // 어댑터에 있는 데이터 지우고 채우기
+//          mainAdapter.mainList = response.body() as MutableList<MainData>
+//          mainAdapter.notifyDataSetChanged()
 //        }
-//      }
-//    }
+//
+//        override fun onFailure(call: Call<List<MainData>>, t: Throwable) {
+//          TODO("Not yet implemented")
+//        }
+//      })// findComplete
+
+    }// btnIng
+
 
     // 완료
     // cate 의 값이 N인 것만 불러오기
-    binding.butEnd.setOnClickListener { 
-      
-    }
+    binding.butEnd.setOnClickListener {
+      ingList.clear()
+      for(data in mainList){
+        if(data.tComplete == 'N'){
+          ingList.add(data)
+        }
+      }
+      mainAdapter.mainList = ingList
+      mainAdapter.notifyDataSetChanged()
+
+//      Client.retrofit.findComplete('N').enqueue(object:retrofit2.Callback<List<MainData>>{
+//        override fun onResponse(call: Call<List<MainData>>, response: Response<List<MainData>>) {
+//          mainAdapter.mainList.clear() // 어댑터에 있는 데이터 지우고 채우기
+//          mainAdapter.mainList = response.body() as MutableList<MainData>
+//          mainAdapter.notifyDataSetChanged()
+//        }
+//
+//        override fun onFailure(call: Call<List<MainData>>, t: Throwable) {
+//          TODO("Not yet implemented")
+//        }
+//      })// findComplete
+
+    } // btnEnd
+
+
 
     // 카테고리 데이터
 //    val cateList = listOf("혼자","친구","가족","연인")
@@ -159,7 +220,7 @@ class MainActivity : AppCompatActivity() {
         setPositiveButton("확인",object:DialogInterface.OnClickListener{
           override fun onClick(p0: DialogInterface?, p1: Int) {
             mainList.add(MainData(0, dialogInsert.ddayName.text.toString(),todayDate,dialogInsert.edtStart.text.toString(),dialogInsert.edtEnd.text.toString(),cateSelected,-2,'Y'))
-            mainAdapter.notifyDataSetChanged()
+            mainAdapter!!.notifyDataSetChanged()
           }
         })
 
@@ -169,7 +230,6 @@ class MainActivity : AppCompatActivity() {
     }// btnAdd
 
     // 인텐트로 서브창 넘어가게 하기 데이터 가지고 갈 필요 X
-    // 어댑터에 온클릭 인터페이스 생성
 
 
   }// onCreate

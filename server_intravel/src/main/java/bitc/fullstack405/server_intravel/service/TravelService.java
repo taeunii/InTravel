@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -20,31 +21,18 @@ public class TravelService {
 
     public List<TravelEntity> findAll() {
 
-//        LocalDate nowDate = LocalDate.now();
-
         List<TravelEntity> travels = travelRepository.findAll();
-
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-
-        for (TravelEntity travel : travels) {
-//            int startDate = Integer.parseInt(travel.getStartDate());
-//            int endDate = Integer.parseInt(travel.getEndDate());
-//            long daysStart = DAYS.between(nowDate, startDate);
-//            long daysStart = Integer.parseInt(nowDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))) - startDate;
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-            LocalDate date1 = LocalDate.parse(travel.getStartDate(), formatter);
-            LocalDate date2 = LocalDate.parse(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-
-            Long days = DAYS.between(date1, date2);
-
-            travel.setDDay(days);
-
-        }
-
-        travelRepository.saveAll(travels);
-
+//        LocalDate nowDate = LocalDate.now();  // ******************************************************************** 삭제금지
+//
+//        for (TravelEntity travel : travels) {
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//            LocalDate startDate = LocalDate.parse(travel.getStartDate(), formatter);
+//
+//            Long days = ChronoUnit.DAYS.between(startDate, nowDate);
+//            travel.setDDay(days);
+//        }
+////
+//        travelRepository.saveAll(travels); // ************************************************************************* 삭제금지
         return travels;
     }
 
@@ -61,5 +49,9 @@ public class TravelService {
         travel.setCate(travelEntity.getCate());
 
         return travelRepository.save(travel);
+    }
+
+    public List<TravelEntity> findByIsComplete(char comp) {
+        return travelRepository.findByTComplete(comp);
     }
 }

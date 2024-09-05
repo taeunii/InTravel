@@ -3,8 +3,10 @@ package bitc.fullstack405.server_intravel.controller;
 import bitc.fullstack405.server_intravel.entity.TravelEntity;
 import bitc.fullstack405.server_intravel.service.TravelService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,6 +19,11 @@ public class TravelController {
     @GetMapping("/list")
     public List<TravelEntity> TravelList() {
         return travelService.findAll();
+    }
+
+    @GetMapping("/listComplete")
+    public List<TravelEntity> TravelListComplete(@RequestBody char tComplete) {
+        return travelService.findByIsComplete(tComplete);
     }
 
     @PostMapping("/insert")

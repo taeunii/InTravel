@@ -37,13 +37,13 @@ public class TodoService {
     todoRepository.deleteByTodoId(todoId);
   }
 
-  public List<TodoEntity> listUncomp(Long travelId) {
-    char complete = 'N';
-    return todoRepository.findByTravelIdAndTdComplete(travelId, complete);
+  public List<TodoEntity> listUncomp(Long travelId, char comp) {
+//    char complete = 'N';
+    return todoRepository.findByTravelIdAndTdComplete(travelId, comp);
   }
 
-  public List<TodoEntity> listComp(Long travelId) {
-    char complete = 'Y';
-    return todoRepository.findByTravelIdAndTdComplete(travelId, complete);
-  }
+//  public List<TodoEntity> listComp(Long travelId) {
+//    char complete = 'Y';
+//    return todoRepository.findByTravelIdAndTdComplete(travelId, complete);
+//  }
 }

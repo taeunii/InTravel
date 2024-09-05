@@ -22,15 +22,15 @@ public class TodoController {
 
 //  To do list 미완료 보기
   @GetMapping("/listIncomplete/{tId}")
-  public List<TodoEntity> listUncomp(@PathVariable("tId") Long tId) {
-    return todoService.listUncomp(tId);
+  public List<TodoEntity> listUncomp(@PathVariable("tId") Long tId, @RequestBody char tdComplete) {
+    return todoService.listUncomp(tId, tdComplete);
   }
 
-//  To do list 완료 보기
-  @GetMapping("/listComplete/{tId}")
-  public List<TodoEntity> listComp(@PathVariable("tId") Long tId) {
-    return todoService.listComp(tId);
-  }
+////  To do list 완료 보기
+//  @GetMapping("/listComplete/{tId}")
+//  public List<TodoEntity> listComp(@PathVariable("tId") Long tId) {
+//    return todoService.listComp(tId);
+//  }
 
 //  To do list 추가
   @PostMapping("/save/{tId}")

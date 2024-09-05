@@ -2,6 +2,7 @@ package bitc.fullstack405.server_intravel.service;
 
 import bitc.fullstack405.server_intravel.entity.TravelEntity;
 import bitc.fullstack405.server_intravel.repository.TravelRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class TravelService {
 
     private final TravelRepository travelRepository;
 
+    @Transactional
     public List<TravelEntity> findAll() {
 
 //        LocalDate nowDate = LocalDate.now();
@@ -52,10 +54,11 @@ public class TravelService {
         return travelRepository.save(travelEntity);
     }
 
+    @Transactional
     public TravelEntity updateTravel(Long id, TravelEntity travelEntity) {
         TravelEntity travel = travelRepository.findById(id).get();
 
-        travel.setTTitle(travelEntity.getTTitle());
+        travel.setTravTitle(travelEntity.getTravTitle());
         travel.setStartDate(travelEntity.getStartDate());
         travel.setEndDate(travelEntity.getEndDate());
         travel.setCate(travelEntity.getCate());

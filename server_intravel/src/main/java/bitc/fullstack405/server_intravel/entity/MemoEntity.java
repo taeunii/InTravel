@@ -13,11 +13,14 @@ public class MemoEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long mId;
+  private Long memoId;
 
-  private Long tId;
+  private Long travId;
 
-  private String mTitle;
+  private String memoTitle;
 
-  private String mContent;
+  private String memoContent;
+
+//  @ManyToOne
+//  private TravelEntity travel;
 }

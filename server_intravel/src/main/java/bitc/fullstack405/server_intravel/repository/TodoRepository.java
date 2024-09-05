@@ -9,11 +9,11 @@ import java.util.List;
 @Repository
 public interface TodoRepository extends JpaRepository<TodoEntity, Long> {
 
-  List<TodoEntity> findByTravelId(Long travelId);
+  List<TodoEntity> findByTravId(Long travId);
 
-  TodoEntity findByTodoIdAndTravelId(Long todoId, Long travelId);
+  TodoEntity findByTodoIdAndTravId(Long todoId, Long travId);
 
-  List<TodoEntity> findByTravelIdAndTdComplete(Long travelId, char tdComplete);
+  List<TodoEntity> findByTravIdAndTodoComplete(Long travId, char tdComplete);
 
   void deleteByTodoId(Long tdId);
 }

@@ -9,9 +9,9 @@ import java.util.List;
 @Repository
 public interface MemoRepository extends JpaRepository<MemoEntity, Long> {
 
-  List<MemoEntity> findBytId(Long tId);
+  List<MemoEntity> findByTravId(Long travId);
 
-  MemoEntity findBymId(Long mId);
+  MemoEntity findByMemoId(Long memoId);
 
-  void deleteBymId(Long mId);
+//  void deleteByMemoId(Long memoId);
 }

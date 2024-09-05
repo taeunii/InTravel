@@ -15,23 +15,23 @@ public class MemoController {
   private final MemoService memoService;
 
   @GetMapping("/list/{tId}")
-  public List<MemoEntity> listAll(@PathVariable("tId") Long tId) {
-    return memoService.listAll(tId);
+  public List<MemoEntity> listAll(@PathVariable("tId") Long travId) {
+    return memoService.listAll(travId);
   }
 
   @PostMapping("/save/{tId}")
-  public MemoEntity save(@PathVariable("tId") Long tId, @RequestBody MemoEntity memoEntity) {
-    return memoService.save(tId, memoEntity);
+  public MemoEntity save(@PathVariable("tId") Long travId, @RequestBody MemoEntity memoEntity) {
+    return memoService.save(travId, memoEntity);
   }
 
   @PutMapping("/update/{mId}")
-  public MemoEntity update(@PathVariable("mId") Long mId, @RequestBody MemoEntity memoEntity) {
-    return memoService.update(mId, memoEntity);
+  public MemoEntity update(@PathVariable("mId") Long memoId, @RequestBody MemoEntity memoEntity) {
+    return memoService.update(memoId, memoEntity);
   }
 
   @DeleteMapping("/delete/{mId}")
-  public void delete(@PathVariable("mId") Long mId) {
-    memoService.deleteByMId(mId);
+  public void delete(@PathVariable("mId") Long memoId) {
+    memoService.deleteById(memoId);
   }
 
 }

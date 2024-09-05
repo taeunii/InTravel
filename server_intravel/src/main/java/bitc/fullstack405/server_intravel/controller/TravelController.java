@@ -29,9 +29,9 @@ public class TravelController {
         return travelService.updateTravel(id, travelEntity);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable Long id) {
+//    @DeleteMapping("/delete/{id}")
+//    public void delete(@PathVariable Long id) {
 //        travelService.delete(id);
-    }
+//    }
 }
 

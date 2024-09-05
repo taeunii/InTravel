@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Table(name = "travel")
 @Entity
@@ -15,9 +16,9 @@ public class TravelEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long tId;
+  private Long travId;
 
-  private String tTitle;
+  private String travTitle;
 
   private LocalDateTime createDate = LocalDateTime.now();
 
@@ -27,8 +28,14 @@ public class TravelEntity {
 
   private Long dDay;
 
-  private char tComplete = 'N';
+  private char travComplete = 'N';
 
   private String cate;
+
+//  @OneToMany(mappedBy = "travel", cascade = CascadeType.REMOVE)
+//  private List<TodoEntity> todoEntityList;
+//
+//  @OneToMany(mappedBy = "travel", cascade = CascadeType.REMOVE)
+//  private List<MemoEntity> memoEntityList;
 
 }

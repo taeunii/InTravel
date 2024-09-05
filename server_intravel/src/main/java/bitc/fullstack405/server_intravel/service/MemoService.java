@@ -15,27 +15,27 @@ public class MemoService {
   private final MemoRepository memoRepository;
 
 
-  public List<MemoEntity> listAll(Long tId) {
-    return memoRepository.findBytId(tId);
+  public List<MemoEntity> listAll(Long travId) {
+    return memoRepository.findByTravId(travId);
   }
 
-  public MemoEntity save(Long tId, MemoEntity memoEntity) {
-    memoEntity.setTId(tId);
+  public MemoEntity save(Long travId, MemoEntity memoEntity) {
+    memoEntity.setTravId(travId);
     return memoRepository.save(memoEntity);
   }
 
   @Transactional
-  public MemoEntity update(Long mId, MemoEntity memoEntity) {
+  public MemoEntity update(Long memoId, MemoEntity memoEntity) {
 
-    MemoEntity updateMemo = memoRepository.findBymId(mId);
+    MemoEntity updateMemo = memoRepository.findByMemoId(memoId);
 
-    updateMemo.setMContent(memoEntity.getMContent());
-    updateMemo.setMTitle(memoEntity.getMTitle());
+    updateMemo.setMemoContent(memoEntity.getMemoContent());
+    updateMemo.setMemoTitle(memoEntity.getMemoTitle());
 
     return updateMemo;
   }
 
-  public void deleteByMId(Long mId) {
-    memoRepository.deleteBymId(mId);
+  public void deleteById(Long memoId) {
+    memoRepository.deleteById(memoId);
   }
 }

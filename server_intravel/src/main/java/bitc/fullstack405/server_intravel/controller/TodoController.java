@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/todolist")
+@RequestMapping("/todo")
 @RequiredArgsConstructor
 public class TodoController {
 
@@ -16,37 +16,37 @@ public class TodoController {
 
 //  To do list 전체보기
   @GetMapping("/listAll/{tId}")
-  public List<TodoEntity> listAll(@PathVariable("tId") Long tId) {
-    return todoService.listAll(tId);
+  public List<TodoEntity> listAll(@PathVariable("tId") Long travId) {
+    return todoService.listAll(travId);
   }
 
 //  To do list 미완료 보기
   @GetMapping("/listIncomplete/{tId}")
-  public List<TodoEntity> listUncomp(@PathVariable("tId") Long tId) {
-    return todoService.listUncomp(tId);
+  public List<TodoEntity> listUncomp(@PathVariable("tId") Long travId) {
+    return todoService.listUncomp(travId);
   }
 
 //  To do list 완료 보기
   @GetMapping("/listComplete/{tId}")
-  public List<TodoEntity> listComp(@PathVariable("tId") Long tId) {
-    return todoService.listComp(tId);
+  public List<TodoEntity> listComp(@PathVariable("tId") Long travId) {
+    return todoService.listComp(travId);
   }
 
 //  To do list 추가
   @PostMapping("/save/{tId}")
-  public TodoEntity save(@PathVariable("tId") Long tId, @RequestBody TodoEntity todoEntity) {
-    return todoService.save(tId, todoEntity);
+  public TodoEntity save(@PathVariable("tId") Long travId, @RequestBody TodoEntity todoEntity) {
+    return todoService.save(travId, todoEntity);
   }
 
 //  To do list 수정
   @PutMapping("update/{tdId}")
-  public TodoEntity update(@PathVariable("tdId") Long tdId, @RequestBody TodoEntity todoEntity) {
-    return todoService.update(tdId, todoEntity);
+  public TodoEntity update(@PathVariable("tdId") Long todoId, @RequestBody TodoEntity todoEntity) {
+    return todoService.update(todoId, todoEntity);
   }
 
 //  To do list 삭제
   @DeleteMapping("delete/{tdId}")
-  public void delete(@PathVariable("tdId") Long tdId) {
-    todoService.deleteBytId(tdId);
+  public void delete(@PathVariable("tdId") Long todoId) {
+    todoService.deleteBytId(todoId);
   }
 }

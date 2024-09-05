@@ -15,11 +15,14 @@ public class TodoEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long todoId;
 
-  private Long travelId;
+  private Long travId;
 
-  private String tdContent;
+  private String todoContent;
 
-  private char tdComplete = 'N';
+  private char todoComplete = 'N';
 
-  private char tdImpo;
+  private char todoImpo;
+
+//  @ManyToOne
+//  private TravelEntity travel;
 }

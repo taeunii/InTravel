@@ -14,21 +14,21 @@ public class TodoService {
 
   private final TodoRepository todoRepository;
 
-  public List<TodoEntity> listAll(Long travelId) {
-    return todoRepository.findByTravelId(travelId);
+  public List<TodoEntity> listAll(Long travId) {
+    return todoRepository.findByTravId(travId);
   }
 
-  public TodoEntity save(Long travelId, TodoEntity todoEntity) {
-    todoEntity.setTravelId(travelId);
+  public TodoEntity save(Long travId, TodoEntity todoEntity) {
+    todoEntity.setTravId(travId);
     return todoRepository.save(todoEntity);
   }
 
   @Transactional
   public TodoEntity update(Long todoId, TodoEntity todoEntity) {
-    TodoEntity updateTodo = todoRepository.findByTodoIdAndTravelId(todoEntity.getTodoId(), todoId);
+    TodoEntity updateTodo = todoRepository.findByTodoIdAndTravId(todoEntity.getTodoId(), todoId);
 
-    updateTodo.setTdImpo(todoEntity.getTdImpo());
-    updateTodo.setTdContent(todoEntity.getTdContent());
+    updateTodo.setTodoImpo(todoEntity.getTodoImpo());
+    updateTodo.setTodoContent(todoEntity.getTodoContent());
 
     return updateTodo;
   }
@@ -39,11 +39,11 @@ public class TodoService {
 
   public List<TodoEntity> listUncomp(Long travelId) {
     char complete = 'N';
-    return todoRepository.findByTravelIdAndTdComplete(travelId, complete);
+    return todoRepository.findByTravIdAndTodoComplete(travelId, complete);
   }
 
   public List<TodoEntity> listComp(Long travelId) {
     char complete = 'Y';
-    return todoRepository.findByTravelIdAndTdComplete(travelId, complete);
+    return todoRepository.findByTravIdAndTodoComplete(travelId, complete);
   }
 }

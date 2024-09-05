@@ -17,15 +17,9 @@ public class TodoEntity {
 
   private Long travelId;
 
-  private Long tId;
-
   private String tdContent;
 
-<<<<<<< HEAD:server_intravel/src/main/java/bitc/fullstack405/server_intravel/entity/TodoEntity.java
   private char tdComplete = 'N';
-=======
-  private char tdComplete;
->>>>>>> origin/jun/back:server_intravel/src/main/java/bitc/fullstack405/server_intravel/entity/ToDoList.java
 
   private char tdImpo;
 }

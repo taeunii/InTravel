@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/recyclerLayout"
+    android:padding="16dp">
+
+    <!-- 첫 번째 여행 로그 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#ffffff"
+        android:elevation="2dp"
+        android:padding="16dp"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/tv_title1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="D+1 Travel Log Title1"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_date1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2024.00.00"
+            android:textColor="#6b7280" />
+    </LinearLayout>
+
+<!--    &lt;!&ndash; 두 번째 여행 로그 &ndash;&gt;-->
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        android:background="#ffffff"-->
+<!--        android:elevation="2dp"-->
+<!--        android:padding="16dp"-->
+<!--        android:layout_marginBottom="8dp">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tv_title2"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="D+1 Travel Log Title2"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textSize="16sp" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tv_date2"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="2024.00.00"-->
+<!--            android:textColor="#6b7280" />-->
+<!--    </LinearLayout>-->
+
+<!--    &lt;!&ndash; 세 번째 여행 로그 &ndash;&gt;-->
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        android:background="#ffffff"-->
+<!--        android:elevation="2dp"-->
+<!--        android:padding="16dp"-->
+<!--        android:layout_marginBottom="8dp">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tv_title3"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="D+1 Travel Log Title3"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textSize="16sp" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tv_date3"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="2024.00.00" />-->
+<!--    </LinearLayout>-->
+</LinearLayout>

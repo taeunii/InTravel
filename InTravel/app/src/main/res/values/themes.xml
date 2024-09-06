@@ -5,5 +5,7 @@
     <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
   </style>
 
-  <style name="Theme.InTravel" parent="Base.Theme.InTravel" />
+  <style name="Theme.InTravel" parent="Base.Theme.InTravel">
+    <item name="android:windowIsTranslucent">true</item>
+  </style>
 </resources>

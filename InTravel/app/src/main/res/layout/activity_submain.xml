@@ -1,0 +1,132 @@
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray100"
+    tools:context=".DetailMainActivity">
+        <!-- ConstraintLayout for Icon and Title -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:background="@color/yellow400">
+
+            <!-- Left Icon -->
+            <ImageView
+                android:id="@+id/icon_left"
+                android:layout_width="38dp"
+                android:layout_height="31dp"
+                android:src="?attr/homeAsUpIndicator"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@android:color/black" />
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/header_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Title1"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/icon_right"
+                app:layout_constraintStart_toEndOf="@id/icon_left"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Right Icon -->
+            <ImageView
+                android:id="@+id/icon_right"
+                android:layout_width="29dp"
+                android:layout_height="23dp"
+                android:src="@drawable/baseline_edit_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.666"
+                app:tint="@android:color/black" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Main Content -->
+    <TextView
+        android:id="@+id/main_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="D+1"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/main_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2024.00.00"
+        android:textColor="@color/gray500"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <!-- TabLayout for navigation between pages -->
+
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tablayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/yellow400"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/yellow200"
+        app:tabSelectedTextColor="@color/gray100"
+        app:tabTextColor="@color/black"
+        android:textAlignment="center"
+        android:layout_marginBottom="16dp">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Todo" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Memo" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Menu3" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <!-- ViewPager2 for swiping between pages -->
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal" />
+
+    <!-- Floating Action Button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="Add"
+        app:srcCompat="@drawable/baseline_add_24"
+        app:backgroundTint="@color/yellow400"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+</LinearLayout>

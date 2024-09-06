@@ -20,7 +20,7 @@ public class MemoController {
   }
 
   @PostMapping("/save/{tId}")
-  public MemoEntity save(@PathVariable("tId") Long travId, @RequestBody MemoEntity memoEntity) {
+  public MemoEntity save(@PathVariable("tId") Long travId, MemoEntity memoEntity) {
     return memoService.save(travId, memoEntity);
   }
 
@@ -31,7 +31,7 @@ public class MemoController {
 
   @DeleteMapping("/delete/{mId}")
   public void delete(@PathVariable("mId") Long memoId) {
-    memoService.deleteById(memoId);
+    memoService.deleteByMemoId(memoId);
   }
 
 }

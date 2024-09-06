@@ -3,6 +3,10 @@ package bitc.fullstack405.server_intravel.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.text.DateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Table(name = "memo")
 @Entity
 @Getter
@@ -20,6 +24,8 @@ public class MemoEntity {
   private String memoTitle;
 
   private String memoContent;
+
+  private String memoCreateDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
 //  @ManyToOne
 //  private TravelEntity travel;

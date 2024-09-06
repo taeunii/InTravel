@@ -20,7 +20,7 @@ public class TravelEntity {
 
   private String travTitle;
 
-  private LocalDateTime createDate = LocalDateTime.now();
+  private String createDate = LocalDateTime.now().toString();
 
   private String startDate;
 

@@ -35,7 +35,7 @@ public class MemoService {
     return updateMemo;
   }
 
-  public void deleteById(Long memoId) {
+  public void deleteByMemoId(Long memoId) {
     memoRepository.deleteById(memoId);
   }
 }

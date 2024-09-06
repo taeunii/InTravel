@@ -20,16 +20,10 @@ public class TodoController {
     return todoService.listAll(travId);
   }
 
-//  To do list 미완료 보기
-  @GetMapping("/listIncomplete/{tId}")
-  public List<TodoEntity> listUncomp(@PathVariable("tId") Long travId) {
-    return todoService.listUncomp(travId);
-  }
-
-//  To do list 완료 보기
-  @GetMapping("/listComplete/{tId}")
-  public List<TodoEntity> listComp(@PathVariable("tId") Long travId) {
-    return todoService.listComp(travId);
+//  To do list 완료/미완료 보기
+  @GetMapping("/listIsComplete/{tId}")
+  public List<TodoEntity> listIsComplete(@PathVariable("tId") Long travId, @RequestBody char isComplete) {
+    return todoService.listIsComplete(travId, isComplete);
   }
 
 //  To do list 추가
@@ -47,6 +41,6 @@ public class TodoController {
 //  To do list 삭제
   @DeleteMapping("delete/{tdId}")
   public void delete(@PathVariable("tdId") Long todoId) {
-    todoService.deleteBytId(todoId);
+    todoService.deleteByTodoId(todoId);
   }
 }

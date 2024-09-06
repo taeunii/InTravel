@@ -27,7 +27,11 @@ public class TravelService {
     public List<TravelEntity> findAll() {
 
         List<TravelEntity> travels = travelRepository.findAll();
-//        LocalDate nowDate = LocalDate.now();  // ******************************************************************** 삭제금지
+
+        //******************************************************************** 삭제금지
+        
+//        날짜 계산 로직 짬
+//        LocalDate nowDate = LocalDate.now();
 //
 //        for (TravelEntity travel : travels) {
 //            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -37,7 +41,17 @@ public class TravelService {
 //            travel.setDDay(days);
 //        }
 ////
-//        travelRepository.saveAll(travels); // ************************************************************************* 삭제금지
+//        travelRepository.saveAll(travels);
+//
+//        public String formatDDay(Long days) {
+//        if (days > 0) {
+//            return "+" + days.toString();
+//        } else {
+//            return days.toString();
+//        }
+//    }
+//
+//        ************************************************************************* 삭제금지
         return travels;
     }
 

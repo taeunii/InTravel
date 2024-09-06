@@ -1,11 +1,9 @@
 package com.example.intravel.data
 
-import java.io.Serializable
+data class TodoList(var tdId:Long,
+                    var tId:Long,
+                    var tdContent:String,
+                    var tdComplete:Char,
+                    var tdImpo:Char)
 
-data class TodoList(var tId:Long,
-                    var content:String,
-                    var tdComplete:Char = 'N',
-                    var tdImpo:Char = 'N') : Serializable
-
-
-// 외래키로 받아오는 t_id 컬럼도 추가해야하나?
+// toComplete(완료), tdImpo(중요) 기본값 N

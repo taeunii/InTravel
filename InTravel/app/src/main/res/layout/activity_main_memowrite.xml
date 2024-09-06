@@ -17,26 +17,26 @@
         android:layout_marginEnd="16dp"
         android:background="@drawable/edittext_border"
         android:ems="10"
-        android:inputType="text"
         android:hint="메모 제목"
+        android:inputType="text"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/btnDate" />
 
     <EditText
         android:id="@+id/mContent"
         android:layout_width="0dp"
-        android:layout_height="500dp"
+        android:layout_height="400dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/edittext_border"
         android:ems="10"
         android:gravity="top|start"
+        android:hint="메모 내용"
         android:inputType="textMultiLine"
         android:minLines="5"
-        android:hint="메모 내용"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
-        android:text="cancel"
+        android:text="CANCEL"
         android:background="#FDF79B"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mContent" />
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
-        android:text="ok"
+        android:text="OK"
         android:background="#FBEA04"
         app:layout_constraintEnd_toStartOf="@+id/btnMemoCancel"
         app:layout_constraintTop_toBottomOf="@+id/mContent" />
@@ -70,9 +70,24 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
-        android:text="delete"
+        android:text="DELETE"
         android:background="#FDF79B"
+        android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/btnMemoOk"
         app:layout_constraintTop_toBottomOf="@+id/mContent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnDate"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:text="여행 날짜 선택"
+        android:textSize="20sp"
+        android:background="#FDF79B"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

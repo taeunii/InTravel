@@ -32,8 +32,8 @@ public class TravelController {
     }
 
     @PutMapping("/update/{tId}")
-    public TravelEntity updateTravel(@PathVariable("tId") Long id, @RequestBody TravelEntity travelEntity) {
-        return travelService.updateTravel(id, travelEntity);
+    public TravelEntity updateTravel(@PathVariable("tId") Long travId, @RequestBody TravelEntity travelEntity) {
+        return travelService.updateTravel(travId, travelEntity);
     }
 
 //    @DeleteMapping("/delete/{id}")

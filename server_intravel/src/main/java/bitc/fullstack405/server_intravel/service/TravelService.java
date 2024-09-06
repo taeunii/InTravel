@@ -61,8 +61,8 @@ public class TravelService {
     }
 
     @Transactional
-    public TravelEntity updateTravel(Long tId, TravelEntity travelEntity) {
-        TravelEntity travel = travelRepository.findById(tId).get();
+    public TravelEntity updateTravel(Long travId, TravelEntity travelEntity) {
+        TravelEntity travel = travelRepository.findById(travId).get();
 
         travel.setTravTitle(travelEntity.getTravTitle());
         travel.setStartDate(travelEntity.getStartDate());
@@ -73,7 +73,7 @@ public class TravelService {
     }
 
     public List<TravelEntity> findByTravelComplete(char comp) {
-        return travelRepository.findBytComplete(comp);
+        return travelRepository.findByTravComplete(comp);
     }
 
     @Transactional

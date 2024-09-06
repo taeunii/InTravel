@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface TravelRepository extends JpaRepository<TravelEntity, Long> {
-    List<TravelEntity> findBytComplete(char tComplete);
+    List<TravelEntity> findByTravComplete(char travComplete);
 }

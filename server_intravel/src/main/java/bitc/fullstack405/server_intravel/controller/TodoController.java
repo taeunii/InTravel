@@ -26,6 +26,12 @@ public class TodoController {
     return todoService.listIsComplete(travId, isComplete);
   }
 
+////  To do list 완료 보기
+//  @GetMapping("/listComplete/{tId}")
+//  public List<TodoEntity> listComp(@PathVariable("tId") Long tId) {
+//    return todoService.listComp(tId);
+//  }
+
 //  To do list 추가
   @PostMapping("/save/{tId}")
   public TodoEntity save(@PathVariable("tId") Long travId, @RequestBody TodoEntity todoEntity) {

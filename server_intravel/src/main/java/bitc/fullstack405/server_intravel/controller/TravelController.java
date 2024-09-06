@@ -3,8 +3,10 @@ package bitc.fullstack405.server_intravel.controller;
 import bitc.fullstack405.server_intravel.entity.TravelEntity;
 import bitc.fullstack405.server_intravel.service.TravelService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,13 +21,18 @@ public class TravelController {
         return travelService.findAll();
     }
 
-    @PostMapping("/insert")
-    public TravelEntity insert(@RequestBody TravelEntity travelEntity) {
+    @PostMapping("/save")
+    public TravelEntity save(@RequestBody TravelEntity travelEntity) {
         return travelService.save(travelEntity);
     }
 
-    @PutMapping("/update/{id}")
-    public TravelEntity updateTravel(@PathVariable Long id, @RequestBody TravelEntity travelEntity) {
+    @GetMapping("/listComplete")
+    public List<TravelEntity> TravelListComplete(@RequestBody char travComplete) {
+        return travelService.findByTravelComplete(travComplete);
+    }
+
+    @PutMapping("/update/{tId}")
+    public TravelEntity updateTravel(@PathVariable("tId") Long id, @RequestBody TravelEntity travelEntity) {
         return travelService.updateTravel(id, travelEntity);
     }
 
@@ -33,5 +40,10 @@ public class TravelController {
 //    public void delete(@PathVariable Long id) {
 //        travelService.delete(id);
 //    }
+
+    @DeleteMapping("/delete/{tId}")
+    public void delete(@PathVariable("tId") Long travId) {
+        travelService.delete(travId);
+    }
 }
 

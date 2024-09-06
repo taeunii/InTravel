@@ -1,36 +1,26 @@
 package com.example.intravel.adapter
 
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.provider.ContactsContract.Data
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.intravel.R
 import com.example.intravel.TestActivity
-import com.example.intravel.client.Client
-import com.example.intravel.data.MainData
+import com.example.intravel.data.TravelData
 import com.example.intravel.databinding.CustomDdayBinding
 import com.example.intravel.databinding.ItemMainBinding
-import retrofit2.Call
-import retrofit2.Response
 import java.lang.Integer.parseInt
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 
-class MainAdapter(var mainList: MutableList<MainData>):RecyclerView.Adapter<MainAdapter.MainHolder>() {
+class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<MainAdapter.MainHolder>() {
 
     // 오늘 날짜 활용해야함, 생성일X
-    fun ddayCal(data:MainData):String{
+    fun ddayCal(data:TravelData):String{
         var sysDate = Date(System.currentTimeMillis())
         var dateFormat = SimpleDateFormat("yyyyMMdd")
         var today = parseInt(dateFormat.format(sysDate)) // 계산하기 위한 int 변환
@@ -59,7 +49,7 @@ class MainAdapter(var mainList: MutableList<MainData>):RecyclerView.Adapter<Main
     }
 
 
-    fun updateData(data:MainData,position: Int){
+    fun updateData(data:TravelData, position: Int){
         mainList[position] = data
         notifyDataSetChanged()
     }
@@ -69,7 +59,7 @@ class MainAdapter(var mainList: MutableList<MainData>):RecyclerView.Adapter<Main
         notifyDataSetChanged()
     }
 
-    fun insertData(data:MainData){
+    fun insertData(data:TravelData){
         mainList.add(data)
         notifyDataSetChanged()
     }
@@ -206,7 +196,7 @@ class MainAdapter(var mainList: MutableList<MainData>):RecyclerView.Adapter<Main
                 
                 setPositiveButton("확인",object: DialogInterface.OnClickListener{
                     override fun onClick(p0: DialogInterface?, p1: Int) {
-                        val d = MainData( // 수정된 데이터 생성
+                        val d = TravelData( // 수정된 데이터 생성
                             mainList.get(position).tId,
                             dialogEdit.ddayName.text.toString(),
                             mainList[position].createDate,

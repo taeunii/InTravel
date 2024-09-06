@@ -2,9 +2,7 @@ package com.example.intravel
 
 import android.content.DialogInterface
 import android.icu.util.Calendar
-import android.icu.util.TimeZone.SystemTimeZoneType
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -15,18 +13,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.intravel.adapter.MainAdapter
-import com.example.intravel.client.Client
-import com.example.intravel.data.MainData
+import com.example.intravel.data.TravelData
 import com.example.intravel.databinding.ActivityMainBinding
 import com.example.intravel.databinding.CustomDdayBinding
-import retrofit2.Call
-import retrofit2.Response
-import java.lang.Integer.parseInt
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.Date
-import kotlin.time.Duration.Companion.days
-import kotlin.time.Duration.Companion.parse
 
 class MainActivity : AppCompatActivity() {
 
@@ -84,16 +75,16 @@ class MainActivity : AppCompatActivity() {
     binding.titleDate.text = korDate
 
     // 데이터 생성
-    var mainList = mutableListOf<MainData>()
-    var ingList = mutableListOf<MainData>() // db 연결전 테스트용
+    var mainList = mutableListOf<TravelData>()
+    var ingList = mutableListOf<TravelData>() // db 연결전 테스트용
     // db 연결 전에는 데이터 분리해서 넣고 사용함, 연결하고 나서는 상관 없을듯 ?
 
     // db 연결 전 테스트용 데이터 추가
     // + 버튼 누르면 값 디비에 추가 후 리스폰된 값 받아서 화면에 띄움
     // Y 진행중, N 완료됨
-    mainList.add(MainData(0,"일본 여행",null,"20240914","20240920","동생",'Y'))
-    mainList.add(MainData(0,"경주 여행",null,"20240903","20240920","친구",'Y'))
-    mainList.add(MainData(0,"전주 여행",null,"20240925","20240930","동생",'N'))
+    mainList.add(TravelData(0,"일본 여행",null,"20240914","20240920","동생",'Y'))
+    mainList.add(TravelData(0,"경주 여행",null,"20240903","20240920","친구",'Y'))
+    mainList.add(TravelData(0,"전주 여행",null,"20240925","20240930","동생",'N'))
 
 
 
@@ -278,7 +269,7 @@ class MainActivity : AppCompatActivity() {
         setPositiveButton("확인",object:DialogInterface.OnClickListener{
           override fun onClick(p0: DialogInterface?, p1: Int) {
             // 디비 들어갈 데이터
-            var d = (MainData(0,
+            var d = (TravelData(0,
               dialogInsert.ddayName.text.toString(),
               null,
               dialogInsert.edtStart.text.toString(),

@@ -1,7 +1,6 @@
 package com.example.intravel.adapter
 
 import android.content.DialogInterface
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,16 +8,15 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
-import com.example.intravel.R
-import com.example.intravel.TestActivity
+import com.example.intravel.client.Client
 import com.example.intravel.data.TravelData
 import com.example.intravel.databinding.CustomDdayBinding
 import com.example.intravel.databinding.ItemMainBinding
+import retrofit2.Call
+import retrofit2.Response
 import java.lang.Integer.parseInt
 import java.text.SimpleDateFormat
 import java.util.Date
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 
 class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<MainAdapter.MainHolder>() {
 
@@ -83,7 +81,7 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
     override fun onBindViewHolder(holder: MainAdapter.MainHolder, position: Int) {
         val data = mainList.get(position)
         val dday = ddayCal(data)
-        holder.binding.itemTitle.text = data.tTitle
+        holder.binding.itemTitle.text = data.travTitle
         holder.binding.itemCate.text = data.cate
         holder.binding.itemDday.text = dday // 디데이는 좀더 생각을
 
@@ -92,8 +90,6 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
         holder.itemView.setOnClickListener {
             onItemClickListener?.onItemClick(data,dday,position)
         }
-
-
 
 
 
@@ -115,7 +111,7 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
                 setMessage("날짜를 선택해주세요")
                 setView(dialogEdit.root)
 
-                dialogEdit.ddayName.setText(data.tTitle.toString())
+                dialogEdit.ddayName.setText(data.travTitle.toString())
                 dialogEdit.edtStart.setText(data.startDate.toString())
                 dialogEdit.edtEnd.setText(data.endDate.toString())
 
@@ -201,45 +197,44 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
                 setPositiveButton("확인",object: DialogInterface.OnClickListener{
                     override fun onClick(p0: DialogInterface?, p1: Int) {
                         val d = TravelData( // 수정된 데이터 생성
-                            mainList.get(position).tId,
+                            mainList.get(position).travId,
                             dialogEdit.ddayName.text.toString(),
                             mainList[position].createDate,
                             dialogEdit.edtStart.text.toString(),
                             dialogEdit.edtEnd.text.toString(),
                             cateSelected,
                             'N')
-                        updateData(d,holder.adapterPosition)
+//                        updateData(d,holder.adapterPosition)
 
 //                        // db 연결 버전
-//                        Client.retrofit.update(d.tId,d).enqueue(object:retrofit2.Callback<MainData>{
-//                            override fun onResponse(call: Call<MainData>,response: Response<MainData>) {
-//                                response.body()?.let { it1 -> updateData(it1,holder.adapterPosition) }
-//                            }
-//
-//                            override fun onFailure(call: Call<MainData>, t: Throwable) {
-//                                TODO("Not yet implemented")
-//                            }
-//                        }) // enqueu
-//                    }
+                        Client.retrofit.update(d.travId,d).enqueue(object:retrofit2.Callback<TravelData>{
+                            override fun onResponse(call: Call<TravelData>, response: Response<TravelData>) {
+                                response.body()?.let { it1 -> updateData(it1,holder.adapterPosition) }
+                            }
+
+                            override fun onFailure(call: Call<TravelData>, t: Throwable) {
+                                TODO("Not yet implemented")
+                            }
+                        }) // enqueu
                     } // onclick
                 }) // positive 확인
 
                 // positive 버튼 한개 더 만들어서 삭제로 하면..
                 setNeutralButton("삭제",object:DialogInterface.OnClickListener{
                     override fun onClick(p0: DialogInterface?, p1: Int) {
-                        removeData(holder.adapterPosition)
+//                        removeData(holder.adapterPosition)
 
                         // db 연결버전
-//                        Client.retrofit.deleteById(data.tId).enqueue(object:retrofit2.Callback<Void>{
-//                            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-//                                removeData(holder.adapterPosition)
-//                            }
-//
-//                            override fun onFailure(call: Call<Void>, t: Throwable) {
-//                                TODO("Not yet implemented")
-//                            }
-//
-//                        })//enqueu
+                        Client.retrofit.deleteById(data.travId).enqueue(object:retrofit2.Callback<Void>{
+                            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                                removeData(holder.adapterPosition)
+                            }
+
+                            override fun onFailure(call: Call<Void>, t: Throwable) {
+                                TODO("Not yet implemented")
+                            }
+
+                        })//enqueu
                     }//onclick
 
                 })//positive 삭제

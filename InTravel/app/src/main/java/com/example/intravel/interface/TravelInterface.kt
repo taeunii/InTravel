@@ -2,22 +2,32 @@ package com.example.intravel.`interface`
 
 import com.example.intravel.data.TravelData
 import retrofit2.Call
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface TravelInterface {
 
     // 완료여부 조회
-    fun findComplete(tCompleted:Char):Call<List<TravelData>>
+    @POST("listComplete")
+    fun findComplete(@Body travComplete:Char):Call<List<TravelData>>
 
-    ////////////////// 공통 함수 ///////////////////
     // 전체보기
+    @GET("list")
     fun findAll():Call<List<TravelData>>
 
     // 추가
-    fun insert(data:TravelData):Call<TravelData>
+    @POST("save")
+    fun insert(@Body data:TravelData):Call<TravelData>
 
     // 수정
-    fun update(id:Long,data:TravelData):Call<TravelData>
+    @PUT("update/{tId}")
+    fun update(@Path("tId") tId:Long,@Body data:TravelData):Call<TravelData>
 
     // 삭제
-    fun deleteById(id:Long):Call<Void>
+    @DELETE("delete/{tId}")
+    fun deleteById(@Path("tId") tId:Long):Call<Void>
 }

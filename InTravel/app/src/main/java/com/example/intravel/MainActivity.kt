@@ -14,9 +14,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.intravel.adapter.MainAdapter
+import com.example.intravel.client.Client
 import com.example.intravel.data.TravelData
 import com.example.intravel.databinding.ActivityMainBinding
 import com.example.intravel.databinding.CustomDdayBinding
+import retrofit2.Call
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -83,9 +86,9 @@ class MainActivity : AppCompatActivity() {
     // db 연결 전 테스트용 데이터 추가
     // + 버튼 누르면 값 디비에 추가 후 리스폰된 값 받아서 화면에 띄움
     // Y 진행중, N 완료됨
-    mainList.add(TravelData(0,"일본 여행",null,"20240914","20240920","동생",'Y'))
-    mainList.add(TravelData(0,"경주 여행",null,"20240903","20240920","친구",'Y'))
-    mainList.add(TravelData(0,"전주 여행",null,"20240925","20240930","동생",'N'))
+//    mainList.add(TravelData(0,"일본 여행",null,"20240914","20240920","동생",'Y'))
+//    mainList.add(TravelData(0,"경주 여행",null,"20240903","20240920","친구",'Y'))
+//    mainList.add(TravelData(0,"전주 여행",null,"20240925","20240930","동생",'N'))
 
 
 
@@ -97,47 +100,47 @@ class MainActivity : AppCompatActivity() {
     // 전체보기
     // 데이터 리스트 불러와서 리사이클러뷰에 붙이기
     binding.btnList.setOnClickListener {
-      mainAdapter.mainList = mainList
-      mainAdapter.notifyDataSetChanged()
+//      mainAdapter.mainList = mainList
+//      mainAdapter.notifyDataSetChanged()
 
       // db 연결버전
-//      Client.retrofit.findAll().enqueue(object:retrofit2.Callback<List<MainData>>{
-//        override fun onResponse(call: Call<List<MainData>>, response: Response<List<MainData>>) {
+      Client.retrofit.findAll().enqueue(object:retrofit2.Callback<List<TravelData>>{
+        override fun onResponse(call: Call<List<TravelData>>, response: Response<List<TravelData>>) {
 //          mainAdapter.mainList.clear()
-//          mainAdapter.mainList = response.body() as MutableList<MainData>
-//          mainAdapter.notifyDataSetChanged()
-//        }
-//
-//        override fun onFailure(call: Call<List<MainData>>, t: Throwable) {
-//          TODO("Not yet implemented")
-//        }
-//      })// findAll
+          mainAdapter.mainList = response.body() as MutableList<TravelData>
+          mainAdapter.notifyDataSetChanged()
+        }
+
+        override fun onFailure(call: Call<List<TravelData>>, t: Throwable) {
+          TODO("Not yet implemented")
+        }
+      })// findAll
     } // btnList
 
     // 진행중 *첫화면*
     // cate 의 값이 Y 인 것만 데이터로 보내기
     binding.btnIng.setOnClickListener {
-      ingList.clear()
-      for(i in 0..mainList.size-1){ // 인덱스는 0부터 시작하니까 크기-1 까지임 ㅠ
-        if (mainList.get(i).tComplete=='N'){
-          ingList.add(mainList.get(i))
-        }
-      }
-      mainAdapter.mainList = ingList // 어댑터에 있는 데이터 바꿔야함
-      mainAdapter.notifyDataSetChanged()
+//      ingList.clear()
+//      for(i in 0..mainList.size-1){ // 인덱스는 0부터 시작하니까 크기-1 까지임 ㅠ
+//        if (mainList.get(i).travComplete =='N'){
+//          ingList.add(mainList.get(i))
+//        }
+//      }
+//      mainAdapter.mainList = ingList // 어댑터에 있는 데이터 바꿔야함
+//      mainAdapter.notifyDataSetChanged()
 
         // db연결 버전
-//      Client.retrofit.findComplete('N').enqueue(object:retrofit2.Callback<List<MainData>>{
-//        override fun onResponse(call: Call<List<MainData>>, response: Response<List<MainData>>) {
-//          mainAdapter.mainList.clear() // 어댑터에 있는 데이터 지우고 채우기
-//          mainAdapter.mainList = response.body() as MutableList<MainData>
-//          mainAdapter.notifyDataSetChanged()
-//        }
-//
-//        override fun onFailure(call: Call<List<MainData>>, t: Throwable) {
-//          TODO("Not yet implemented")
-//        }
-//      })// findComplete
+      Client.retrofit.findComplete('N').enqueue(object:retrofit2.Callback<List<TravelData>>{
+        override fun onResponse(call: Call<List<TravelData>>, response: Response<List<TravelData>>) {
+          mainAdapter.mainList.clear() // 어댑터에 있는 데이터 지우고 채우기
+          mainAdapter.mainList = response.body() as MutableList<TravelData>
+          mainAdapter.notifyDataSetChanged()
+        }
+
+        override fun onFailure(call: Call<List<TravelData>>, t: Throwable) {
+          TODO("Not yet implemented")
+        }
+      })// findComplete
 
     }// btnIng
 
@@ -145,26 +148,26 @@ class MainActivity : AppCompatActivity() {
     // 완료
     // cate 의 값이 N인 것만 불러오기
     binding.butEnd.setOnClickListener {
-      ingList.clear()
-      for(data in mainList){
-        if(data.tComplete == 'Y'){
-          ingList.add(data)
-        }
-      }
-      mainAdapter.mainList = ingList
-      mainAdapter.notifyDataSetChanged()
+//      ingList.clear()
+//      for(data in mainList){
+//        if(data.travComplete == 'Y'){
+//          ingList.add(data)
+//        }
+//      }
+//      mainAdapter.mainList = ingList
+//      mainAdapter.notifyDataSetChanged()
 
-//      Client.retrofit.findComplete('Y').enqueue(object:retrofit2.Callback<List<MainData>>{
-//        override fun onResponse(call: Call<List<MainData>>, response: Response<List<MainData>>) {
-//          mainAdapter.mainList.clear() // 어댑터에 있는 데이터 지우고 채우기
-//          mainAdapter.mainList = response.body() as MutableList<MainData>
-//          mainAdapter.notifyDataSetChanged()
-//        }
-//
-//        override fun onFailure(call: Call<List<MainData>>, t: Throwable) {
-//          TODO("Not yet implemented")
-//        }
-//      })// findComplete
+      Client.retrofit.findComplete('Y').enqueue(object:retrofit2.Callback<List<TravelData>>{
+        override fun onResponse(call: Call<List<TravelData>>, response: Response<List<TravelData>>) {
+          mainAdapter.mainList.clear() // 어댑터에 있는 데이터 지우고 채우기
+          mainAdapter.mainList = response.body() as MutableList<TravelData>
+          mainAdapter.notifyDataSetChanged()
+        }
+
+        override fun onFailure(call: Call<List<TravelData>>, t: Throwable) {
+          TODO("Not yet implemented")
+        }
+      })// findComplete
 
     } // btnEnd
 
@@ -276,20 +279,20 @@ class MainActivity : AppCompatActivity() {
               dialogInsert.edtStart.text.toString(),
               dialogInsert.edtEnd.text.toString(),
               cateSelected,
-               null))
+               'N'))
 
-            mainAdapter.insertData(d)
+//            mainAdapter.insertData(d)
 
             // db 연결 버전
-//            Client.retrofit.insert(d).enqueue(object:retrofit2.Callback<MainData>{
-//              override fun onResponse(call: Call<MainData>, response: Response<MainData>) {
-//                response.body()?.let { it1 -> mainAdapter.insertData(it1) }
-//              }
-//
-//              override fun onFailure(call: Call<MainData>, t: Throwable) {
-//                TODO("Not yet implemented")
-//              }
-//            })//enqueue
+            Client.retrofit.insert(d).enqueue(object:retrofit2.Callback<TravelData>{
+              override fun onResponse(call: Call<TravelData>, response: Response<TravelData>) {
+                response.body()?.let { it1 -> mainAdapter.insertData(it1) }
+              }
+
+              override fun onFailure(call: Call<TravelData>, t: Throwable) {
+                TODO("Not yet implemented")
+              }
+            })//enqueue
           }//onClick
 
         })//positiveButon
@@ -306,8 +309,8 @@ class MainActivity : AppCompatActivity() {
 
         var intent = Intent(this@MainActivity,TestActivity::class.java)
 
-        intent.putExtra("tId",data.tId) // 메모, 투두리스트 필요
-        intent.putExtra("tTitle",data.tTitle) // 서브 상단
+        intent.putExtra("tId",data.travId) // 메모, 투두리스트 필요
+        intent.putExtra("tTitle",data.travTitle) // 서브 상단
         intent.putExtra("dday",dday) // 서브 상단
 
         startActivity(intent)

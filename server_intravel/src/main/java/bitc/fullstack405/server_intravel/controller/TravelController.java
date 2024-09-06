@@ -26,8 +26,8 @@ public class TravelController {
         return travelService.save(travelEntity);
     }
 
-    @GetMapping("/listComplete")
-    public List<TravelEntity> TravelListComplete(char travComplete) {
+    @PostMapping("/listComplete")
+    public List<TravelEntity> TravelListComplete(@RequestBody char travComplete) {
         return travelService.findByTravelComplete(travComplete);
     }
 

@@ -20,7 +20,7 @@ public class MemoService {
   }
 
   public MemoEntity save(Long tId, MemoEntity memoEntity) {
-    memoEntity.setTId(tId);
+    memoEntity.setTravelId(tId);
     return memoRepository.save(memoEntity);
   }
 

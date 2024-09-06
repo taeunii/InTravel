@@ -21,24 +21,25 @@ public class TravelController {
         return travelService.findAll();
     }
 
-    @GetMapping("/listComplete")
-    public List<TravelEntity> TravelListComplete(@RequestBody char tComplete) {
-        return travelService.findByIsComplete(tComplete);
-    }
-
-    @PostMapping("/insert")
-    public TravelEntity insert(@RequestBody TravelEntity travelEntity) {
+    @PostMapping("/save")
+    public TravelEntity save(@RequestBody TravelEntity travelEntity) {
         return travelService.save(travelEntity);
     }
 
+    @GetMapping("/listComplete")
+    public List<TravelEntity> TravelListComplete(@RequestBody char tComplete) {
+        return travelService.findByTravelComplete(tComplete);
+    }
+
     @PutMapping("/update/{id}")
-    public TravelEntity updateTravel(@PathVariable Long id, @RequestBody TravelEntity travelEntity) {
+    public TravelEntity updateTravel(@PathVariable("id") Long id, @RequestBody TravelEntity travelEntity) {
         return travelService.updateTravel(id, travelEntity);
     }
 
+
     @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable Long id) {
-//        travelService.delete(id);
+    public void delete(@PathVariable("id") Long id) {
+        travelService.delete(id);
     }
 }
 

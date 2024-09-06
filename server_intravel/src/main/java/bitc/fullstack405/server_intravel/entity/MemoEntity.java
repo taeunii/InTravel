@@ -15,7 +15,7 @@ public class MemoEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long mId;
 
-  private Long tId;
+  private Long travelId;
 
   private String mTitle;
 

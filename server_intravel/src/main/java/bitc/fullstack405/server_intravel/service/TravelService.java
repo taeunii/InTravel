@@ -1,7 +1,10 @@
 package bitc.fullstack405.server_intravel.service;
 
 import bitc.fullstack405.server_intravel.entity.TravelEntity;
+import bitc.fullstack405.server_intravel.repository.MemoRepository;
+import bitc.fullstack405.server_intravel.repository.TodoRepository;
 import bitc.fullstack405.server_intravel.repository.TravelRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class TravelService {
 
     private final TravelRepository travelRepository;
+    private final TodoRepository todoRepository;
+    private final MemoRepository memoRepository;
 
     public List<TravelEntity> findAll() {
 
@@ -51,7 +56,14 @@ public class TravelService {
         return travelRepository.save(travel);
     }
 
-    public List<TravelEntity> findByIsComplete(char comp) {
-        return travelRepository.findByTComplete(comp);
+    public List<TravelEntity> findByTravelComplete(char comp) {
+        return travelRepository.findBytComplete(comp);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        todoRepository.deleteByTravelId(id);
+        memoRepository.deleteByTravelId(id);
+        travelRepository.deleteById(id);
     }
 }

@@ -1,10 +1,11 @@
 package bitc.fullstack405.server_intravel.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.text.DateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Table(name = "memo")
 @Entity
@@ -16,9 +17,18 @@ public class MemoEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long mId;
+  private Long memoId;
 
-  private String mContent;
+  private Long travId;
 
-  private char mComplete;
+  private String memoTitle;
+
+  private String memoContent;
+
+  private String choiceDate;
+
+  private String memoCreateDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+
+//  @ManyToOne
+//  private TravelEntity travel;
 }

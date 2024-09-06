@@ -1,10 +1,7 @@
 package bitc.fullstack405.server_intravel.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Table(name = "to_do_list")
 @Entity
@@ -12,13 +9,20 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ToDoList {
+public class TodoEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long tdId;
+  private Long todoId;
 
-  private String tdContent;
+  private Long travId;
 
-  private char td_complete;
+  private String todoContent;
+
+  private char todoComplete;
+
+  private char todoImpo;
+
+//  @ManyToOne
+//  private TravelEntity travel;
 }

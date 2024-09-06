@@ -1,12 +1,10 @@
 package bitc.fullstack405.server_intravel.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Table(name = "travel")
 @Entity
@@ -15,19 +13,29 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TravelEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long tId;
+  private Long travId;
 
-  private String tTitle;
+  private String travTitle;
 
-  private LocalDateTime createDate = LocalDateTime.now();
+  private String createDate = LocalDateTime.now().toString();
 
   private String startDate;
 
   private String endDate;
 
-  private char tComplete;
+//  private Long dDay;
+
+  private char travComplete;
 
   private String cate;
+
+//  @OneToMany(mappedBy = "travel", cascade = CascadeType.REMOVE)
+//  private List<TodoEntity> todoEntityList;
+//
+//  @OneToMany(mappedBy = "travel", cascade = CascadeType.REMOVE)
+//  private List<MemoEntity> memoEntityList;
+
 }

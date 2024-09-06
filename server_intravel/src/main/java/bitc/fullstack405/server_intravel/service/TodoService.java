@@ -42,8 +42,8 @@ public class TodoService {
 //    return todoRepository.findByTravIdAndTodoComplete(travelId, complete);
 //  }
 
-  public List<TodoEntity> listIsComplete(Long travelId, char isComplete) {
-    return todoRepository.findByTravIdAndTodoComplete(travelId, isComplete);
+  public List<TodoEntity> listIsComplete(Long travelId, char todoComplete) {
+    return todoRepository.findByTravIdAndTodoComplete(travelId, todoComplete);
   }
 
 //  public List<TodoEntity> listUncomp(Long travelId, char comp) {

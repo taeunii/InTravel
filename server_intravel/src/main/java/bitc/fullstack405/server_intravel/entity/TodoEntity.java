@@ -19,7 +19,7 @@ public class TodoEntity {
 
   private String todoContent;
 
-  private char todoComplete = 'N';
+  private char todoComplete;
 
   private char todoImpo;
 

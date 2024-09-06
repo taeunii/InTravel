@@ -13,7 +13,7 @@ public interface TodoRepository extends JpaRepository<TodoEntity, Long> {
 
   TodoEntity findByTodoIdAndTravId(Long todoId, Long travId);
 
-  List<TodoEntity> findByTravIdAndTodoComplete(Long travId, char tdComplete);
+  List<TodoEntity> findByTravIdAndTodoComplete(Long travId, char todoComplete);
 
   void deleteByTodoId(Long tdId);
 

@@ -25,6 +25,8 @@ public class MemoEntity {
 
   private String memoContent;
 
+  private String choiceDate;
+
   private String memoCreateDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
 //  @ManyToOne

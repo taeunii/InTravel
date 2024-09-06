@@ -25,7 +25,7 @@ public class MemoController {
   }
 
   @PutMapping("/update/{mId}")
-  public MemoEntity update(@PathVariable("mId") Long memoId, @RequestBody MemoEntity memoEntity) {
+  public MemoEntity update(@PathVariable("mId") Long memoId,  MemoEntity memoEntity) {
     return memoService.update(memoId, memoEntity);
   }
 

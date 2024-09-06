@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/travel")
 @RequiredArgsConstructor
 public class TravelController {
 
@@ -27,7 +27,7 @@ public class TravelController {
     }
 
     @GetMapping("/listComplete")
-    public List<TravelEntity> TravelListComplete(@RequestBody char travComplete) {
+    public List<TravelEntity> TravelListComplete(char travComplete) {
         return travelService.findByTravelComplete(travComplete);
     }
 

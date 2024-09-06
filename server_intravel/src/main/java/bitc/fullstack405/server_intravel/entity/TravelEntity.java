@@ -28,7 +28,7 @@ public class TravelEntity {
 
 //  private Long dDay;
 
-  private char travComplete = 'N';
+  private char travComplete;
 
   private String cate;
 

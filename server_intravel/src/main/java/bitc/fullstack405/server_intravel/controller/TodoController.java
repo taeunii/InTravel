@@ -22,8 +22,8 @@ public class TodoController {
 
 //  To do list 완료/미완료 보기
   @GetMapping("/listIsComplete/{tId}")
-  public List<TodoEntity> listIsComplete(@PathVariable("tId") Long travId, @RequestBody char isComplete) {
-    return todoService.listIsComplete(travId, isComplete);
+  public List<TodoEntity> listIsComplete(@PathVariable("tId") Long travId, char todoComplete) {
+    return todoService.listIsComplete(travId, todoComplete);
   }
 
 ////  To do list 완료 보기

@@ -20,12 +20,12 @@ public class MemoController {
   }
 
   @PostMapping("/save/{tId}")
-  public MemoEntity save(@PathVariable("tId") Long travId, MemoEntity memoEntity) {
+  public MemoEntity save(@PathVariable("tId") Long travId, @RequestBody MemoEntity memoEntity) {
     return memoService.save(travId, memoEntity);
   }
 
   @PutMapping("/update/{mId}")
-  public MemoEntity update(@PathVariable("mId") Long memoId,  MemoEntity memoEntity) {
+  public MemoEntity update(@PathVariable("mId") Long memoId, @RequestBody MemoEntity memoEntity) {
     return memoService.update(memoId, memoEntity);
   }
 

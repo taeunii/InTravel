@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Table(name = "travel")
@@ -20,7 +21,7 @@ public class TravelEntity {
 
   private String travTitle;
 
-  private String createDate = LocalDateTime.now().toString();
+  private String createDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
   private String startDate;
 

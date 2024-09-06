@@ -5,17 +5,20 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.setPadding
 import com.example.intravel.adapter.DetaiTabFragmentAdapter
 
 
-import com.example.intravel.databinding.ActivityMainBinding
+import com.example.intravel.databinding.ActivitySubmainBinding
 
 import com.google.android.material.tabs.TabLayoutMediator
 
 
 class DetailMainActivity : AppCompatActivity() {
 
-  private lateinit var binding: ActivityMainBinding
+  private lateinit var binding: ActivitySubmainBinding
 //  private lateinit var viewPager2Adapter: MyFragmentAdapter
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,9 +27,14 @@ class DetailMainActivity : AppCompatActivity() {
 
 
     // View binding setup
-    binding = ActivityMainBinding.inflate(layoutInflater)
+    binding = ActivitySubmainBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
+    ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.tablayout)) {v, insets ->
+      val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+      v.setPadding(systemBars.left, systemBars.right, systemBars.top, systemBars.bottom)
+      insets
+    }
 
     // MyFragmentAdapter 설정
     val viewPager2Adapter = DetaiTabFragmentAdapter(this)

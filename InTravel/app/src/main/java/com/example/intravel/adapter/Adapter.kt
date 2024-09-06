@@ -1,12 +1,9 @@
-package com.example.intravel.RecyclerView
+package com.example.intravel.adapter
 
-import android.content.ClipData.Item
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.intravel.R
 import com.example.intravel.databinding.ItemBinding
 
 class Adapter(private val items: List<String>) : RecyclerView.Adapter<Adapter.Holder>() {
@@ -32,6 +29,8 @@ class Adapter(private val items: List<String>) : RecyclerView.Adapter<Adapter.Ho
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.ItemInit(items[position])
+        Log.d("onBindViewHolder :" , items[position])
+
     }
 
 

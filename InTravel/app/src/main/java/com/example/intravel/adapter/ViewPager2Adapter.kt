@@ -1,4 +1,4 @@
-package com.example.intravel
+package com.example.intravel.adapter
 
 
 import android.view.LayoutInflater
@@ -17,7 +17,7 @@ class ViewPager2Adapter(var listData:MutableList<TempData>): RecyclerView.Adapte
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ViewPager2Adapter.ViewHolder {
+    ): ViewHolder {
         return ViewHolder(ItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
@@ -26,7 +26,7 @@ class ViewPager2Adapter(var listData:MutableList<TempData>): RecyclerView.Adapte
     }
 
     // 뷰 홀더 생성하고 여기서 하나씩 붙임
-    override fun onBindViewHolder(holder: ViewPager2Adapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val tab = listData[position]
 //        holder.binding.tvDate1.id

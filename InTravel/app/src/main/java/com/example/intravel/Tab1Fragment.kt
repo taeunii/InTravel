@@ -6,9 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.intravel.RecyclerView.Adapter
+import com.example.intravel.adapter.TabOneApapter
 import com.example.intravel.databinding.FragmentTab1Binding
-import com.example.intravel.databinding.FragmentTab2Binding
 
 class Tab1Fragment : Fragment() {
 
@@ -19,10 +18,11 @@ class Tab1Fragment : Fragment() {
         // Inflate the layout for this fragment
 
         val binding = FragmentTab1Binding.inflate(inflater, container, false)
+        binding.recyclerView.adapter = TabOneApapter(listOf("test1", "test2", "test3"))
 
-        binding.recyclerView.adapter = Adapter(listOf("test1", "test2", "test3"))
+        binding.recyclerView.layoutManager = LinearLayoutManager(activity)
 
-        return inflater.inflate(R.layout.fragment_tab1, container, false)
+       // return inflater.inflate(R.layout.fragment_tab1, container, false)
+        return binding.root
     }
-
 }

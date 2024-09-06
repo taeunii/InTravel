@@ -24,8 +24,6 @@ class DetailMainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-
-
     // View binding setup
     binding = ActivitySubmainBinding.inflate(layoutInflater)
     setContentView(binding.root)
@@ -35,6 +33,16 @@ class DetailMainActivity : AppCompatActivity() {
       v.setPadding(systemBars.left, systemBars.right, systemBars.top, systemBars.bottom)
       insets
     }
+
+    var tId = intent.getLongExtra("tId",0)
+    var tTitle = intent.getStringExtra("tTitle")
+    var dday = intent.getStringExtra("dday")
+    var today = intent.getStringExtra("today")
+
+    binding.headerTitle.text = tTitle
+    binding.mainTitle2.text = dday
+    binding.mainSubtitle.text = today
+
 
     // MyFragmentAdapter 설정
     val viewPager2Adapter = DetaiTabFragmentAdapter(this)

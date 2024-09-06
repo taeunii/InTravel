@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity() {
 
     // 완료
     // cate 의 값이 N인 것만 불러오기
-    binding.butEnd.setOnClickListener {
+    binding.btnEnd.setOnClickListener {
 //      ingList.clear()
 //      for(data in mainList){
 //        if(data.travComplete == 'Y'){
@@ -307,11 +307,12 @@ class MainActivity : AppCompatActivity() {
     mainAdapter.onItemClickListener = object:MainAdapter.OnItemClickListener{
       override fun onItemClick(data: TravelData, dday:String, position: Int) {
 
-        var intent = Intent(this@MainActivity,TestActivity::class.java)
+        var intent = Intent(this@MainActivity,DetailMainActivity::class.java)
 
         intent.putExtra("tId",data.travId) // 메모, 투두리스트 필요
         intent.putExtra("tTitle",data.travTitle) // 서브 상단
         intent.putExtra("dday",dday) // 서브 상단
+        intent.putExtra("today",todayDate)
 
         startActivity(intent)
         overridePendingTransition(R.anim.rightin_activity,R.anim.not_move_activity)

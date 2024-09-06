@@ -2,29 +2,62 @@ package com.example.intravel.adapter
 
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.provider.ContactsContract.Data
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.intravel.R
+import com.example.intravel.TestActivity
 import com.example.intravel.client.Client
 import com.example.intravel.data.MainData
 import com.example.intravel.databinding.CustomDdayBinding
 import com.example.intravel.databinding.ItemMainBinding
 import retrofit2.Call
 import retrofit2.Response
+import java.lang.Integer.parseInt
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 
 class MainAdapter(var mainList: MutableList<MainData>):RecyclerView.Adapter<MainAdapter.MainHolder>() {
 
-    // 디데이 계산은 어댑터에서 해야할 것 같은데.....
-//    fun ddayCal(data: MainData, position: Int):String{
-//
-//        return "${data.startDate}"-"${data.createDate}"
-//    }
+    // 오늘 날짜 활용해야함, 생성일X
+    fun ddayCal(data:MainData):String{
+        var sysDate = Date(System.currentTimeMillis())
+        var dateFormat = SimpleDateFormat("yyyyMMdd")
+        var today = parseInt(dateFormat.format(sysDate)) // 계산하기 위한 int 변환
+
+        var startDate = parseInt(data.startDate)
+
+        var result = startDate-today // 시작 날짜 - 오늘 날짜
+
+        var dday = "" // 반환할 string 값
+
+        // 디데이 +/- 계산
+        if(result <0){
+        // 오늘 > 시작
+            result = -result
+            dday = "+${result}"
+        }
+        else if(result == 0){
+            dday = "-day"
+        }
+        else{
+        // 오늘 < 시작
+            dday = "-${result}"
+        }
+
+        return dday
+    }
+
 
     fun updateData(data:MainData,position: Int){
         mainList[position] = data
@@ -33,6 +66,11 @@ class MainAdapter(var mainList: MutableList<MainData>):RecyclerView.Adapter<Main
 
     fun removeData(position: Int){
         mainList.removeAt(position)
+        notifyDataSetChanged()
+    }
+
+    fun insertData(data:MainData){
+        mainList.add(data)
         notifyDataSetChanged()
     }
     
@@ -48,18 +86,35 @@ class MainAdapter(var mainList: MutableList<MainData>):RecyclerView.Adapter<Main
         val data = mainList.get(position)
         holder.binding.itemTitle.text = data.tTitle
         holder.binding.itemCate.text = data.cate
-        //holder.binding.itemTextview.text = "D"
-        holder.binding.itemDday.text = data.dday.toString()
+        holder.binding.itemDday.text = ddayCal(data) // 디데이는 좀더 생각을
+
+        // 디데이 클릭하면 서브로 넘어가기
+        // 정보만 넘기고 데이터 안 받아와도 됨 아마도??
+        holder.itemView.setOnClickListener {
+            var intent = Intent(it.context,TestActivity::class.java)
+            intent.putExtra("tId",data.tId) // 메모, 투두리스트 필요
+            intent.putExtra("tTitle",data.tTitle) // 서브 상단
+            intent.putExtra("dday",ddayCal(data)) // 서브 상단
+
+            it.context.startActivity(intent)
+        }
+
+
+
+
 
         // 수정
         // 다이얼로그 창 띄우기
-//        val cateData = resources.getStringArray(R.array.cateList)
-//        var cateSelected:String?=null
+        // 카테고리스피너
+        val cateList = mutableListOf("---선택해주세요---","혼자","친구","가족","연인")
+        var cateSelected = data.cate
 
         holder.binding.btnEdt.setOnClickListener{
             val dialogEdit = CustomDdayBinding.inflate(LayoutInflater.from(it.context))
-//            val cateAdapter = ArrayAdapter(it.context,android.R.layout.simple_list_item_1,cateData)
-//            dialogEdit.cateSpinner.adapter = cateAdapter
+
+            // 스피너 어댑터
+            val cateAdapter = ArrayAdapter(it.context,android.R.layout.simple_list_item_1,cateList)
+            dialogEdit.cateSpinner.adapter = cateAdapter
 
             AlertDialog.Builder(it.context).run{
                 setTitle("디데이 수정하기")
@@ -76,16 +131,78 @@ class MainAdapter(var mainList: MutableList<MainData>):RecyclerView.Adapter<Main
 
                 dialogEdit.edtStart.setOnClickListener {
                     dialogEdit.calendarView.setOnDateChangeListener { calendarView, year, month, date ->
-                        dialogEdit.edtStart.setText("${year}.${month+1}.${date}")
+                        var e_month = ""
+                        var e_date = ""
+
+                        // 한자리 수는 0붙여서 나오게
+                        if(month+1 < 10){
+                            e_month = "0${month+1}"
+
+                            if(date < 10){
+                                e_date = "0${date}"
+                            }
+                            else{
+                                e_date = date.toString()
+                            }
+
+                        }else if(month+1 > 10){
+                            e_month = (month+1).toString()
+
+                            if(date < 10){
+                                e_date ="0${date}"
+                            }
+                            else{
+                                e_date =date.toString()
+                            }
+                        }
+
+                        dialogEdit.edtStart.setText("${year}${e_month}${e_date}")
                     }
                 }
 
                 // 마감 날짜를 눌렀을 때 캘린더 활성화
                 dialogEdit.edtEnd.setOnClickListener {
                     dialogEdit.calendarView.setOnDateChangeListener { calendarView, year, month, date ->
-                        dialogEdit.edtEnd.setText("${year}.${month+1}.${date}")
+                        var e_month = ""
+                        var e_date = ""
+
+                        // 한자리 수는 0붙여서 나오게
+                        if(month+1 < 10){
+                            e_month = "0${month+1}"
+
+                            if(date < 10){
+                                e_date = "0${date}"
+                            }
+                            else{
+                                e_date = date.toString()
+                            }
+
+                        }else if(month+1 > 10){
+                            e_month = (month+1).toString()
+
+                            if(date < 10){
+                                e_date ="0${date}"
+                            }
+                            else{
+                                e_date =date.toString()
+                            }
+                        }
+
+                        dialogEdit.edtEnd.setText("${year}${e_month}${e_date}")
                     }
                 }
+
+                dialogEdit.cateSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+                    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                        cateSelected = cateList.get(position)
+                    }
+
+                    override fun onNothingSelected(p0: AdapterView<*>?) {
+                        cateSelected = data.cate
+                    }
+                }
+
+
                 
                 setPositiveButton("확인",object: DialogInterface.OnClickListener{
                     override fun onClick(p0: DialogInterface?, p1: Int) {
@@ -95,10 +212,8 @@ class MainAdapter(var mainList: MutableList<MainData>):RecyclerView.Adapter<Main
                             mainList[position].createDate,
                             dialogEdit.edtStart.text.toString(),
                             dialogEdit.edtEnd.text.toString(),
-                            "cate",
-                            -2,
-                            'Y'
-                        )
+                            cateSelected,
+                            'N')
                         updateData(d,holder.adapterPosition)
 
 //                        // db 연결 버전
@@ -134,12 +249,11 @@ class MainAdapter(var mainList: MutableList<MainData>):RecyclerView.Adapter<Main
                     }//onclick
 
                 })//positive 삭제
-
                 setNegativeButton("취소",null)
                 show()
-            }
-        }
-    }
+            }//dialog
+        }//btnEdt
+    }//onBindViewHolder
 
     override fun getItemCount(): Int {
         return mainList.size

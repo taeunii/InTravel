@@ -21,12 +21,15 @@ import com.example.intravel.databinding.ActivityMainBinding
 import com.example.intravel.databinding.CustomDdayBinding
 import retrofit2.Call
 import retrofit2.Response
+import java.lang.Integer.parseInt
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.parse
 
 class MainActivity : AppCompatActivity() {
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
@@ -39,10 +42,18 @@ class MainActivity : AppCompatActivity() {
       insets
     }
 
+
     // 오늘 날짜 시스템에서 받아오기
-    val format = "yyyy.MM.dd." // 포맷 설정
-    val today = Date(System.currentTimeMillis()) // 현재 시스템 날짜
-    val dateFormat = SimpleDateFormat(format) // 포맷 적용해서 저장
+    // 메인에서 오늘 날짜 출력해야해서 이거 필요함!!!!!!!!!!!!
+    //val format = "yyyy.MM.dd." // 포맷 설정
+    var today = Date(System.currentTimeMillis()) // 현재 시스템 날짜
+    var dateFormat = SimpleDateFormat("yyyy. MM. dd ") // 포맷 적용해서 저장
+
+    // 날짜 포맷 맞춰서 받기
+    val todayDate :String = dateFormat.format(today)
+
+    // 메인에 오늘날짜 출력
+    binding.titleToday.text = todayDate
 
     // 한글 요일 구하는 함수
     fun doDayOfWeek():String?{
@@ -70,10 +81,6 @@ class MainActivity : AppCompatActivity() {
 
     // 한글로 요일 받기
     val korDate:String? = doDayOfWeek()
-    // 날짜 포맷 맞춰서 받기
-    val todayDate :String = dateFormat.format(today)
-
-    binding.titleToday.text = todayDate
     binding.titleDate.text = korDate
 
     // 데이터 생성
@@ -84,9 +91,11 @@ class MainActivity : AppCompatActivity() {
     // db 연결 전 테스트용 데이터 추가
     // + 버튼 누르면 값 디비에 추가 후 리스폰된 값 받아서 화면에 띄움
     // Y 진행중, N 완료됨
-    mainList.add(MainData(0,"일본 여행",todayDate,"2024.08.14","2024.08.20","동생",-6,'Y'))
-    mainList.add(MainData(0,"경주 여행",todayDate,"2024.01.14","2024.01.20","친구",-13,'Y'))
-    mainList.add(MainData(0,"전주 여행",todayDate,"2024.07.03","2024.07.05","동생",+2,'N'))
+    mainList.add(MainData(0,"일본 여행",null,"20240914","20240920","동생",'Y'))
+    mainList.add(MainData(0,"경주 여행",null,"20240903","20240920","친구",'Y'))
+    mainList.add(MainData(0,"전주 여행",null,"20240925","20240930","동생",'N'))
+
+
 
     // 어댑터 생성
     var mainAdapter = MainAdapter(mainList)
@@ -118,7 +127,7 @@ class MainActivity : AppCompatActivity() {
     binding.btnIng.setOnClickListener {
       ingList.clear()
       for(i in 0..mainList.size-1){ // 인덱스는 0부터 시작하니까 크기-1 까지임 ㅠ
-        if (mainList.get(i).tComplete=='Y'){
+        if (mainList.get(i).tComplete=='N'){
           ingList.add(mainList.get(i))
         }
       }
@@ -126,7 +135,7 @@ class MainActivity : AppCompatActivity() {
       mainAdapter.notifyDataSetChanged()
 
         // db연결 버전
-//      Client.retrofit.findComplete('Y').enqueue(object:retrofit2.Callback<List<MainData>>{
+//      Client.retrofit.findComplete('N').enqueue(object:retrofit2.Callback<List<MainData>>{
 //        override fun onResponse(call: Call<List<MainData>>, response: Response<List<MainData>>) {
 //          mainAdapter.mainList.clear() // 어댑터에 있는 데이터 지우고 채우기
 //          mainAdapter.mainList = response.body() as MutableList<MainData>
@@ -146,14 +155,14 @@ class MainActivity : AppCompatActivity() {
     binding.butEnd.setOnClickListener {
       ingList.clear()
       for(data in mainList){
-        if(data.tComplete == 'N'){
+        if(data.tComplete == 'Y'){
           ingList.add(data)
         }
       }
       mainAdapter.mainList = ingList
       mainAdapter.notifyDataSetChanged()
 
-//      Client.retrofit.findComplete('N').enqueue(object:retrofit2.Callback<List<MainData>>{
+//      Client.retrofit.findComplete('Y').enqueue(object:retrofit2.Callback<List<MainData>>{
 //        override fun onResponse(call: Call<List<MainData>>, response: Response<List<MainData>>) {
 //          mainAdapter.mainList.clear() // 어댑터에 있는 데이터 지우고 채우기
 //          mainAdapter.mainList = response.body() as MutableList<MainData>
@@ -170,8 +179,8 @@ class MainActivity : AppCompatActivity() {
 
 
     // 카테고리 데이터
-//    val cateList = listOf("혼자","친구","가족","연인")
-    val cateData = resources.getStringArray(R.array.cateList)
+    val cateList = listOf("---선택해주세요---","혼자","친구","가족","연인")
+//    val cateData = resources.getStringArray(R.array.cateList) // 리소스파일 안쓰고 걍 배열 생성
     var cateSelected:String?=null
 
     // 추가하기 다이얼로그
@@ -180,7 +189,7 @@ class MainActivity : AppCompatActivity() {
       val dialogInsert = CustomDdayBinding.inflate(layoutInflater)
 
       // spinner 드롭다운 어댑터
-      val cateAdapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,cateData)
+      val cateAdapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,cateList)
       dialogInsert.cateSpinner.adapter = cateAdapter
 
       AlertDialog.Builder(this).run{
@@ -195,34 +204,103 @@ class MainActivity : AppCompatActivity() {
         // 출발 날짜를 눌렀을 때 캘린더 활성화
         dialogInsert.edtStart.setOnClickListener {
           dialogInsert.calendarView.setOnDateChangeListener { calendarView, year, month, date ->
-            dialogInsert.edtStart.setText("${year}.${month+1}.${date}")
+            var e_month = ""
+            var e_date = ""
+
+            // 한자리 수는 0붙여서 나오게
+            if(month+1 < 10){
+              e_month = "0${month+1}"
+
+              if(date < 10){
+                e_date = "0${date}"
+              }
+              else{
+                e_date = date.toString()
+              }
+
+            }else if(month+1 > 10){
+              e_month = (month+1).toString()
+
+              if(date < 10){
+                e_date ="0${date}"
+              }
+              else{
+                e_date =date.toString()
+              }
+            }
+
+            dialogInsert.edtStart.setText("${year}${e_month}${e_date}")
           }
         }
 
         // 마감 날짜를 눌렀을 때 캘린더 활성화
         dialogInsert.edtEnd.setOnClickListener {
           dialogInsert.calendarView.setOnDateChangeListener { calendarView, year, month, date ->
-            dialogInsert.edtEnd.setText("${year}.${month+1}.${date}")
+            var e_month = ""
+            var e_date = ""
+
+            // 한자리 수는 0붙여서 나오게
+            if(month+1 < 10){
+              e_month = "0${month+1}"
+
+              if(date < 10){
+                e_date = "0${date}"
+              }
+              else{
+                e_date = date.toString()
+              }
+
+            }else if(month+1 > 10){
+              e_month = (month+1).toString()
+
+              if(date < 10){
+                e_date ="0${date}"
+              }
+              else{
+                e_date =date.toString()
+              }
+            }
+
+            dialogInsert.edtEnd.setText("${year}${e_month}${e_date}")
           }
         }
 
         dialogInsert.cateSpinner.onItemSelectedListener = object:AdapterView.OnItemSelectedListener{
           override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-            cateSelected = cateData.get(position)
+            cateSelected = cateList.get(position)
           }
 
           override fun onNothingSelected(p0: AdapterView<*>?) {
             TODO("Not yet implemented")
           }
-
         }
-        // 어댑터 온클릭으로 열리면 수정 버튼으로 바뀌게
+
         setPositiveButton("확인",object:DialogInterface.OnClickListener{
           override fun onClick(p0: DialogInterface?, p1: Int) {
-            mainList.add(MainData(0, dialogInsert.ddayName.text.toString(),todayDate,dialogInsert.edtStart.text.toString(),dialogInsert.edtEnd.text.toString(),cateSelected,-2,'Y'))
-            mainAdapter!!.notifyDataSetChanged()
-          }
-        })
+            // 디비 들어갈 데이터
+            var d = (MainData(0,
+              dialogInsert.ddayName.text.toString(),
+              null,
+              dialogInsert.edtStart.text.toString(),
+              dialogInsert.edtEnd.text.toString(),
+              cateSelected,
+               null))
+
+            mainAdapter.insertData(d)
+
+            // db 연결 버전
+//            Client.retrofit.insert(d).enqueue(object:retrofit2.Callback<MainData>{
+//              override fun onResponse(call: Call<MainData>, response: Response<MainData>) {
+//                response.body()?.let { it1 -> mainAdapter.insertData(it1) }
+//              }
+//
+//              override fun onFailure(call: Call<MainData>, t: Throwable) {
+//                TODO("Not yet implemented")
+//              }
+//            })//enqueue
+          }//onClick
+
+        })//positiveButon
 
         setNegativeButton("취소",null)
         show()

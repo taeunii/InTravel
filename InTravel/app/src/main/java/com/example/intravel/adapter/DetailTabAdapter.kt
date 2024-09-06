@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.intravel.databinding.ItemBinding
 
-class Adapter(private val items: List<String>) : RecyclerView.Adapter<Adapter.Holder>() {
+class DetailTabAdapter(private val items: List<String>) : RecyclerView.Adapter<DetailTabAdapter.Holder>() {
 
     inner class Holder(val binding:ItemBinding) : RecyclerView.ViewHolder(binding.root){
 

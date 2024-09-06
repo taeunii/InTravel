@@ -1,4 +1,4 @@
-package com.example.intravel
+package com.example.intravel.Fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.intravel.adapter.TabOneApapter
 import com.example.intravel.databinding.FragmentTab1Binding
 
-class Tab1Fragment : Fragment() {
+class DetailTab1Fragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

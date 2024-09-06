@@ -8,7 +8,7 @@ import com.example.intravel.data.TempData
 import com.example.intravel.databinding.ItemBinding
 
 
-class ViewPager2Adapter(var listData:MutableList<TempData>): RecyclerView.Adapter<ViewPager2Adapter.ViewHolder>() {
+class DetailViewPagerAdapter(var listData:MutableList<TempData>): RecyclerView.Adapter<DetailViewPagerAdapter.ViewHolder>() {
     class ViewHolder(val binding: ItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
     }

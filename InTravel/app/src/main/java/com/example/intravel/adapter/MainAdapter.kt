@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import com.example.intravel.R
 import com.example.intravel.TestActivity
 import com.example.intravel.data.TravelData
 import com.example.intravel.databinding.CustomDdayBinding
@@ -16,6 +17,8 @@ import com.example.intravel.databinding.ItemMainBinding
 import java.lang.Integer.parseInt
 import java.text.SimpleDateFormat
 import java.util.Date
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 
 class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<MainAdapter.MainHolder>() {
 
@@ -72,21 +75,22 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
         return MainHolder(ItemMainBinding.inflate(LayoutInflater.from(parent.context),parent,false))
     }
 
+    interface OnItemClickListener{
+        fun onItemClick(data: TravelData,dday:String,position: Int)
+    }
+    var onItemClickListener:OnItemClickListener?=null
+
     override fun onBindViewHolder(holder: MainAdapter.MainHolder, position: Int) {
         val data = mainList.get(position)
+        val dday = ddayCal(data)
         holder.binding.itemTitle.text = data.tTitle
         holder.binding.itemCate.text = data.cate
-        holder.binding.itemDday.text = ddayCal(data) // 디데이는 좀더 생각을
+        holder.binding.itemDday.text = dday // 디데이는 좀더 생각을
 
         // 디데이 클릭하면 서브로 넘어가기
         // 정보만 넘기고 데이터 안 받아와도 됨 아마도??
         holder.itemView.setOnClickListener {
-            var intent = Intent(it.context,TestActivity::class.java)
-            intent.putExtra("tId",data.tId) // 메모, 투두리스트 필요
-            intent.putExtra("tTitle",data.tTitle) // 서브 상단
-            intent.putExtra("dday",ddayCal(data)) // 서브 상단
-
-            it.context.startActivity(intent)
+            onItemClickListener?.onItemClick(data,dday,position)
         }
 
 

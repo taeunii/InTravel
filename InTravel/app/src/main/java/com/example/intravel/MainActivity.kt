@@ -1,6 +1,7 @@
 package com.example.intravel
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.View
@@ -299,6 +300,21 @@ class MainActivity : AppCompatActivity() {
     }// btnAdd
 
     // 인텐트로 서브창 넘어가게 하기 데이터 가지고 갈 필요 X
+
+    mainAdapter.onItemClickListener = object:MainAdapter.OnItemClickListener{
+      override fun onItemClick(data: TravelData, dday:String, position: Int) {
+
+        var intent = Intent(this@MainActivity,TestActivity::class.java)
+
+        intent.putExtra("tId",data.tId) // 메모, 투두리스트 필요
+        intent.putExtra("tTitle",data.tTitle) // 서브 상단
+        intent.putExtra("dday",dday) // 서브 상단
+
+        startActivity(intent)
+        overridePendingTransition(R.anim.rightin_activity,R.anim.not_move_activity)
+      }
+
+    }
 
 
   }// onCreate

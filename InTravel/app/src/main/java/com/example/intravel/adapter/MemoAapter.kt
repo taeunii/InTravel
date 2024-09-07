@@ -1,5 +1,6 @@
 package com.example.intravel.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -19,19 +20,19 @@ class MemoAapter(var memoList: MutableList<Memo>):RecyclerView.Adapter<MemoAapte
     // 추가
     fun addMemo(memo: Memo) {
         memoList.add(memo)
-        notifyDataSetChanged()
+        notifyItemInserted(memoList.size - 1)
     }
 
     // 수정
     fun updateMemo(memo: Memo, position: Int) {
         memoList[position] = memo
-        notifyDataSetChanged()
+        notifyItemChanged(position)
     }
 
     // 삭제
     fun removeMemo(position: Int) {
         memoList.removeAt(position)
-        notifyDataSetChanged()
+        notifyItemRemoved(position)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoAapter.MemoHolder {
@@ -40,12 +41,10 @@ class MemoAapter(var memoList: MutableList<Memo>):RecyclerView.Adapter<MemoAapte
 
     override fun onBindViewHolder(holder: MemoAapter.MemoHolder, position: Int) {
         val memoItem = memoList[position]
-
-        // 초기 데이터 설정
         holder.binding.mTitle.text = memoItem.mTitle
         holder.binding.choiceDate.text = memoItem.choiceDate
 
-        // 수정, 삭제
+        // 수정
         holder.itemView.setOnClickListener {
             onItemClickListener?.onItemClick(memoItem, position)
         }

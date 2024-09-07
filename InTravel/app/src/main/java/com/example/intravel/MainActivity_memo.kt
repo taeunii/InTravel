@@ -2,6 +2,7 @@ package com.example.intravel
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.intravel.adapter.MemoAapter
 import com.example.intravel.client.SubClient
 import com.example.intravel.data.Memo
+import com.example.intravel.data.TodoList
 import com.example.intravel.databinding.ActivityMainMemoBinding
 import retrofit2.Call
 import retrofit2.Response
@@ -18,8 +20,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 class MainActivity_memo : AppCompatActivity() {
-
-    var currentTId: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +34,9 @@ class MainActivity_memo : AppCompatActivity() {
             insets
         }
 
-        currentTId = intent.getLongExtra("T_ID", 0) // 메인 화면에서 전달된 tId
+        var tId = intent.getLongExtra("tId",0)
+        var tStartDate = intent.getStringExtra("tStartDate")
+        var tEndDate = intent.getStringExtra("tEndDate")
 
         // 데이터 및 어댑터 생성, 리사이클러뷰 연결
         val memoList = mutableListOf<Memo>()
@@ -45,11 +47,12 @@ class MainActivity_memo : AppCompatActivity() {
 
         // 전체 memolist 보기 (바로 화면에 보여야함)
         // DB 연결용
-        SubClient.retrofit.findAllMemo().enqueue(object :retrofit2.Callback<List<Memo>> {
+        SubClient.retrofit.findAllMemo(tId).enqueue(object :retrofit2.Callback<List<Memo>> {
             override fun onResponse(call: Call<List<Memo>>, response: Response<List<Memo>>) {
-                memoAdapter.memoList.clear()
-                memoAdapter.memoList = response.body() as MutableList<Memo>
-                memoAdapter.notifyDataSetChanged()
+                if (response.body() != null) {
+                    memoAdapter.memoList = response.body() as MutableList<Memo>
+                    memoAdapter.notifyDataSetChanged()
+                }
             }
             override fun onFailure(call: Call<List<Memo>>, t: Throwable) {
             }
@@ -61,45 +64,62 @@ class MainActivity_memo : AppCompatActivity() {
             if (it.resultCode == RESULT_OK) {
                 val mId = it.data?.getLongExtra("mId", 0)?:0
                 val pos = it.data?.getIntExtra("pos", 0)?:0
-                val mTitle = it.data?.getStringExtra("mTitle")?:""
-                val mContent = it.data?.getStringExtra("mContent")?:""
-                val mCreateDate = it.data?.getStringExtra("mCreateDate")?:""
-                val choiceDate = it.data?.getStringExtra("choiceDate")?:""
+                val button = it.data?.getStringExtra("button")
+
+                val mTitle = it.data?.getStringExtra("mTitle") ?: ""
+                val mContent = it.data?.getStringExtra("mContent") ?: ""
+                val choiceDate = it.data?.getStringExtra("choiceDate") ?: ""
 
                 // 받아온 데이터를 리스트에 추가
-                var newMemo = Memo(0, currentTId, mTitle, mContent, mCreateDate, choiceDate)
-                val button = it.data?.getStringExtra("button")
+                var newMemo = Memo(0, tId, mTitle, mContent, "", choiceDate)
                 if (button == "add") {  // 추가
-                    SubClient.retrofit.insertMemo(newMemo).enqueue(object :retrofit2.Callback<Memo> {
+                    SubClient.retrofit.insertMemo(tId, newMemo).enqueue(object :retrofit2.Callback<Memo> {
                         override fun onResponse(call: Call<Memo>, response: Response<Memo>) {
-                            memoAdapter.addMemo(response.body()!!)
+                            if (response.body() != null) {
+                                memoAdapter.addMemo(response.body()!!)
+                            }
                         }
                         override fun onFailure(call: Call<Memo>, t: Throwable) {
                         }
                     })  //insertMemo
                 }
-                else {  // 수정
+                else if (button == "update") {  // 수정
                     SubClient.retrofit.updateMemo(mId, newMemo).enqueue(object :retrofit2.Callback<Memo> {
                         override fun onResponse(call: Call<Memo>, response: Response<Memo>) {
-                            memoAdapter.updateMemo(newMemo, pos!!)
+                            if (response.body() != null) {
+                                memoAdapter.updateMemo(newMemo, pos!!)
+                            }
                         }
                         override fun onFailure(call: Call<Memo>, t: Throwable) {
                         }
                     })  //updateMemo
                 }
-            }
-            else if (it.resultCode == RESULT_CANCELED) {
+                else if (button == "delete") {  // 삭제
+                    SubClient.retrofit.deleteByIdMemo(mId).enqueue(object :retrofit2.Callback<Void> {
+                        override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                            if (response.body() != null) {
+                                memoAdapter.removeMemo(pos!!)
+                            }
+                        }
+                        override fun onFailure(call: Call<Void>, t: Throwable) {
+                        }
+                    })  //deleteByIdMemo
+                }
+                else if (it.resultCode == RESULT_CANCELED) {
+                }
             }
         }
 
-        // 추가 버튼 클릭 - 리턴 값 있음
+        // 추가 버튼 클릭
         binding.btnMemoAdd.setOnClickListener {
             val intent = Intent(this@MainActivity_memo, MainActivity_memowrite::class.java)
             intent.putExtra("button", "add")
+            intent.putExtra("tStartDate", tStartDate)
+            intent.putExtra("tEndDate", tEndDate)
             activityResultLauncher.launch(intent)
         }
 
-        // 수정, 삭제
+        // 수정
         memoAdapter.onItemClickListener = object :MemoAapter.OnItemClickListener {
             override fun onItemClick(memo: Memo, pos: Int) {
                 val memo = memoAdapter.memoList[pos]
@@ -107,7 +127,7 @@ class MainActivity_memo : AppCompatActivity() {
                 intent.putExtra("mId", memo.mId)
                 intent.putExtra("mTitle", memo.mTitle)
                 intent.putExtra("mContent", memo.mContent)
-                intent.putExtra("mCreateDate", memo.mCreateDate)
+                // intent.putExtra("mCreateDate", memo.mCreateDate)
                 intent.putExtra("choiceDate", memo.choiceDate)
 
                 intent.putExtra("pos", pos)

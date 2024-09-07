@@ -313,6 +313,8 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra("tTitle",data.travTitle) // 서브 상단
         intent.putExtra("dday",dday) // 서브 상단
         intent.putExtra("today",todayDate)
+        intent.putExtra("tStartDate", data.startDate) // 메모 작성 시 필요(메모 작성 날짜 선택)
+        intent.putExtra("tEndDate", data.endDate) // 메모 작성 시 필요(메모 작성 날짜 선택)
 
         startActivity(intent)
         overridePendingTransition(R.anim.rightin_activity,R.anim.not_move_activity)

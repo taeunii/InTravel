@@ -5,4 +5,4 @@ data class Memo(var mId:Long,
                 var mTitle:String,
                 var mContent:String,
                 var mCreateDate:String,
-                var choiceDate:String)
+                var choiceDate:String)  // 선택된 날짜

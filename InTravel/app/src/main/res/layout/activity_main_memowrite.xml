@@ -22,12 +22,12 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnDate" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/mContent"
         android:layout_width="0dp"
-        android:layout_height="400dp"
+        android:layout_height="500dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
@@ -76,18 +76,17 @@
         app:layout_constraintEnd_toStartOf="@+id/btnMemoOk"
         app:layout_constraintTop_toBottomOf="@+id/mContent" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnDate"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="16dp"
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnMemoDate"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:text="여행 날짜 선택"
-        android:textSize="20sp"
-        android:background="#FDF79B"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:scaleType="centerInside"
+        android:src="@drawable/calendar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/mContent"
+        android:contentDescription="@string/memo_date_button_description"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

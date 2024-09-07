@@ -1,5 +1,6 @@
 package com.example.intravel.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -45,7 +46,7 @@ class MemoAapter(var memoList: MutableList<Memo>):RecyclerView.Adapter<MemoAapte
         holder.binding.mTitle.text = memoItem.mTitle
         holder.binding.choiceDate.text = memoItem.choiceDate
 
-        // 수정, 삭제
+        // 수정
         holder.itemView.setOnClickListener {
             onItemClickListener?.onItemClick(memoItem, position)
         }

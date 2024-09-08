@@ -133,28 +133,46 @@ class MainActivity_memowrite : AppCompatActivity() {
 
         // 확인 버튼 클릭
         binding.btnMemoOk.setOnClickListener {
-            if (binding.mTitle.text.toString().isEmpty()) {
-                AlertDialog.Builder(this).apply {
-                    setTitle("경고")
-                    setMessage("타이틀을 입력해주세요.")
-                    setPositiveButton("확인", null)
-                    show()
+            when {
+                binding.mTitle.text.toString().isEmpty() -> {
+                    AlertDialog.Builder(this).apply {
+                        setTitle("경고")
+                        setMessage("제목을 입력해주세요.")
+                        setPositiveButton("확인", null)
+                        show()
+                    }
                 }
-            }
-            else {
-                if (binding.btnMemoOk.text == "UPDATE") {
-                    intent.putExtra("pos", intent.getIntExtra("pos", 0))
-                    intent.putExtra("button", "update")
+                binding.mContent.text.toString().isEmpty() -> {
+                    AlertDialog.Builder(this).apply {
+                        setTitle("경고")
+                        setMessage("내용을 입력해주세요.")
+                        setPositiveButton("확인", null)
+                        show()
+                    }
                 }
-                else {
-                    intent.putExtra("button", "add")
+                dialogMemo.choiceDate.text.toString().isEmpty() -> {
+                    AlertDialog.Builder(this).apply {
+                        setTitle("경고")
+                        setMessage("날짜를 선택해주세요.")
+                        setPositiveButton("확인", null)
+                        show()
+                    }
                 }
-                intent.putExtra("mTitle", binding.mTitle.text.toString())
-                intent.putExtra("mContent", binding.mContent.text.toString())
-                intent.putExtra("choiceDate", selectedDate)  // 선택된 날짜 (다이얼로그에서 선택한 날짜)
+                else -> {
+                    if (binding.btnMemoOk.text == "UPDATE") {
+                        intent.putExtra("pos", intent.getIntExtra("pos", 0))
+                        intent.putExtra("button", "update")
+                    }
+                    else {
+                        intent.putExtra("button", "add")
+                    }
+                    intent.putExtra("mTitle", binding.mTitle.text.toString())
+                    intent.putExtra("mContent", binding.mContent.text.toString())
+                    intent.putExtra("choiceDate", selectedDate)  // 선택된 날짜 (다이얼로그에서 선택한 날짜)
 
-                setResult(RESULT_OK, intent)
-                finish()
+                    setResult(RESULT_OK, intent)
+                    finish()
+                }
             }
         }
 

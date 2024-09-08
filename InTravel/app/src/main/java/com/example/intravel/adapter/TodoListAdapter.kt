@@ -2,6 +2,7 @@ package com.example.intravel.adapter
 
 import android.content.DialogInterface
 import android.graphics.Typeface
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -20,15 +21,15 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
     class TodoHolder(val binding: ItemTodolistBinding):RecyclerView.ViewHolder(binding.root)
 
     // DB 연결용
-//    interface OnItemClickListener {
-//        fun onItemClick(todoItem: TodoList, pos: Int)
-//    }
-//    var onItemClickListener:OnItemClickListener?= null
+    interface OnItemClickListener {
+        fun onItemClick(todoItem: TodoList, pos: Int)
+    }
+    var onItemClickListener:OnItemClickListener?= null
 
     // 추가
     fun addTodoList(todoItem: TodoList) {
         todoList.add(todoItem)
-        notifyDataSetChanged()
+        notifyItemInserted(todoList.size - 1)
     }
 
     // 수정
@@ -54,13 +55,10 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
         // 초기 데이터 설정
         holder.binding.tdContent.setText(todoItem.todoContent)
 
-        // UI 업데이트
-        updateUI(holder, todoItem)
-
         // 완료 여부 클릭 이벤트
         holder.binding.btnTodoListComplete.setOnClickListener {
             todoItem.todoComplete = if (todoItem.todoComplete == 'Y') 'N' else 'Y'
-            updateTodoList(todoItem, position)
+            updateUI(holder, todoItem)
             SubClient.retrofit.updateTodoList(todoItem.todoId, todoItem).enqueue(object :retrofit2.Callback<TodoList> {
                 override fun onResponse(call: Call<TodoList>, response: Response<TodoList>) {
                     if (response.body() != null) {
@@ -70,13 +68,12 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
                 override fun onFailure(call: Call<TodoList>, t: Throwable) {
                 }
             })
-//            updateUI(holder, todoItem)  //DB 연결 전 테스트용 - 추후 삭제
         }
 
         // 중요도 변경 이벤트
         holder.binding.btnTodolistImpo.setOnClickListener {
             todoItem.todoImpo = if (todoItem.todoImpo == 'Y') 'N' else 'Y'
-            updateTodoList(todoItem, position)
+            updateUI(holder, todoItem)
             SubClient.retrofit.updateTodoList(todoItem.todoId, todoItem).enqueue(object :retrofit2.Callback<TodoList> {
                 override fun onResponse(call: Call<TodoList>, response: Response<TodoList>) {
                     if (response.body() != null) {
@@ -86,7 +83,6 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
                 override fun onFailure(call: Call<TodoList>, t: Throwable) {
                 }
             })
-//            updateUI(holder, todoItem)  //DB 연결 전 테스트용 - 추후 삭제
         }
 
         // 삭제 버튼 클릭 이벤트
@@ -98,18 +94,22 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
             // DB 연결용
             AlertDialog.Builder(it.context).run {
                 setTitle("삭제하시겠습니까?")
-                setPositiveButton("삭제", object :DialogInterface.OnClickListener {
-                    override fun onClick(p0: DialogInterface?, p1: Int) {
-                        SubClient.retrofit.deleteByIdTodoList(todoItem.todoId).enqueue(object :retrofit2.Callback<Void> {
-                            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                                removeTodoList(holder.adapterPosition)
+                // DB 연결 전 테스트용 - 추후 삭제
+                setPositiveButton("삭제") { _, _ ->
+                    removeTodoList(holder.adapterPosition)
+                }
+                // DB 연결용
+//                setPositiveButton("삭제", object :DialogInterface.OnClickListener {
+//                    override fun onClick(p0: DialogInterface?, p1: Int) {
+//                        SubClient.retrofit.deleteByIdTodoList(todoItem.todoId).enqueue(object :retrofit2.Callback<Void> {
+//                            override fun onResponse(call: Call<Void>, response: Response<Void>) {
 //                                removeTodoList(holder.adapterPosition)
-                            }
-                            override fun onFailure(call: Call<Void>, t: Throwable) {
-                            }
-                        })  //deleteByIdTodoList
-                    }
-                })  //setPositiveButton
+//                            }
+//                            override fun onFailure(call: Call<Void>, t: Throwable) {
+//                            }
+//                        })  //deleteByIdTodoList
+//                    }
+//                })  //setPositiveButton
                 setNegativeButton("닫기", null)
                 show()
             }
@@ -132,15 +132,14 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 // 수정된 내용을 todoItem에 반영
                 todoItem.todoContent = holder.binding.tdContent.text.toString()
-                updateTodoList(todoItem, position)
-                // 포커스 해제 및 비활성화
-                holder.binding.tdContent.clearFocus()
-                holder.binding.tdContent.isEnabled = false
                 SubClient.retrofit.updateTodoList(todoItem.todoId, todoItem).enqueue(object :retrofit2.Callback<TodoList> {
                     override fun onResponse(call: Call<TodoList>, response: Response<TodoList>) {
                         if (response.isSuccessful) {
                             if (response.body() != null) {
                                 updateTodoList(todoItem, holder.adapterPosition)
+                                // 포커스 해제 및 비활성화
+                                holder.binding.tdContent.clearFocus()
+                                holder.binding.tdContent.isEnabled = false
                             }
                         }
                     }
@@ -154,23 +153,23 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
             }
         }
 
-//        // DB 연결 전 테스트용 - 추후 삭제
-//        // 엔터키로 저장 완료
-//        holder.binding.tdContent.setOnEditorActionListener { _, actionId, _ ->
-//            if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                todoItem.todoContent = holder.binding.tdContent.text.toString()
-//                addTodoList(todoItem)
-//                // 포커스 해제 및 비활성화
-//                holder.binding.tdContent.clearFocus()
-//                holder.binding.tdContent.isEnabled = false
-//                // 데이터 변경 알림
-//                notifyItemChanged(position)
-//                true
-//            }
-//            else {
-//                false
-//            }
-//        }
+        // DB 연결 전 테스트용 - 추후 삭제
+        // 엔터키로 저장 완료
+        holder.binding.tdContent.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                todoItem.todoContent = holder.binding.tdContent.text.toString()
+                addTodoList(todoItem)
+                // 포커스 해제 및 비활성화
+                holder.binding.tdContent.clearFocus()
+                holder.binding.tdContent.isEnabled = false
+                // 데이터 변경 알림
+                notifyItemChanged(position)
+                true
+            }
+            else {
+                false
+            }
+        }
     }
 
     // 상태에 따라 이미지, 텍스트 스타일, 투명도를 업데이트하는 함수

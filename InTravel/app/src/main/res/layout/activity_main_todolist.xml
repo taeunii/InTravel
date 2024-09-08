@@ -31,3 +31,6 @@
         app:layout_constraintTop_toBottomOf="@+id/todoListRecyclerView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+<!-- 추후 문제 없을시 삭제가능 (내용 fragment_todo_list 로 이동함)-->

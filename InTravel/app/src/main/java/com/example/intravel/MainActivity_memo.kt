@@ -19,6 +19,8 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
 
+//////// 추후 문제 없을시 삭제가능 (내용 MemoFragment(Fragment 폴더) 로 이동함)
+
 class MainActivity_memo : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

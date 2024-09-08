@@ -14,36 +14,36 @@ interface SubInterface {
 
     // todolist
     // 전체보기
-    @GET("listAll/{tId}")
+    @GET("todo/listAll/{tId}")
     fun findAllTodoList(@Path("tId") travId:Long): Call<List<TodoList>>
 
     // 추가
-    @POST("save/{tId}")
+    @POST("todo/save/{tId}")
     fun insertTodoList(@Path("tId") travId:Long, @Body todoList: TodoList):Call<TodoList>
 
     // 수정
-    @PUT("update/{tdId}")
+    @PUT("todo/update/{tdId}")
     fun updateTodoList(@Path("tdId") tdId:Long, @Body todoList: TodoList):Call<TodoList>
 
     // 삭제
-    @DELETE("delete/{tdId}")
+    @DELETE("todo/delete/{tdId}")
     fun deleteByIdTodoList(@Path("tdId") tdId: Long):Call<Void>
 
 
     // memo
     // 전체보기
-    @GET("listAll/{tId}")
+    @GET("memo/listAll/{tId}")
     fun findAllMemo(@Path("tId") travId:Long): Call<List<Memo>>
 
     // 추가
-    @POST("save/{tId}")
+    @POST("memo/save/{tId}")
     fun insertMemo(@Path("tId") travId:Long, @Body memo: Memo):Call<Memo>
 
     // 수정
-    @PUT("update/{mId}")
-    fun updateMemo(@Path("mtId") mId:Long, @Body memo: Memo):Call<Memo>
+    @PUT("memo/update/{mId}")
+    fun updateMemo(@Path("mId") mId:Long, @Body memo: Memo):Call<Memo>
 
     // 삭제
-    @DELETE("delete/{mId}")
-    fun deleteByIdMemo(@Path("mtId") mId: Long):Call<Void>
+    @DELETE("memo/delete/{mId}")
+    fun deleteByIdMemo(@Path("mId") mId: Long):Call<Void>
 }

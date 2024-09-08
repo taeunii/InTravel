@@ -14,6 +14,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+//////// 추후 문제 없을시 삭제가능 (내용 TodoListFragment(Fragment 폴더) 로 이동함)
+
 class MainActivity_todolist : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

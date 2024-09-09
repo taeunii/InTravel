@@ -46,4 +46,11 @@ interface SubInterface {
     // 삭제
     @DELETE("memo/delete/{mId}")
     fun deleteByIdMemo(@Path("mId") mId: Long):Call<Void>
+
+
+    // Calculate
+    // 전체보기
+    // 추가
+    // 수정
+    // 삭제
 }

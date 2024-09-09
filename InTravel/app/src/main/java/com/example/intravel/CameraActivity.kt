@@ -1,5 +1,6 @@
 package com.example.intravel
 
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
+    <cache-path
+        name="/"
+        path="/" />
+    <files-path
+        name="/"
+        path="/" />
     <external-path
         name="intravel"
-        path="Android/data/com.example.intravel/files/Pictures" />
+        path="." />
+<!--        path="Android/data/com.example.intravel/files/Pictures" />-->
 </paths>

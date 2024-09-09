@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import com.example.intravel.adapter.DetaiTabFragmentAdapter
 
@@ -41,9 +42,20 @@ class DetailMainActivity : AppCompatActivity() {
     var dday = intent.getStringExtra("dday")
     var today = intent.getStringExtra("today")
 
+    // 완료된 아이템은 디데이말고 기한으로 보이게 하기
+    var travComplete = intent.getCharExtra("travComplete",'a')
+    var tStartDate = intent.getStringExtra("tStartDate")
+    var tEndDate = intent.getStringExtra("tEndDate")
+
     binding.headerTitle.text = tTitle
     binding.mainTitle2.text = dday
     binding.mainSubtitle.text = today
+
+    if(travComplete == 'Y'){
+      binding.frontLayout.isVisible = false
+      binding.compText.isVisible=true
+      binding.compText.text = "${tStartDate}~${tEndDate}"
+    }
 
 
     // MyFragmentAdapter 설정

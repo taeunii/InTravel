@@ -9,7 +9,7 @@ import retrofit2.create
 
 object TempClient {
   val retrofit:TempInterface = Retrofit.Builder()
-    .baseUrl("http://localhost:8811/")
+    .baseUrl("http://10.100.105.208:8811/")
     .addConverterFactory(GsonConverterFactory.create())
     .build()
     .create(TempInterface::class.java)

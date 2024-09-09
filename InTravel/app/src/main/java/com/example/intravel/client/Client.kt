@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object Client {
   val retrofit:TravelInterface = Retrofit.Builder()
-    .baseUrl("http://10.100.105.216:8811/travel/")
+    .baseUrl("http://10.100.105.208:8811/travel/")
     .addConverterFactory(GsonConverterFactory.create())
     .build()
     .create(TravelInterface::class.java)

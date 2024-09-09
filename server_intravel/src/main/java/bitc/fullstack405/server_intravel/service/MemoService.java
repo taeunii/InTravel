@@ -26,16 +26,18 @@ public class MemoService {
 
   @Transactional
   public MemoEntity update(Long memoId, MemoEntity memoEntity) {
+    MemoEntity updateMemo = memoRepository.findById(memoId).get();
 
-    MemoEntity updateMemo = memoRepository.findByMemoId(memoId);
-
-    updateMemo.setMemoContent(memoEntity.getMemoContent());
+    updateMemo.setTravId(memoEntity.getTravId());
     updateMemo.setMemoTitle(memoEntity.getMemoTitle());
+    updateMemo.setMemoContent(memoEntity.getMemoContent());
+    updateMemo.setChoiceDate(memoEntity.getChoiceDate());
 
     return updateMemo;
   }
 
+  @Transactional
   public void deleteByMemoId(Long memoId) {
-    memoRepository.deleteById(memoId);
+    memoRepository.deleteByMemoId(memoId);
   }
 }

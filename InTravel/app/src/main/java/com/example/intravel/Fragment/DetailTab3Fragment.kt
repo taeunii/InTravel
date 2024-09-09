@@ -19,6 +19,3 @@ class DetailTab3Fragment : Fragment() {
         return inflater.inflate(R.layout.fragment_tab3, container, false)
     }
 }
-
-
-

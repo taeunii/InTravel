@@ -9,8 +9,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.setPadding
-import com.example.intravel.adapter.DetaiTabFragmentAdapter
+import com.example.intravel.Fragment.MemoFragment
+import com.example.intravel.Fragment.MemoWriteFragment
+import com.example.intravel.adapter.DetailTabFragmentAdapter
 
 
 import com.example.intravel.databinding.ActivitySubmainBinding
@@ -47,7 +48,7 @@ class DetailMainActivity : AppCompatActivity() {
 
 
     // MyFragmentAdapter 설정
-    val viewPager2Adapter = DetaiTabFragmentAdapter(this)
+    val viewPager2Adapter = DetailTabFragmentAdapter(this)
     binding.viewpager2.adapter = viewPager2Adapter
 
     val tabElement: List<String> = mutableListOf("To-Do", "Memo", "Menu")

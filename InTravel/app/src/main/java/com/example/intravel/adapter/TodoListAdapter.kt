@@ -34,7 +34,6 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
     fun addTodoList(todoItem: TodoList) {
         todoList.add(todoItem)
         notifyDataSetChanged()
-//        notifyItemInserted(todoList.size - 1)
     }
 
     // 수정

@@ -275,7 +275,7 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
         // 오늘 날짜가 enddate 보다 크다면 디비에 tId, Y 전달, 업데이트랑 비슷하게 하면 될듯?
         // 마감 날짜 받아오기
         var endDate = parseInt(data.endDate)
-        if(today == endDate+1){ // 완료 날짜 다음날이면 확인 창
+        if(data.travComplete=='N' && today == endDate+1){ // 완료 날짜 다음날이면 확인 창
             // 여행 완료 됐는지 묻는 창
             AlertDialog.Builder(holder.itemView.context).run{
                 setTitle("여행 완료 여부")

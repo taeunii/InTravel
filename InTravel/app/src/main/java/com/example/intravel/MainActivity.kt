@@ -98,24 +98,22 @@ class MainActivity : AppCompatActivity() {
     binding.recyclerViewMain.layoutManager = LinearLayoutManager(this)
 
     //  *첫화면* 진행중
-//    Client.retrofit.findComplete('N').enqueue(object:retrofit2.Callback<List<TravelData>>{
-//      override fun onResponse(call: Call<List<TravelData>>, response: Response<List<TravelData>>) {
-//        mainAdapter.mainList = response.body() as MutableList<TravelData>
-//        mainAdapter.notifyDataSetChanged()
-//      }
-//
-//      override fun onFailure(call: Call<List<TravelData>>, t: Throwable) {
-//        TODO("Not yet implemented")
-//      }
-//
-//    })
+    Client.retrofit.findComplete('N').enqueue(object:retrofit2.Callback<List<TravelData>>{
+      override fun onResponse(call: Call<List<TravelData>>, response: Response<List<TravelData>>) {
+        mainAdapter.mainList.clear() // 어댑터에 있는 데이터 지우고 채우기
+        mainAdapter.mainList = response.body() as MutableList<TravelData>
+        mainAdapter.notifyDataSetChanged()
+      }
+
+      override fun onFailure(call: Call<List<TravelData>>, t: Throwable) {
+        TODO("Not yet implemented")
+      }
+    })// findComplete
 
 
     // 전체보기
     // 데이터 리스트 불러와서 리사이클러뷰에 붙이기
     binding.btnList.setOnClickListener {
-//      mainAdapter.mainList = mainList
-//      mainAdapter.notifyDataSetChanged()
 
       // db 연결버전
       Client.retrofit.findAll().enqueue(object:retrofit2.Callback<List<TravelData>>{
@@ -155,14 +153,6 @@ class MainActivity : AppCompatActivity() {
     // 완료
     // cate 의 값이 Y인 것만 불러오기
     binding.btnEnd.setOnClickListener {
-//      ingList.clear()
-//      for(data in mainList){
-//        if(data.travComplete == 'Y'){
-//          ingList.add(data)
-//        }
-//      }
-//      mainAdapter.mainList = ingList
-//      mainAdapter.notifyDataSetChanged()
 
       Client.retrofit.findComplete('Y').enqueue(object:retrofit2.Callback<List<TravelData>>{
         override fun onResponse(call: Call<List<TravelData>>, response: Response<List<TravelData>>) {
@@ -322,6 +312,7 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra("today",todayDate)
         intent.putExtra("tStartDate", data.startDate) // 메모 작성 시 필요(메모 작성 날짜 선택)
         intent.putExtra("tEndDate", data.endDate) // 메모 작성 시 필요(메모 작성 날짜 선택)
+        intent.putExtra("travComplete",data.travComplete) // 완료 여부 전달
 
         startActivity(intent)
         overridePendingTransition(R.anim.rightin_activity,R.anim.not_move_activity)

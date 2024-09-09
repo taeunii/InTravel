@@ -1,8 +1,10 @@
 package com.example.intravel
 
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -56,6 +58,8 @@ class DetailMainActivity : AppCompatActivity() {
         val textView = TextView(this@DetailMainActivity)
         textView.text = tabElement[position]
         tab.customView = textView
+        textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+        textView.setTypeface(textView.typeface, Typeface.BOLD)
 //        tab.text. = View.TEXT_ALIGNMENT_CENTER
       }.attach()
     } catch (e: Exception) {

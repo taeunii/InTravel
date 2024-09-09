@@ -35,6 +35,7 @@ public class TodoService {
     return updateTodo;
   }
 
+  @Transactional
   public void deleteByTodoId(Long todoId) {
     todoRepository.deleteByTodoId(todoId);
   }

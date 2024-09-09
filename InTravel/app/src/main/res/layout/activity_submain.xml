@@ -15,15 +15,28 @@
             android:background="@color/yellow400">
 
             <!-- Left Icon -->
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/icon_left"
-                android:layout_width="38dp"
-                android:layout_height="31dp"
-                android:src="?attr/homeAsUpIndicator"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@android:color/black" />
+                app:layout_constraintVertical_bias="0.666"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                android:src="@drawable/home" />
+
+<!--            기존 아이콘-->
+<!--            <ImageView-->
+<!--                android:id="@+id/icon_left"-->
+<!--                android:layout_width="38dp"-->
+<!--                android:layout_height="31dp"-->
+<!--                android:src="?attr/homeAsUpIndicator"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:tint="@android:color/black" />-->
 
             <!-- Title -->
             <TextView
@@ -42,16 +55,29 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Right Icon -->
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/icon_right"
-                android:layout_width="29dp"
-                android:layout_height="23dp"
-                android:src="@drawable/baseline_edit_24"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.666"
-                app:tint="@android:color/black" />
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                android:src="@drawable/edit" />
+
+<!--            기존 아이콘-->
+<!--            <ImageView-->
+<!--                android:id="@+id/icon_right"-->
+<!--                android:layout_width="29dp"-->
+<!--                android:layout_height="23dp"-->
+<!--                android:src="@drawable/baseline_edit_24"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintVertical_bias="0.666"-->
+<!--                app:tint="@android:color/black" />-->
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Main Content -->

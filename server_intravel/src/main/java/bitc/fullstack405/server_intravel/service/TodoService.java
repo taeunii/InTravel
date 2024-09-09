@@ -25,8 +25,10 @@ public class TodoService {
 
   @Transactional
   public TodoEntity update(Long todoId, TodoEntity todoEntity) {
-    TodoEntity updateTodo = todoRepository.findByTodoIdAndTravId(todoEntity.getTodoId(), todoId);
+    TodoEntity updateTodo = todoRepository.findById(todoId).get();
 
+    updateTodo.setTravId(todoEntity.getTravId());
+    updateTodo.setTodoComplete(todoEntity.getTodoComplete());
     updateTodo.setTodoImpo(todoEntity.getTodoImpo());
     updateTodo.setTodoContent(todoEntity.getTodoContent());
 

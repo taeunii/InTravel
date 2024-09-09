@@ -32,7 +32,7 @@ interface SubInterface {
 
     // memo
     // 전체보기
-    @GET("memo/listAll/{tId}")
+    @GET("memo/list/{tId}")
     fun findAllMemo(@Path("tId") travId:Long): Call<List<Memo>>
 
     // 추가

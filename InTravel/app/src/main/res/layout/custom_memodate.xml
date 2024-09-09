@@ -19,7 +19,7 @@
             android:id="@+id/choiceDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="YYYY-MM-DD"
+            android:hint="YYYY.MM.DD"
             android:textAlignment="center"
             android:textSize="20sp" />
 

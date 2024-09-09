@@ -13,5 +13,7 @@ public interface MemoRepository extends JpaRepository<MemoEntity, Long> {
 
   MemoEntity findByMemoId(Long memoId);
 
+  void deleteByMemoId(Long memoId);
+
   void deleteByTravId(Long travelId);
 }

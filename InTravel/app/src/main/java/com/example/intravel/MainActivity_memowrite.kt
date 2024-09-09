@@ -136,7 +136,7 @@ class MainActivity_memowrite : AppCompatActivity() {
             when {
                 binding.mTitle.text.toString().isEmpty() -> {
                     AlertDialog.Builder(this).apply {
-                        setTitle("경고")
+//                        setTitle("경고")
                         setMessage("제목을 입력해주세요.")
                         setPositiveButton("확인", null)
                         show()
@@ -144,7 +144,7 @@ class MainActivity_memowrite : AppCompatActivity() {
                 }
                 binding.mContent.text.toString().isEmpty() -> {
                     AlertDialog.Builder(this).apply {
-                        setTitle("경고")
+//                        setTitle("경고")
                         setMessage("내용을 입력해주세요.")
                         setPositiveButton("확인", null)
                         show()
@@ -152,7 +152,7 @@ class MainActivity_memowrite : AppCompatActivity() {
                 }
                 dialogMemo.choiceDate.text.toString().isEmpty() -> {
                     AlertDialog.Builder(this).apply {
-                        setTitle("경고")
+//                        setTitle("경고")
                         setMessage("날짜를 선택해주세요.")
                         setPositiveButton("확인", null)
                         show()
@@ -184,8 +184,8 @@ class MainActivity_memowrite : AppCompatActivity() {
 
         binding.btnMemoDelete.setOnClickListener {
             AlertDialog.Builder(this).apply {
-                setTitle("삭제")
-                setMessage("정말로 이 메모를 삭제하시겠습니까?")
+//                setTitle("삭제")
+                setMessage("삭제하시겠습니까?")
                 setPositiveButton("삭제") { _, _ ->
                     val memoId = intent.getLongExtra("mId", 0)
                     if (memoId != 0L) {

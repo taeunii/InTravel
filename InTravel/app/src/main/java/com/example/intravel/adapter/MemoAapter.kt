@@ -20,19 +20,19 @@ class MemoAapter(var memoList: MutableList<Memo>):RecyclerView.Adapter<MemoAapte
     // 추가
     fun addMemo(memo: Memo) {
         memoList.add(memo)
-        notifyItemInserted(memoList.size - 1)
+        notifyDataSetChanged()
     }
 
     // 수정
     fun updateMemo(memo: Memo, position: Int) {
         memoList[position] = memo
-        notifyItemChanged(position)
+        notifyDataSetChanged()
     }
 
     // 삭제
     fun removeMemo(position: Int) {
         memoList.removeAt(position)
-        notifyItemRemoved(position)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoAapter.MemoHolder {
@@ -41,7 +41,11 @@ class MemoAapter(var memoList: MutableList<Memo>):RecyclerView.Adapter<MemoAapte
 
     override fun onBindViewHolder(holder: MemoAapter.MemoHolder, position: Int) {
         val memoItem = memoList[position]
-        holder.binding.mTitle.text = memoItem.mTitle
+
+        // 초기 데이터 설정
+//        holder.binding.mTitle.setText(memoItem.memoTitle)
+//        holder.binding.choiceDate.setText(memoItem.choiceDate)
+        holder.binding.mTitle.text = memoItem.memoTitle
         holder.binding.choiceDate.text = memoItem.choiceDate
 
         // 수정

@@ -39,6 +39,26 @@
             android:text="2024.00.00"
             android:textSize="20sp" />
 
+<!--        <TextView-->
+<!--            android:id="@+id/mTitle"-->
+<!--            android:layout_width="250dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:layout_marginStart="15dp"-->
+<!--            android:gravity="center|start"-->
+<!--            android:text="메모 제목"-->
+<!--            android:textSize="20sp" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/choiceDate"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="end|bottom"-->
+<!--            android:layout_marginEnd="15dp"-->
+<!--            android:layout_marginBottom="10dp"-->
+<!--            android:text="2024.00.00"-->
+<!--            android:textSize="16sp" />-->
+
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

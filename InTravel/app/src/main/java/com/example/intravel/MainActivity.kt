@@ -97,6 +97,20 @@ class MainActivity : AppCompatActivity() {
     binding.recyclerViewMain.adapter = mainAdapter
     binding.recyclerViewMain.layoutManager = LinearLayoutManager(this)
 
+    //  *첫화면* 진행중
+//    Client.retrofit.findComplete('N').enqueue(object:retrofit2.Callback<List<TravelData>>{
+//      override fun onResponse(call: Call<List<TravelData>>, response: Response<List<TravelData>>) {
+//        mainAdapter.mainList = response.body() as MutableList<TravelData>
+//        mainAdapter.notifyDataSetChanged()
+//      }
+//
+//      override fun onFailure(call: Call<List<TravelData>>, t: Throwable) {
+//        TODO("Not yet implemented")
+//      }
+//
+//    })
+
+
     // 전체보기
     // 데이터 리스트 불러와서 리사이클러뷰에 붙이기
     binding.btnList.setOnClickListener {
@@ -117,17 +131,10 @@ class MainActivity : AppCompatActivity() {
       })// findAll
     } // btnList
 
-    // 진행중 *첫화면*
-    // cate 의 값이 Y 인 것만 데이터로 보내기
+
+    // 진행중
+    // cate 의 값이 N 인 것만 데이터로 보내기
     binding.btnIng.setOnClickListener {
-//      ingList.clear()
-//      for(i in 0..mainList.size-1){ // 인덱스는 0부터 시작하니까 크기-1 까지임 ㅠ
-//        if (mainList.get(i).travComplete =='N'){
-//          ingList.add(mainList.get(i))
-//        }
-//      }
-//      mainAdapter.mainList = ingList // 어댑터에 있는 데이터 바꿔야함
-//      mainAdapter.notifyDataSetChanged()
 
         // db연결 버전
       Client.retrofit.findComplete('N').enqueue(object:retrofit2.Callback<List<TravelData>>{
@@ -146,7 +153,7 @@ class MainActivity : AppCompatActivity() {
 
 
     // 완료
-    // cate 의 값이 N인 것만 불러오기
+    // cate 의 값이 Y인 것만 불러오기
     binding.btnEnd.setOnClickListener {
 //      ingList.clear()
 //      for(data in mainList){

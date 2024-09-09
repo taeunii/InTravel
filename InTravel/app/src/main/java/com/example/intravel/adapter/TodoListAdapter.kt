@@ -8,10 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.intravel.MainActivity
 import com.example.intravel.R
 import com.example.intravel.client.SubClient
 import com.example.intravel.data.TodoList
@@ -88,13 +90,18 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
 //            todoItem.todoImpo = if (holder.binding.btnTodolistImpo.drawable.constantState == ContextCompat.getDrawable(holder.binding.btnTodolistImpo.context, R.drawable.star_outline)?.constantState) { 'N' }
 //            else { 'Y' }
 
+            var todos = TodoList(todoItem.todoId,todoItem.travId,holder.binding.tdContent.text.toString(),'N','N')
+
             // 서버에 데이터 업데이트 요청
-            SubClient.retrofit.updateTodoList(todoItem.todoId, todoItem).enqueue(object : retrofit2.Callback<TodoList> {
+            SubClient.retrofit.updateTodoList(todos.todoId, todos).enqueue(object : retrofit2.Callback<TodoList> {
                 override fun onResponse(call: Call<TodoList>, response: Response<TodoList>) {
+                    Log.d("todo update","${response.body()}")
                     response.body()?.let { updateItem -> updateTodoList(updateItem, holder.adapterPosition) }
+
                 }
                 override fun onFailure(call: Call<TodoList>, t: Throwable) {
                     // 실패 처리
+//                    Log.d("")
                 }
             })
             holder.binding.tdContent.clearFocus()

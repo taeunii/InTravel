@@ -41,6 +41,7 @@ public class TodoController {
 //  To do list 수정
   @PutMapping("update/{tdId}")
   public TodoEntity update(@PathVariable("tdId") Long todoId, @RequestBody TodoEntity todoEntity) {
+    System.out.println(todoId);
     return todoService.update(todoId, todoEntity);
   }
 

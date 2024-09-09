@@ -46,9 +46,9 @@ class DetailMainActivity : AppCompatActivity() {
     binding.mainSubtitle.text = today
 
 
-    // MyFragmentAdapter 설정
-    val viewPager2Adapter = DetaiTabFragmentAdapter(this)
-    binding.viewpager2.adapter = viewPager2Adapter
+//    // MyFragmentAdapter 설정
+//    val viewPager2Adapter = DetaiTabFragmentAdapter(this)
+//    binding.viewpager2.adapter = viewPager2Adapter
 
     val tabElement: List<String> = mutableListOf("To-Do", "Memo", "Menu")
 

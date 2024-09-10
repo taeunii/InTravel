@@ -1,6 +1,7 @@
 package com.example.intravel.`interface`
 
 import com.example.intravel.data.Memo
+import com.example.intravel.data.MoneyData
 import com.example.intravel.data.TodoList
 import retrofit2.Call
 import retrofit2.http.Body
@@ -48,9 +49,10 @@ interface SubInterface {
     fun deleteByIdMemo(@Path("mId") mId: Long):Call<Void>
 
 
-    // Calculate
+    // Money
     // 전체보기
     // 추가
+    fun insertMoney(@Path("tId") travId: Long, @Body money:MoneyData):Call<MoneyData>
     // 수정
     // 삭제
 }

@@ -16,6 +16,12 @@ import com.example.intravel.databinding.ItemMoneyBinding
 
 
 class MoneyAdapter(var moneyList:MutableList<MoneyData>):RecyclerView.Adapter<MoneyAdapter.Holder>() {
+
+    fun insertMoney(money: MoneyData){
+        moneyList.add(money)
+        notifyDataSetChanged()
+    }
+
     class Holder(val binding: ItemMoneyBinding):RecyclerView.ViewHolder(binding.root) {
 
     }
@@ -37,6 +43,7 @@ class MoneyAdapter(var moneyList:MutableList<MoneyData>):RecyclerView.Adapter<Mo
 
         holder.itemView.setOnClickListener {
             onItemClickListener!!.onItemClick(money,position)
+//            var intent = Intent(require)
         }
     }
 

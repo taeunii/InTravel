@@ -16,6 +16,7 @@ import com.example.intravel.databinding.ItemMainBinding
 import retrofit2.Call
 import retrofit2.Response
 import java.lang.Integer.parseInt
+import java.text.Format
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -93,14 +94,22 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
     override fun onBindViewHolder(holder: MainAdapter.MainHolder, position: Int) {
         val data = mainList.get(position)
         val dday = ddayCal(data)
+        // 2 0 2 4 0 9 0 1
+        // 0 1 2 3 4 5 6 7
+        var sYear = data.startDate.substring(0,4) // 2024
+        var sMonth = data.startDate.substring(4,6) // 09
+        var sDay = data.startDate.substring(6) // 01
 
+        var eYear = data.endDate.substring(0,4) // 2024
+        var eMonth = data.endDate.substring(4,6) // 09
+        var eDay = data.endDate.substring(6) // 01
 
         if(data.travComplete == 'Y'){
             holder.binding.frontLayout.isVisible = false
             holder.binding.completeLayout.isVisible = true
             //holder.binding.itemTextview.isVisible = false // 장소까지 숨김
             holder.binding.comTitle.text = data.travTitle
-            holder.binding.comPeriod.text = "${data.startDate}~${data.endDate}"
+            holder.binding.comPeriod.text = "$sYear.$sMonth.$sDay~$eYear.$eMonth.$eDay"
             holder.binding.comCate.text = "같이 갔던 사람 : ${data.cate}"
 
         }else{

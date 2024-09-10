@@ -51,10 +51,19 @@ class DetailMainActivity : AppCompatActivity() {
     binding.mainTitle2.text = dday
     binding.mainSubtitle.text = today
 
+    var sYear = tStartDate!!.substring(0,4) // 2024
+    var sMonth = tStartDate!!.substring(4,6) // 09
+    var sDay = tStartDate!!.substring(6) // 01
+
+    var eYear = tEndDate!!.substring(0,4) // 2024
+    var eMonth = tEndDate!!.substring(4,6) // 09
+    var eDay = tEndDate!!.substring(6) // 01
+
+
     if(travComplete == 'Y'){
       binding.frontLayout.isVisible = false
       binding.compText.isVisible=true
-      binding.compText.text = "${tStartDate}~${tEndDate}"
+      binding.compText.text = "$sYear.$sMonth.$sDay~$eYear.$eMonth.$eDay"
     }
 
 

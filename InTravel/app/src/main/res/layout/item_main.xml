@@ -13,17 +13,19 @@
         android:id="@+id/frontLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/itemTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
+            android:maxLines="2"
             android:text="title"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -35,7 +37,7 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
             android:text="같이 가는 사람 : "
@@ -86,41 +88,41 @@
             app:layout_constraintHorizontal_bias="0.849"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/completeLayout"
-        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/comTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="230dp"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
-            android:layout_marginStart="32dp"
-            />
+            android:textSize="20sp"
+            android:maxLines="2"/>
 
         <TextView
             android:id="@+id/comPeriod"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:layout_marginStart="32dp"/>
+            android:layout_marginStart="24dp"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/comCate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginStart="32dp"
-            />
+            android:layout_marginStart="24dp"
+            android:layout_marginBottom="16dp" />
 
     </LinearLayout>
 
@@ -128,15 +130,15 @@
         android:id="@+id/btnEdt"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="18dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:scaleType="centerInside"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/edit" />
+        android:src="@drawable/edit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-<!--    기존 아이콘 -->
+    <!--    기존 아이콘 -->
 <!--    <ImageButton-->
 <!--        android:id="@+id/btnEdt"-->
 <!--        android:layout_width="44dp"-->

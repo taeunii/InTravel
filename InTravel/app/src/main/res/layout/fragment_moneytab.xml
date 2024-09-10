@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/moneyTabFragment"
     tools:context=".Fragment.MoneyTabFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -10,7 +11,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/moneyRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="640dp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnMoneyAdd"
@@ -23,5 +24,6 @@
         android:text="+"
         android:textSize="30sp"
         android:layout_gravity="bottom"/>
+
 
 </FrameLayout>

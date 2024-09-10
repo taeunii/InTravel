@@ -14,7 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.InTravel"
         android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="31">
+        <!--enableOnBackInvokedCallback 프래그먼트 작업 중 추가-->
         <activity
             android:name=".MainActivity_memowrite"
             android:exported="false" />

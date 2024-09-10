@@ -255,7 +255,7 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
                     } // onclick
                 }) // positive 확인
 
-                // positive 버튼 한개 더 만들어서 삭제로 하면..
+                // positive 버튼 한개 더 만들어서 삭제로 하면 위치가 똑같고 얘 쓰면 왼쪽 끝에 나옴
                 setNeutralButton("삭제",object:DialogInterface.OnClickListener{
                     override fun onClick(p0: DialogInterface?, p1: Int) {
 //                        removeData(holder.adapterPosition)
@@ -269,11 +269,10 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
                             override fun onFailure(call: Call<Void>, t: Throwable) {
                                 TODO("Not yet implemented")
                             }
-
                         })//enqueu
                     }//onclick
+                })//Neutral 삭제
 
-                })//positive 삭제
                 setNegativeButton("취소",null)
                 show()
             }//dialog

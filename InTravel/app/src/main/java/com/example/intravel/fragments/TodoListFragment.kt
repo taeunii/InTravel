@@ -49,9 +49,16 @@ class TodoListFragment : Fragment() {
         // 서버에서 todoList 가져오기
         SubClient.retrofit.findAllTodoList(tId).enqueue(object : Callback<List<TodoList>> {
             override fun onResponse(call: Call<List<TodoList>>, response: Response<List<TodoList>>) {
-                response.body()?.let {
-                    todoListAdapter.todoList = it.toMutableList()
+                response.body()?.let { todos ->
+                    // 완료 여부에 따라 정렬 (완료된 항목을 맨 아래로 이동)
+                    val sortedTodos = todos.sortedWith(compareBy({ it.todoComplete == 'Y' }, { it.todoId }))
+
+                    // 어댑터에 정렬된 리스트 설정
+                    todoListAdapter.todoList = sortedTodos.toMutableList()
                     todoListAdapter.notifyDataSetChanged()
+
+//                    todoListAdapter.todoList = it.toMutableList()
+//                    todoListAdapter.notifyDataSetChanged()
                 }
             }
             override fun onFailure(call: Call<List<TodoList>>, t: Throwable) {

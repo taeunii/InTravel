@@ -51,7 +51,6 @@ class MemoFragment : Fragment() {
         val tStartDate = activity?.intent?.getStringExtra("tStartDate")
         val tEndDate = activity?.intent?.getStringExtra("tEndDate")
 
-
         // StartDate와 EndDate를 Date 객체로 변환
         val startDate: Date = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).parse(tStartDate) ?: Date()
         val endDate: Date = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).parse(tEndDate) ?: Date()
@@ -60,7 +59,7 @@ class MemoFragment : Fragment() {
 
         // 데이터 및 어댑터 생성, 리사이클러뷰 연결
         val memoList = mutableListOf<Memo>()
-        memoAdapter = MemoAapter(memoList)
+        memoAdapter = MemoAapter(memoList, tStartDate, tEndDate)
         binding.memoRecyclerView.adapter = memoAdapter
         binding.memoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -77,7 +76,7 @@ class MemoFragment : Fragment() {
             }
         })  //findAllMemo
 
-        // 추가 버튼 (다이얼로그 창)
+        // 메모 추가 버튼 (다이얼로그 창)
         binding.btnMemoAdd.setOnClickListener {
             val addDialog = CustomMemowriteBinding.inflate(layoutInflater)
             val memoWriteDialog = CustomMemodateBinding.inflate(layoutInflater)
@@ -131,8 +130,6 @@ class MemoFragment : Fragment() {
                     }
                 }   //btnMemoDate
 
-
-
                 setPositiveButton("확인", object :DialogInterface.OnClickListener {
                     override fun onClick(p0: DialogInterface?, p1: Int) {
                         val memoItem = Memo(0,
@@ -155,89 +152,5 @@ class MemoFragment : Fragment() {
                 show()
             }
         }
-
-
-//        // 메모 수정
-//        memoAdapter.onItemClickListener = object :MemoAapter.OnItemClickListener {
-//            override fun onItemClick(memo: Memo, pos: Int) {
-//                val editDialog = CustomMemowriteBinding.inflate(layoutInflater)
-//                val memoWriteDialog = CustomMemodateBinding.inflate(layoutInflater)
-//
-//                // 기존 메모 정보를 다이얼로그에 설정
-//                editDialog.edtTitle.setText(memo.memoTitle)
-//                editDialog.edtContent.setText(memo.memoContent)
-//                editDialog.MemoDate.setText(memo.choiceDate)
-//
-//                AlertDialog.Builder(requireContext()).run {
-//                    setTitle("여행 메모 수정")
-//                    setView(editDialog.root)
-//
-//                    // 캘린더 클릭시 다이얼로그
-//                    editDialog.btnMemoDate.setOnClickListener {
-//                        AlertDialog.Builder(requireContext()).run {
-//                            setTitle("여행 날짜 선택")
-//                            setView(memoWriteDialog.root)
-//
-//                            // 캘린더에서 선택 가능한 날짜 범위 설정
-//                            memoWriteDialog.memoCalendarView.minDate = startDate.time
-//                            memoWriteDialog.memoCalendarView.maxDate = endDate.time
-//
-//                            val selectedDate = memo.choiceDate
-//                            if (selectedDate.isNotEmpty()) {
-//                                val dateParts = selectedDate.split(".")
-//                                if (dateParts.size == 3) {
-//                                    val year = dateParts[0].toInt()
-//                                    val month = dateParts[1].toInt() - 1
-//                                    val day = dateParts[2].toInt()
-//
-//                                    val calendar = Calendar.getInstance()
-//                                    calendar.set(year, month, day)
-//                                    memoWriteDialog.memoCalendarView.date = calendar.timeInMillis
-//                                }
-//                            }
-//
-//                            // 캘린더 날짜 선택 시 하부에 선택된 날짜 표현
-//                            memoWriteDialog.memoCalendarView.setOnDateChangeListener { calendarView, year, month, date  ->
-//                                var m_month = if (month + 1 < 10) "0${month + 1}" else "${month + 1}"
-//                                var m_date = if (date < 10) "0${date}" else "$date"
-//                                val newSelecteddate = "$year.$m_month.$m_date"  // YYYY.MM.DD 형식
-//                                memoWriteDialog.choiceDate.setText(newSelecteddate)
-//                            }
-//
-//                            setPositiveButton("확인", object :DialogInterface.OnClickListener {
-//                                override fun onClick(p0: DialogInterface?, p1: Int) {
-//                                    val updateDate = memoWriteDialog.choiceDate.text.toString()
-//                                    editDialog.MemoDate.setText(updateDate)
-//                                }
-//                            })
-//                            setNegativeButton("취소", null)
-//                            show()
-//                        }
-//                    }   //btnMemoDate
-//
-//                    setPositiveButton("확인", object :DialogInterface.OnClickListener {
-//                        override fun onClick(p0: DialogInterface?, p1: Int) {
-//                            val memoItem = Memo(memo.memoId,
-//                                memo.travId,
-//                                editDialog.edtTitle.text.toString(),
-//                                editDialog.edtContent.text.toString(),
-//                                editDialog.MemoDate.text.toString(),
-//                                "")
-//                            SubClient.retrofit.updateMemo(memoItem.memoId, memoItem).enqueue(object :retrofit2.Callback<Memo> {
-//                                override fun onResponse(call: Call<Memo>, response: Response<Memo>) { response.body()?.let { updateItem -> memoAdapter.updateMemo(updateItem, pos) }
-//
-//                                }
-//                                override fun onFailure(call: Call<Memo>, t: Throwable) {
-//                                }
-//                            })
-//                        }
-//                    })  //setPositiveButton
-//                    setNegativeButton("취소", null)
-//                    show()
-//                }
-//            }
-//        }
-
-
     }
 }

@@ -33,8 +33,21 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
 
     // 수정
     fun updateTodoList(todoItem: TodoList, position: Int) {
-        todoList[position] = todoItem
-        notifyDataSetChanged()
+        // 기존 항목을 제거
+        todoList.removeAt(position)
+
+        // 완료 여부에 따라 새 위치 결정
+        val newPosition = if (todoItem.todoComplete == 'Y') {
+            todoList.size  // 완료된 항목을 리스트의 맨 아래로 이동
+        }
+        else {
+            // 완료되지 않은 항목을 `todoId` 순서에 맞게 재배치
+            todoList.indexOfFirst { it.todoId > todoItem.todoId }.takeIf { it >= 0 } ?: todoList.size
+        }
+
+        // 새 위치에 항목 추가
+        todoList.add(newPosition, todoItem)
+        notifyDataSetChanged()  // RecyclerView에 변경 사항 알림
     }
 
     // 삭제

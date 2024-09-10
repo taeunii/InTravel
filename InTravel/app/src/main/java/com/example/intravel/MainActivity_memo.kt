@@ -40,7 +40,8 @@ class MainActivity_memo : AppCompatActivity() {
 
         // 데이터 및 어댑터 생성, 리사이클러뷰 연결
         val memoList = mutableListOf<Memo>()
-        val memoAdapter = MemoAapter(memoList)
+//        val memoAdapter = MemoAapter(memoList)
+        val memoAdapter = MemoAapter(memoList, tStartDate, tEndDate)
         binding.memoRecyclerView.adapter = memoAdapter
         binding.memoRecyclerView.layoutManager = LinearLayoutManager(this)
 

@@ -21,7 +21,6 @@ public class MemoService {
 
   public MemoEntity save(Long travId, MemoEntity memoEntity) {
     memoEntity.setTravId(travId);
-    System.out.println(memoEntity.getMemoContent());
     return memoRepository.save(memoEntity);
   }
 

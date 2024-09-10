@@ -1,4 +1,4 @@
-package com.example.intravel.Fragment
+package com.example.intravel.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,8 +8,6 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.intravel.adapter.TabOneApapter
 import com.example.intravel.adapter.TodoListAdapter
 import com.example.intravel.client.SubClient
 import com.example.intravel.data.TodoList

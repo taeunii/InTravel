@@ -25,11 +25,6 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
 
     class TodoHolder(val binding: ItemTodolistBinding):RecyclerView.ViewHolder(binding.root)
 
-//    interface OnItemClickListener{
-//        fun onItemClick(todoItem: TodoList, position: Int)
-//    }
-//    var onItemClickListener:OnItemClickListener?= null
-
     // 추가
     fun addTodoList(todoItem: TodoList) {
         todoList.add(todoItem)

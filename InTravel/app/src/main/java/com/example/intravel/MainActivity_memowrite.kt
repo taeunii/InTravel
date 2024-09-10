@@ -36,8 +36,8 @@ class MainActivity_memowrite : AppCompatActivity() {
             insets
         }
 
-        var tStartDate = intent.getStringExtra("tStartDate")?:"2024.01.01"
-        var tEndDate = intent.getStringExtra("tEndDate")?:"2024.12.31"
+        var tStartDate = intent.getStringExtra("tStartDate")
+        var tEndDate = intent.getStringExtra("tEndDate")
 
         // SimpleDateFormat을 사용해 String -> Date 변환
         val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())

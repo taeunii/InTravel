@@ -9,8 +9,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.intravel.Fragment.MemoFragment
-import com.example.intravel.Fragment.MemoWriteFragment
 import com.example.intravel.adapter.DetailTabFragmentAdapter
 
 
@@ -58,9 +56,9 @@ class DetailMainActivity : AppCompatActivity() {
       TabLayoutMediator(binding.tablayout, binding.viewpager2) { tab, position ->
         val textView = TextView(this@DetailMainActivity)
         textView.text = tabElement[position]
+        tab.customView = textView
         textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
         textView.setTypeface(textView.typeface, Typeface.BOLD)
-        tab.customView = textView
 //        tab.text. = View.TEXT_ALIGNMENT_CENTER
       }.attach()
     } catch (e: Exception) {

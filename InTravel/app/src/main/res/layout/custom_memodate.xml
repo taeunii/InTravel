@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -11,18 +12,41 @@
         android:layout_marginTop="30dp"
         android:layout_marginBottom="30dp"/>
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/choiceDate"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:hint="YYYY.MM.DD"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:layout_marginBottom="30dp" />
 
-        <TextView
-            android:id="@+id/choiceDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="YYYY.MM.DD"
-            android:textAlignment="center"
-            android:textSize="20sp" />
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:gravity="center"-->
+<!--        android:layout_marginTop="30dp">-->
 
-    </LinearLayout>
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/btnMemoCancel"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            android:text="CANCEL"-->
+<!--            android:background="#FDF79B"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/mContent" />-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/btnMemoOk"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="OK"-->
+<!--            android:background="#FBEA04"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/btnMemoCancel"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/mContent" />-->
+
+<!--    </LinearLayout>-->
 
 </LinearLayout>

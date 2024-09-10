@@ -40,21 +40,49 @@ class MainActivity_todolist : AppCompatActivity() {
         binding.todoListRecyclerView.layoutManager = LinearLayoutManager(this)
 
 
-        // 전체 todolist 보기 (바로 화면에 보여야함)
-        // DB 연결용
-        SubClient.retrofit.findAllTodoList(tId).enqueue(object :retrofit2.Callback<List<TodoList>> {
+        // 서버에서 todoList 가져오기
+        SubClient.retrofit.findAllTodoList(tId).enqueue(object : Callback<List<TodoList>> {
             override fun onResponse(call: Call<List<TodoList>>, response: Response<List<TodoList>>) {
-                if (response.body() != null) {
-                    todoListAdapter.todoList = response.body() as MutableList<TodoList>
+                response.body()?.let {
+                    todoListAdapter.todoList = it.toMutableList()
                     todoListAdapter.notifyDataSetChanged()
                 }
-//                todoListAdapter.todoList = response.body() as MutableList<TodoList>
-//                todoListAdapter.notifyDataSetChanged()
             }
             override fun onFailure(call: Call<List<TodoList>>, t: Throwable) {
             }
         })  //findAllTodoList
 
+        // 새로운 TodoList 추가 버튼 이벤트 처리
+        binding.btnTodoListAdd.setOnClickListener {
+            val newTodo = TodoList(0, tId, "")
+
+            // 서버에 새로운 TodoList 추가
+            SubClient.retrofit.insertTodoList(tId, newTodo).enqueue(object : Callback<TodoList> {
+                override fun onResponse(call: Call<TodoList>, response: Response<TodoList>) {
+                    response.body()?.let { item -> todoListAdapter.addTodoList(item)}
+                }
+                override fun onFailure(call: Call<TodoList>, t: Throwable) {
+                }
+            })
+        }
+
+
+
+
+        // 전체 todolist 보기 (바로 화면에 보여야함)
+        // DB 연결용
+//        SubClient.retrofit.findAllTodoList(tId).enqueue(object :retrofit2.Callback<List<TodoList>> {
+//            override fun onResponse(call: Call<List<TodoList>>, response: Response<List<TodoList>>) {
+//                if (response.body() != null) {
+//                    todoListAdapter.todoList = response.body() as MutableList<TodoList>
+//                    todoListAdapter.notifyDataSetChanged()
+//                }
+////                todoListAdapter.todoList = response.body() as MutableList<TodoList>
+////                todoListAdapter.notifyDataSetChanged()
+//            }
+//            override fun onFailure(call: Call<List<TodoList>>, t: Throwable) {
+//            }
+//        })  //findAllTodoList
 
         // 추가
         // DB 연결 전 테스트용 - 추후 삭제
@@ -63,27 +91,28 @@ class MainActivity_todolist : AppCompatActivity() {
 //            todoListAdapter.notifyItemInserted(todoListAdapter.todoList.size - 1)
 //        }   // 인덱스 0부터 시작하니까 크기는 -1
         // DB 연결용
-        binding.btnTodoListAdd.setOnClickListener {
-            val newTodo = TodoList(0, tId, "", 'N', 'N')
+//        binding.btnTodoListAdd.setOnClickListener {
+//            val newTodo = TodoList(0, tId, "", 'N', 'N')
+//
+//            // 리사이클러뷰에 항목 먼저 추가
+//            todoListAdapter.addTodoList(newTodo)
+//
+//            // 서버에 추가
+//            SubClient.retrofit.insertTodoList(tId, newTodo).enqueue(object :retrofit2.Callback<TodoList> {
+//                override fun onResponse(call: Call<TodoList>, response: Response<TodoList>) {
+//                    if (response.body() != null) {
+//                        val index = todoListAdapter.todoList.indexOf(newTodo)
+//                        if (index != -1) {
+//                            todoListAdapter.todoList[index] = response.body()!!
+//                            todoListAdapter.notifyItemChanged(index)
+//                        }
+//                    }
+////                    todoListAdapter.addTodoList(response.body()!!)
+//                }
+//                override fun onFailure(call: Call<TodoList>, t: Throwable) {
+//                }
+//            })  //insertTodoList
+//        }   //btnTodoListAdd
 
-            // 리사이클러뷰에 항목 먼저 추가
-            todoListAdapter.addTodoList(newTodo)
-
-            // 서버에 추가
-            SubClient.retrofit.insertTodoList(tId, newTodo).enqueue(object :retrofit2.Callback<TodoList> {
-                override fun onResponse(call: Call<TodoList>, response: Response<TodoList>) {
-                    if (response.body() != null) {
-                        val index = todoListAdapter.todoList.indexOf(newTodo)
-                        if (index != -1) {
-                            todoListAdapter.todoList[index] = response.body()!!
-                            todoListAdapter.notifyItemChanged(index)
-                        }
-                    }
-//                    todoListAdapter.addTodoList(response.body()!!)
-                }
-                override fun onFailure(call: Call<TodoList>, t: Throwable) {
-                }
-            })  //insertTodoList
-        }   //btnTodoListAdd
     }
 }

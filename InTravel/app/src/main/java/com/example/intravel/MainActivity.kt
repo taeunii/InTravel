@@ -213,7 +213,7 @@ class MainActivity : AppCompatActivity() {
                 e_date = date.toString()
               }
 
-            }else if(month+1 > 10){
+            }else if(month+1 >= 10){
               e_month = (month+1).toString()
 
               if(date < 10){
@@ -245,7 +245,7 @@ class MainActivity : AppCompatActivity() {
                 e_date = date.toString()
               }
 
-            }else if(month+1 > 10){
+            }else if(month+1 >= 10){
               e_month = (month+1).toString()
 
               if(date < 10){

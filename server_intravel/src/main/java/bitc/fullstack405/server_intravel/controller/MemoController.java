@@ -20,7 +20,7 @@ public class MemoController {
   }
 
   @PostMapping("/save/{tId}")
-  public MemoEntity save(@PathVariable("tId") Long travId, MemoEntity memoEntity) {
+  public MemoEntity save(@PathVariable("tId") Long travId, @RequestBody MemoEntity memoEntity) {
     return memoService.save(travId, memoEntity);
   }
 

@@ -2,14 +2,20 @@ package com.example.intravel
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.icu.util.Calendar
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,8 +24,10 @@ import com.example.intravel.client.Client
 import com.example.intravel.data.TravelData
 import com.example.intravel.databinding.ActivityMainBinding
 import com.example.intravel.databinding.CustomDdayBinding
+import com.example.intravel.databinding.FragmentGalleryBinding
 import retrofit2.Call
 import retrofit2.Response
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -321,6 +329,7 @@ class MainActivity : AppCompatActivity() {
       }
 
     }
+
 
 
   }// onCreate

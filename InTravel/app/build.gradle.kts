@@ -52,4 +52,7 @@ dependencies {
   implementation ("androidx.viewpager2:viewpager2:1.0.0'")
   implementation ("androidx.fragment:fragment:1.5.0")
 
+  implementation ("com.squareup.okhttp3:okhttp:4.10.0")
+  implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
+
 }

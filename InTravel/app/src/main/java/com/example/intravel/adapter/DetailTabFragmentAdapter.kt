@@ -8,7 +8,7 @@ import com.example.intravel.fragments.GalleryFragment
 import com.example.intravel.fragments.TodoListFragment
 
 
-class DetaiTabFragmentAdapter(private val fragmentActivity: FragmentActivity)
+class DetailTabFragmentAdapter(private val fragmentActivity: FragmentActivity)
   :FragmentStateAdapter(fragmentActivity) {
   var fragments = listOf<Fragment>(TodoListFragment(), DetailTab2Fragment(), GalleryFragment())
   override fun getItemCount(): Int {

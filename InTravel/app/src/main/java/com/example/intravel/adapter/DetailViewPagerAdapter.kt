@@ -29,6 +29,7 @@ class DetailViewPagerAdapter(var listData:MutableList<TempData>): RecyclerView.A
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val tab = listData[position]
+
 //        holder.binding.tvDate1.id
 
 //        holder.

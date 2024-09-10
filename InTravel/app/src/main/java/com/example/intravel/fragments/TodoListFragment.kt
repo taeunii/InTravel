@@ -1,4 +1,4 @@
-package com.example.intravel.fragment
+package com.example.intravel.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

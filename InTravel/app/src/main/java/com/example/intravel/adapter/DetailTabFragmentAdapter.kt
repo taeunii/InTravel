@@ -11,7 +11,7 @@ import com.example.intravel.fragments.MemoFragment
 
 class DetailTabFragmentAdapter(private val fragmentActivity: FragmentActivity)
   :FragmentStateAdapter(fragmentActivity) {
-  var fragments = listOf<Fragment>(TodoListFragment(), MemoFragment(), MoneyTabFragment(),GalleryFragment())
+  var fragments = listOf<Fragment>(TodoListFragment(), MemoFragment(), MoneyTabFragment(), GalleryFragment())
   override fun getItemCount(): Int {
     return  fragments.size
   }

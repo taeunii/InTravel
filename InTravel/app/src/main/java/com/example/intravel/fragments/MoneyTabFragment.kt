@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.intravel.DetailMainActivity
 import com.example.intravel.MainActivity
 import com.example.intravel.R
-import com.example.intravel.TestActivity
 import com.example.intravel.adapter.MoneyAdapter
 import com.example.intravel.client.SubClient
 import com.example.intravel.data.MoneyData

@@ -1,4 +1,4 @@
-package com.example.intravel.`interface`
+package com.example.intravel.interfaces
 
 import com.example.intravel.data.Memo
 import com.example.intravel.data.MoneyData

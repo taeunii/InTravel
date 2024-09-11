@@ -1,4 +1,4 @@
-package com.example.intravel.`interface`
+package com.example.intravel.interfaces
 
 import com.example.intravel.data.PhotoData
 import okhttp3.MultipartBody

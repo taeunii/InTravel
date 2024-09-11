@@ -88,9 +88,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             currentMarker = setupMarker(LatLngEntity(centerLatLng.latitude, centerLatLng.longitude))
             currentMarker?.showInfoWindow()
 
-            // 해당 위치의 주소 가져오기
-            val address = getAddressFromLatLng(centerLatLng)
-            Toast.makeText(this, "현재 주소: $address", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -109,7 +106,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 currentMarker = setupMarker(LatLngEntity(latLng.latitude,latLng.longitude))
                 currentMarker?.showInfoWindow()
 
-//                Toast.makeText(this,"검색된 주소: ${location.getAddressLine(0)}",Toast.LENGTH_SHORT).show()
             }else {
                 Toast.makeText(this, "해당 주소를 찾을 수 없습니다.", Toast.LENGTH_LONG).show()
             }
@@ -133,10 +129,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 currentMarker?.remove()
                 currentMarker = setupMarker(LatLngEntity(it.latitude, it.longitude))
                 currentMarker?.showInfoWindow()
-
-                // 위치 정보를 바탕으로 주소 가져오기
-//                val address = getAddressFromLatLng(currentLatLng)
-//                Toast.makeText(this, "현재 주소: $address", Toast.LENGTH_LONG).show()
             } ?: run {
                 Log.e(TAG, "Location is null")
             }
@@ -169,7 +161,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val markerOption = MarkerOptions().apply {
             position(positionLatLng)
             title("현재 위치")
-            snippet("현재 위치에 대한 정보")
+
+            val address = getAddressFromLatLng(positionLatLng)
+            snippet(address)
         }
         return googleMap.addMarker(markerOption)
     }

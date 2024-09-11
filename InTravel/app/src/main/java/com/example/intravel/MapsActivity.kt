@@ -69,6 +69,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 Toast.makeText(this,"주소를 입력하세요", Toast.LENGTH_SHORT).show()
             }
         }
+
+
+        StrictMode.setThreadPolicy(
+            StrictMode.ThreadPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .build()
+        )
+        StrictMode.setVmPolicy(
+            StrictMode.VmPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .build()
+        )
+
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

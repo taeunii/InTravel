@@ -11,7 +11,10 @@ import retrofit2.http.Path
 
 interface TravelInterface {
 
-    // 완료여부 조회
+    // 완료 여부 전달
+    fun updateComplete(@Path("tId") tId:Long,@Body travComplete:Char):Call<TravelData>
+
+    // 완료 여부 조회
     @POST("listComplete")
     fun findComplete(@Body travComplete:Char):Call<List<TravelData>>
 

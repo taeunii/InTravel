@@ -17,6 +17,8 @@ import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.intravel.adapter.DetailTabFragmentAdapter
+import androidx.core.view.isVisible
+import androidx.core.view.setPadding
 
 
 import com.example.intravel.databinding.ActivitySubmainBinding
@@ -52,16 +54,36 @@ class DetailMainActivity : AppCompatActivity() {
     var dday = intent.getStringExtra("dday")
     var today = intent.getStringExtra("today")
 
+    // 완료된 아이템은 디데이말고 기한으로 보이게 하기
+    var travComplete = intent.getCharExtra("travComplete",'a')
+    var tStartDate = intent.getStringExtra("tStartDate")
+    var tEndDate = intent.getStringExtra("tEndDate")
+
     binding.headerTitle.text = tTitle
     binding.mainTitle2.text = dday
     binding.mainSubtitle.text = today
+
+    var sYear = tStartDate!!.substring(0,4) // 2024
+    var sMonth = tStartDate!!.substring(4,6) // 09
+    var sDay = tStartDate!!.substring(6) // 01
+
+    var eYear = tEndDate!!.substring(0,4) // 2024
+    var eMonth = tEndDate!!.substring(4,6) // 09
+    var eDay = tEndDate!!.substring(6) // 01
+
+
+    if(travComplete == 'Y'){
+      binding.frontLayout.isVisible = false
+      binding.compText.isVisible=true
+      binding.compText.text = "$sYear.$sMonth.$sDay~$eYear.$eMonth.$eDay"
+    }
 
 
     // MyFragmentAdapter 설정
     val detailTabFragmentAdapter = DetailTabFragmentAdapter(this)
     binding.viewpager2.adapter = detailTabFragmentAdapter
 
-    val tabElement: List<String> = mutableListOf("To-Do", "Memo", "Gallery")
+    val tabElement: List<String> = mutableListOf("To-Do", "Memo", "Money", "Gallery")
 
 
     try {

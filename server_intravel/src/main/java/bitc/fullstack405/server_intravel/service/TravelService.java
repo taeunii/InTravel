@@ -70,6 +70,7 @@ public class TravelService {
         travel.setStartDate(travelEntity.getStartDate());
         travel.setEndDate(travelEntity.getEndDate());
         travel.setCate(travelEntity.getCate());
+        travel.setTravComplete(travelEntity.getTravComplete()); // 추가
 
         return travelRepository.save(travel);
     }

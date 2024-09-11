@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="20dp">
+
+
+    <RadioGroup
+        android:id="@+id/rdoGroup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rdoIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="입금" />
+
+        <RadioButton
+            android:id="@+id/rdoOut"
+            android:layout_marginStart="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="지출" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/txtPay1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="* 내역을 입력해주세요."
+        android:textSize="15sp"/>
+
+    <EditText
+        android:id="@+id/edtPayTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLength="10"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/txtPay2"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="* 금액을 입력해주세요."
+        android:textSize="15sp"/>
+
+    <EditText
+        android:id="@+id/edtPayMoney"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:inputType="number"
+        />
+
+
+</LinearLayout>

@@ -24,6 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.InTravel"
         android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="31">
 
         <!--
@@ -45,17 +46,6 @@
             android:name=".MapsActivity"
             android:exported="true"
             android:label="@string/title_activity_maps">
-        </activity>
-
-        <activity
-            android:name=".CameraActivity"
-            android:exported="true" >
-
-<!--            <intent-filter >-->
-<!--                <action android:name="android.intent.action.MAIN"/>-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-
         </activity>
 
         <provider
@@ -94,21 +84,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".MainActivity_todolist"
             android:exported="true">
         </activity>
+
         <activity
             android:name=".TestActivity"
             android:exported="true">
+
         </activity>
+
         <activity
             android:name=".SplashActivity"
             android:exported="true">
+
         </activity>
+
         <activity
             android:name=".DetailMainActivity"
             android:exported="true">
+
         </activity>
     </application>
 

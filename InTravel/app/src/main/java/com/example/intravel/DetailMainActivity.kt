@@ -1,6 +1,7 @@
 package com.example.intravel
 
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +14,7 @@ import com.example.intravel.adapter.DetailTabFragmentAdapter
 
 
 import com.example.intravel.databinding.ActivitySubmainBinding
+import com.example.intravel.interfaces.MainActivity_map
 
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -63,6 +65,11 @@ class DetailMainActivity : AppCompatActivity() {
       }.attach()
     } catch (e: Exception) {
       Log.e("TabLayoutError", "Error in TabLayoutMediator: ${e.message}")
+    }
+
+    binding.iconRight.setOnClickListener {
+      val intent = Intent(this@DetailMainActivity, MainActivity_map::class.java)
+      startActivity(intent)
     }
   }
 }

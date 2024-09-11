@@ -16,6 +16,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".interfaces.MainActivity_map"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity_memowrite"
             android:exported="false" />
         <activity
@@ -36,7 +39,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MainActivity_todolist"
             android:exported="true">
@@ -44,7 +46,6 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".TestActivity"
             android:exported="true">
@@ -54,7 +55,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".SplashActivity"
             android:exported="true">
@@ -64,7 +64,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".DetailMainActivity"
             android:exported="true">

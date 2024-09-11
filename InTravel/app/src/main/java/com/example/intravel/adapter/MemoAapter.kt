@@ -57,8 +57,8 @@ class MemoAapter(var memoList: MutableList<Memo>, val tStartDate: String?, val t
         holder.binding.mTitle.text = memoItem.memoTitle
         holder.binding.choiceDate.text = memoItem.choiceDate
 
-        // 수정 (다이얼로그 창)
-        holder.binding.btnMemoUpdate.setOnClickListener {
+        // 상세보기 및 수정 (다이얼로그 창)
+        holder.itemView.setOnClickListener {
             val updateDialog = CustomMemowriteBinding.inflate(LayoutInflater.from(it.context))
             val memoWriteDialog = CustomMemodateBinding.inflate(LayoutInflater.from(it.context))
 
@@ -67,7 +67,7 @@ class MemoAapter(var memoList: MutableList<Memo>, val tStartDate: String?, val t
             updateDialog.edtContent.setText(memoItem.memoContent)
 
             AlertDialog.Builder(it.context).run {
-                setTitle("여행 메모 수정")
+                setTitle("여행 메모")
                 setView(updateDialog.root)
 
                 // 캘린더 클릭시 다이얼로그

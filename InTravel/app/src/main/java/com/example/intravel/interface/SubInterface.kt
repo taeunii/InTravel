@@ -73,15 +73,18 @@ interface SubInterface {
     @GET("pay/list/{mId}")
     fun findAllPayList(@Path("mId")moneyId: Long):Call<List<PayData>>
 
+    @GET("pay/list/{tId}")
+    fun findTravIdPayList(@Path("tId") travId: Long):Call<List<PayData>>
+
     // 추가
-    @POST("money/save/{tId}")
-    fun insertPay(@Path("tId") moneyId: Long, @Body pay:PayData):Call<PayData>
+    @POST("pay/save/{mId}")
+    fun insertPay(@Path("mId") moneyId: Long, @Body pay:PayData):Call<PayData>
 
     // 수정
-    @PUT("money/update/{pId}")
+    @PUT("pay/update/{pId}")
     fun updatePay(@Path("pId") payId: Long, @Body pay: PayData):Call<PayData>
 
     // 삭제
-    @DELETE("money/delete/{pId}")
+    @DELETE("pay/delete/{pId}")
     fun deleteByIdPay(@Path("pId") payId: Long):Call<Void>
 }

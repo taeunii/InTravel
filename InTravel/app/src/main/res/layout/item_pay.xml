@@ -28,15 +28,26 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/p_Minus"
+            android:id="@+id/p_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start|top"
+            android:layout_gravity="end|top"
             android:layout_marginTop="10dp"
-            android:layout_marginStart="190dp"
+            android:layout_marginEnd="50dp"
             android:text="지출 : 90,000원"
             android:textColor="#DB0000"
             android:textSize="15sp" />
+
+<!--        <TextView-->
+<!--            android:id="@+id/p_Plus"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="start|top"-->
+<!--            android:layout_margintop="20dp"-->
+<!--            android:layout_marginStart="220dp"-->
+<!--            android:text="입금 : 90,000원"-->
+<!--            android:textColor="#2196F3"-->
+<!--            android:textSize="15sp" />-->
 
     </androidx.cardview.widget.CardView>
 

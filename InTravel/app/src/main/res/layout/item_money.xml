@@ -24,12 +24,9 @@
         <TextView
             android:id="@+id/moneyTitle"
             android:layout_width="170dp"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="20dp"
-            android:gravity="center|start"
-            android:inputType="textMultiLine"
-            android:minLines="2"
             android:text="카테고리 제목"
             android:textSize="25sp" />
 
@@ -39,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|top"
             android:layout_marginStart="190dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:text="예산 : 100,000,000원"
             android:textSize="15sp" />
 
@@ -47,22 +44,34 @@
             android:id="@+id/m_Minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start|bottom"
+            android:layout_gravity="start|top"
             android:layout_marginStart="190dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="35dp"
             android:text="지출 : 9,000,000원"
+            android:textSize="13sp"
             android:textColor="#DB0000" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/btnEdt"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="end|bottom"
-            android:layout_marginEnd="10dp"
+        <TextView
+            android:id="@+id/m_Plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|top"
+            android:layout_marginStart="190dp"
+            android:layout_marginTop="55dp"
+            android:text="입금 : 9,000,000원"
+            android:textSize="13sp"
+            android:textColor="#2196F3" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnPayAdd"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="13dp"
             android:layout_marginBottom="10dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:scaleType="centerInside"
-            android:src="@drawable/edit" />
+            android:background="@drawable/shape_cicle_button"
+            android:text="+"
+            android:textSize="20sp" />
 
     </androidx.cardview.widget.CardView>
 
@@ -75,6 +84,8 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/moneyLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/moneyLayout"
+        android:visibility="gone"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

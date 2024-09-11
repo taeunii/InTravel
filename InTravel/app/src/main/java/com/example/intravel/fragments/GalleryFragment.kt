@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.intravel.R
 import com.example.intravel.adapter.GalleryAdapter
@@ -68,88 +69,25 @@ class GalleryFragment : Fragment() {
 
     tId = activity?.intent?.getLongExtra("tId", 0)?: 0
 
+
     val photoList = mutableListOf<PhotoData>()
 
     galleryAdapter = GalleryAdapter(photoList)
     binding.galleryRV.adapter = galleryAdapter
-    binding.galleryRV.layoutManager = LinearLayoutManager(requireContext())
+    binding.galleryRV.layoutManager = GridLayoutManager(requireContext(), 3)
 
-//    //    카메라 앱 사용 결과 반환 런처
-//    val requestCameraLauncher = registerForActivityResult(
-//      ActivityResultContracts.StartActivityForResult()) {
-//      val calRatio = calculateInSampleSize(
-//        Uri.fromFile(
-//          File(filePath)),
-//        resources.getDimensionPixelSize(R.dimen.imgSize),
-//        resources.getDimensionPixelSize(R.dimen.imgSize)
-//      )
-//
-//      val option = BitmapFactory.Options()
-//      option.inSampleSize = calRatio
-//      val bitmap = BitmapFactory.decodeFile(filePath, option)
-//      bitmap?.let {
-////        binding.imgView.setImageBitmap(bitmap)
-//      }
-//    }
+//    loadPhotoList()
 
     //    카메라 버튼 클릭
     binding.btnTakePhoto.setOnClickListener {
-//      val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-//      val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-//
-////      val storageDir: File? = getExternalFilesDir
-////      val file = File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir)
-//
-////      filePath = file.absolutePath
-//
-////      val photoURI: Uri = FileProvider.getUriForFile(it.context, "com.example.intravel.fileprovider", file)
-//
-////      intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-////      intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-//
-//      requestCameraLauncher.launch(intent)
       dispatchTakePictureIntent()
     }
   }
-
-//  //  이미지 해상도 조정 펑션
-//  private fun calculateInSampleSize(fileUri: Uri, reqWidth: Int, reqHeight: Int): Int {
-//    val options = BitmapFactory.Options()
-//    options.inJustDecodeBounds = true
-//
-////    try {
-////      var inputStream = contentResolve
-////      BitmapFactory.decodeStream(inputStream, null, options)
-////      inputStream!!.close()
-////      inputStream = null
-////    }
-////    catch (e: Exception) {
-//////      Toast.makeText(this@GalleryFragment.context, "${e}", Toast.LENGTH_SHORT).show()
-////    }
-//
-//    val (height: Int, width: Int) = options.run {
-//      outHeight to outWidth
-//    }
-//    var inSampleSize = 1
-//
-//    if (height > reqHeight || width > reqWidth) {
-//      val halfHeight: Int = height / 2
-//      val halfWidth: Int = width / 2
-//
-//      while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
-//        inSampleSize *= 2
-//      }
-//    }
-//
-//    return inSampleSize
-//  }
 
   private fun dispatchTakePictureIntent() {
     Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
         photoUri = createImageUri()
         photoUri?.let { uri -> requestCameraLauncher.launch(uri) }
-//      takePictureIntent.resolveActivity(requireActivity().packageManager)?.let {
-//      }
     }
   }
 
@@ -196,6 +134,28 @@ class GalleryFragment : Fragment() {
       }
     }
     return ""
+  }
+
+  private fun loadPhotoList() {
+    val call = Client.photoRetrofit.findPhotoList(tId)
+    call.enqueue(object: Callback<List<PhotoData>> {
+      override fun onResponse(call: Call<List<PhotoData>>, response: Response<List<PhotoData>>) {
+        if (response.isSuccessful) {
+          response.body()?.let {
+            galleryAdapter.photoList.clear()
+            galleryAdapter.photoList.addAll(it)
+            galleryAdapter.notifyDataSetChanged()
+          }
+        }
+        else {
+//          실패
+        }
+      }
+
+      override fun onFailure(call: Call<List<PhotoData>>, t: Throwable) {
+//        에러
+      }
+    })
   }
 
 }

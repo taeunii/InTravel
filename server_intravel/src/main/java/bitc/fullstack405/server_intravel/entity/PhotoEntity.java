@@ -25,5 +25,7 @@ public class PhotoEntity {
 
   private String createDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
+  private String filePath;
+
   private String fileName;
 }

@@ -21,13 +21,13 @@ public class PhotoController {
   private final PhotoService photoService;
   private final FileUtil fileUtil;
 
-  @GetMapping("/list/{travId}")
-  public List<PhotoEntity> photoList(@PathVariable Long travId) {
+  @GetMapping("/list/{tId}")
+  public List<PhotoEntity> photoList(@PathVariable("tId") Long travId) {
     return photoService.photoList(travId);
   }
 
-  @PostMapping("/save/{travId}")
-  public PhotoEntity savePhoto(@PathVariable("travId") Long travId, @RequestParam("photo") MultipartFile file) throws IOException {
+  @PostMapping("/save/{tId}")
+  public PhotoEntity savePhoto(@PathVariable("tId") Long travId, @RequestParam("photo") MultipartFile file) throws IOException {
     return photoService.savePhoto(file, travId);
   }
 

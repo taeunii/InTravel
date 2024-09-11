@@ -15,12 +15,12 @@ import retrofit2.http.Path
 interface PhotoInterface {
 
   @Multipart
-  @GET("/photo/list/{travId}")
-  fun findPhotoList(@Path("travId") travId:Long): Call<List<PhotoData>>
+  @GET("/photo/list/{tId}")
+  fun findPhotoList(@Path("tId") tId:Long): Call<List<PhotoData>>
 
   @Multipart
-  @POST("/photo/save/{travId}")
-  fun savePhoto(@Path("travId") travId: Long, @Part photo: MultipartBody.Part): Call<PhotoData>
+  @POST("/photo/save/{tId}")
+  fun savePhoto(@Path("tId") tId: Long, @Part photo: MultipartBody.Part): Call<PhotoData>
 
   @PUT("/photo/update/{photoId}")
   fun updatePhoto(@Path("photoId") photoId: Long, @Body photoData: PhotoData): Call<PhotoData>

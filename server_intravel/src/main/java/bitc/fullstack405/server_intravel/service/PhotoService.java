@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -38,10 +39,12 @@ public class PhotoService {
 
   public PhotoEntity savePhoto(MultipartFile file, Long travId) throws IOException {
     String fileName = FileUtil.saveFile(file, uploadDir);
+    String filepath = uploadDir + File.separator;
 
     PhotoEntity photo = new PhotoEntity();
     photo.setTravId(travId);
     photo.setCreateDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+    photo.setFilePath(filepath);
     photo.setFileName(fileName);
 
     return photoRepository.save(photo);

@@ -23,7 +23,6 @@ import androidx.core.view.setPadding
 
 import com.example.intravel.databinding.ActivitySubmainBinding
 import com.example.intravel.databinding.FragmentGalleryBinding
-import com.example.intravel.interfaces.MainActivity_map
 
 import com.google.android.material.tabs.TabLayoutMediator
 import java.io.File
@@ -99,8 +98,9 @@ class DetailMainActivity : AppCompatActivity() {
       Log.e("TabLayoutError", "Error in TabLayoutMediator: ${e.message}")
     }
 
+    // 우측 상단 지도 모양 클릭 시 맵 화면으로 이동
     binding.iconRight.setOnClickListener {
-      val intent = Intent(this@DetailMainActivity, MainActivity_map::class.java)
+      val intent = Intent(this@DetailMainActivity, MapsActivity::class.java)
       startActivity(intent)
     }
   }

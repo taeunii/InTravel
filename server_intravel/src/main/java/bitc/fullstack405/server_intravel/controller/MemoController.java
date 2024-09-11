@@ -24,6 +24,7 @@ public class MemoController {
   @PostMapping("/save/{tId}")
   public MemoEntity save(@PathVariable("tId") Long travId, @RequestBody MemoEntity memoEntity) {
     memoEntity.setMemoCreateDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+
     return memoService.save(travId, memoEntity);
   }
 

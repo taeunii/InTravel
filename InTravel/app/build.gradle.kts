@@ -58,4 +58,8 @@ dependencies {
   // Google Map
   implementation ("com.google.android.gms:play-services-maps:17.0.0")
   implementation ("com.google.android.gms:play-services-location:17.0.0")
+
+  // Places API
+  implementation ("com.google.android.libraries.places:places:2.5.0")
+
 }

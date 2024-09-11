@@ -21,7 +21,7 @@ public class TodoController {
   }
 
 //  To do list 완료/미완료 보기
-  @GetMapping("/listIsComplete/{tId}")
+  @PostMapping("/listIsComplete/{tId}")
   public List<TodoEntity> listIsComplete(@PathVariable("tId") Long travId, char todoComplete) {
     return todoService.listIsComplete(travId, todoComplete);
   }
@@ -39,14 +39,13 @@ public class TodoController {
   }
 
 //  To do list 수정
-  @PutMapping("update/{tdId}")
+  @PutMapping("/update/{tdId}")
   public TodoEntity update(@PathVariable("tdId") Long todoId, @RequestBody TodoEntity todoEntity) {
-    System.out.println(todoId);
     return todoService.update(todoId, todoEntity);
   }
 
 //  To do list 삭제
-  @DeleteMapping("delete/{tdId}")
+  @DeleteMapping("/delete/{tdId}")
   public void delete(@PathVariable("tdId") Long todoId) {
     todoService.deleteByTodoId(todoId);
   }

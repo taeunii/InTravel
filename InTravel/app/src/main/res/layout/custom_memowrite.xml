@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <EditText
+        android:id="@+id/MemoDate"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="YYYY.MM.DD"
+        android:inputType="text"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnMemoDate"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edtTitle"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/edittext_border"
+        android:ems="10"
+        android:hint="메모 제목"
+        android:inputType="text"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnMemoDate" />
+
+    <!--    <androidx.appcompat.widget.AppCompatButton-->
+<!--        android:id="@+id/btnMemoOk"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="24dp"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:text="OK"-->
+<!--        android:background="#FBEA04"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/mContent" />-->
+
+<!--    <androidx.appcompat.widget.AppCompatButton-->
+<!--        android:id="@+id/btnMemoDelete"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="24dp"-->
+<!--        android:layout_marginEnd="10dp"-->
+<!--        android:text="DELETE"-->
+<!--        android:background="#FBEA04"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/btnMemoOk"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/mContent" />-->
+
+<!--    <androidx.appcompat.widget.AppCompatButton-->
+<!--        android:id="@+id/btnMemoCancel"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="24dp"-->
+<!--        android:layout_marginEnd="10dp"-->
+<!--        android:text="CANCEL"-->
+<!--        android:background="#FDF79B"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/btnMemoDelete"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/mContent" />-->
+
+    <EditText
+        android:id="@+id/edtContent"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/edittext_border"
+        android:ems="10"
+        android:gravity="top|start"
+        android:hint="메모 내용"
+        android:inputType="textMultiLine"
+        android:minLines="5"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtTitle" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnMemoDate"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/memo_date_button_description"
+        android:scaleType="centerInside"
+        android:src="@drawable/calendar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+<!--<androidx.appcompat.widget.AppCompatButton-->
+<!--android:id="@+id/btnMemoCancel"-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:layout_marginTop="24dp"-->
+<!--android:layout_marginEnd="16dp"-->
+<!--android:text="CANCEL"-->
+<!--android:background="#FDF79B"-->
+<!--app:layout_constraintEnd_toEndOf="parent"-->
+<!--app:layout_constraintTop_toBottomOf="@+id/mContent" />-->
+
+<!--<androidx.appcompat.widget.AppCompatButton-->
+<!--android:id="@+id/btnMemoOk"-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:layout_marginTop="24dp"-->
+<!--android:layout_marginEnd="8dp"-->
+<!--android:text="OK"-->
+<!--android:background="#FBEA04"-->
+<!--app:layout_constraintEnd_toStartOf="@+id/btnMemoCancel"-->
+<!--app:layout_constraintTop_toBottomOf="@+id/mContent" />-->
+
+<!--<androidx.appcompat.widget.AppCompatButton-->
+<!--android:id="@+id/btnMemoDelete"-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:layout_marginTop="24dp"-->
+<!--android:layout_marginEnd="8dp"-->
+<!--android:text="DELETE"-->
+<!--android:background="#FDF79B"-->
+<!--android:visibility="invisible"-->
+<!--app:layout_constraintEnd_toStartOf="@+id/btnMemoOk"-->
+<!--app:layout_constraintTop_toBottomOf="@+id/mContent" />-->

@@ -2,6 +2,7 @@ package bitc.fullstack405.server_intravel.repository;
 
 import bitc.fullstack405.server_intravel.entity.TodoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface TodoRepository extends JpaRepository<TodoEntity, Long> {
 
   List<TodoEntity> findByTravIdAndTodoComplete(Long travId, char todoComplete);
 
-  void deleteByTodoId(Long tdId);
+  void deleteByTodoId(Long todoId);
 
   void deleteByTravId(Long travId);
 }

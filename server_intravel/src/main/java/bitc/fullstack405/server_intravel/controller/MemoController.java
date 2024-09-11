@@ -5,6 +5,8 @@ import bitc.fullstack405.server_intravel.service.MemoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -14,13 +16,15 @@ public class MemoController {
 
   private final MemoService memoService;
 
-  @GetMapping("/list/{tId}")
+  @GetMapping("/listAll/{tId}")
   public List<MemoEntity> listAll(@PathVariable("tId") Long travId) {
     return memoService.listAll(travId);
   }
 
   @PostMapping("/save/{tId}")
-  public MemoEntity save(@PathVariable("tId") Long travId, MemoEntity memoEntity) {
+  public MemoEntity save(@PathVariable("tId") Long travId, @RequestBody MemoEntity memoEntity) {
+    memoEntity.setMemoCreateDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+
     return memoService.save(travId, memoEntity);
   }
 

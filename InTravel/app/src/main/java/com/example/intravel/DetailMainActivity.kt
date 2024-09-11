@@ -21,6 +21,7 @@ import com.example.intravel.adapter.DetailTabFragmentAdapter
 
 import com.example.intravel.databinding.ActivitySubmainBinding
 import com.example.intravel.databinding.FragmentGalleryBinding
+import com.example.intravel.interfaces.MainActivity_map
 
 import com.google.android.material.tabs.TabLayoutMediator
 import java.io.File
@@ -40,13 +41,13 @@ class DetailMainActivity : AppCompatActivity() {
     binding = ActivitySubmainBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
-    ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.tablayout)) { v, insets ->
+    ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.tablayout)) {v, insets ->
       val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
       v.setPadding(systemBars.left, systemBars.right, systemBars.top, systemBars.bottom)
       insets
     }
 
-    var tId = intent.getLongExtra("tId", 0)
+    var tId = intent.getLongExtra("tId",0)
     var tTitle = intent.getStringExtra("tTitle")
     var dday = intent.getStringExtra("dday")
     var today = intent.getStringExtra("today")
@@ -74,6 +75,11 @@ class DetailMainActivity : AppCompatActivity() {
       }.attach()
     } catch (e: Exception) {
       Log.e("TabLayoutError", "Error in TabLayoutMediator: ${e.message}")
+    }
+
+    binding.iconRight.setOnClickListener {
+      val intent = Intent(this@DetailMainActivity, MainActivity_map::class.java)
+      startActivity(intent)
     }
   }
 }

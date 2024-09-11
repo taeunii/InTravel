@@ -25,22 +25,29 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
 
     class TodoHolder(val binding: ItemTodolistBinding):RecyclerView.ViewHolder(binding.root)
 
-//    interface OnItemClickListener{
-//        fun onItemClick(todoItem: TodoList, position: Int)
-//    }
-//    var onItemClickListener:OnItemClickListener?= null
-
     // 추가
     fun addTodoList(todoItem: TodoList) {
         todoList.add(todoItem)
         notifyDataSetChanged()
-//        notifyItemInserted(todoList.size - 1)
     }
 
     // 수정
     fun updateTodoList(todoItem: TodoList, position: Int) {
-        todoList[position] = todoItem
-        notifyDataSetChanged()
+        // 기존 항목을 제거
+        todoList.removeAt(position)
+
+        // 완료 여부에 따라 새 위치 결정
+        val newPosition = if (todoItem.todoComplete == 'Y') {
+            todoList.size  // 완료된 항목을 리스트의 맨 아래로 이동
+        }
+        else {
+            // 완료되지 않은 항목을 `todoId` 순서에 맞게 재배치
+            todoList.indexOfFirst { it.todoId > todoItem.todoId }.takeIf { it >= 0 } ?: todoList.size
+        }
+
+        // 새 위치에 항목 추가
+        todoList.add(newPosition, todoItem)
+        notifyDataSetChanged()  // RecyclerView에 변경 사항 알림
     }
 
     // 삭제
@@ -58,16 +65,57 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
 
         // 초기 데이터 설정
         holder.binding.tdContent.setText(todoItem.todoContent)
+        if (todoItem.todoComplete == 'Y') {
+            holder.binding.btnTodoListComplete.setImageResource(R.drawable.checked3)
+        } else {
+            holder.binding.btnTodoListComplete.setImageResource(R.drawable.unchecked)
+        }
+        if (todoItem.todoImpo == 'Y') {
+            holder.binding.btnTodolistImpo.setImageResource(R.drawable.star_filled)
+        } else {
+            holder.binding.btnTodolistImpo.setImageResource(R.drawable.star_outline)
+        }
+        updateUI(holder, todoItem)
 
         // 완료 여부 클릭 이벤트
         holder.binding.btnTodoListComplete.setOnClickListener {
-            todoItem.todoComplete = if (todoItem.todoComplete == 'Y') 'N' else 'Y'
+            val isCompleted = todoItem.todoComplete == 'Y'
+
+            if (isCompleted) {
+                holder.binding.btnTodoListComplete.setImageResource(R.drawable.unchecked)
+                todoItem.todoComplete = 'N'
+            }
+            else {
+                holder.binding.btnTodoListComplete.setImageResource(R.drawable.checked3)
+                todoItem.todoComplete = 'Y'
+            }
+
+            var todos = TodoList(todoItem.todoId, todoItem.travId, holder.binding.tdContent.text.toString(), todoItem.todoComplete, todoItem.todoImpo)
+
+            // 서버에 데이터 업데이트 요청
+            SubClient.retrofit.updateTodoList(todos.todoId, todos).enqueue(object : retrofit2.Callback<TodoList> {
+                override fun onResponse(call: Call<TodoList>, response: Response<TodoList>) {
+                    response.body()?.let { updateItem -> updateTodoList(updateItem, holder.adapterPosition) }
+                }
+                override fun onFailure(call: Call<TodoList>, t: Throwable) {
+                }
+            })
             updateUI(holder, todoItem)
+            holder.binding.btnTodolistSave.visibility = View.INVISIBLE
         }
 
         // 중요도 변경 이벤트
         holder.binding.btnTodolistImpo.setOnClickListener {
-            todoItem.todoImpo = if (todoItem.todoImpo == 'Y') 'N' else 'Y'
+            val isImpo = todoItem.todoImpo == 'Y'
+
+            if (isImpo) {
+                holder.binding.btnTodolistImpo.setImageResource(R.drawable.star_outline)
+                todoItem.todoImpo = 'N'
+            }
+            else {
+                holder.binding.btnTodolistImpo.setImageResource(R.drawable.star_filled)
+                todoItem.todoImpo = 'Y'
+            }
             updateUI(holder, todoItem)
             holder.binding.btnTodolistSave.visibility = View.VISIBLE
         }
@@ -81,27 +129,16 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
 
         // 수정(저장) 버튼 클릭 이벤트
         holder.binding.btnTodolistSave.setOnClickListener {
-//            // 수정된 내용을 todoItem에 반영
-            holder.binding.tdContent.text.toString()
-            holder.binding.btnTodoListComplete.drawable.constantState.toString()
-//            holder.binding.btnTodolistImpo.drawable.constantState.toString()
-//            todoItem.todoComplete = if (holder.binding.btnTodoListComplete.drawable.constantState == ContextCompat.getDrawable(holder.binding.btnTodoListComplete.context, R.drawable.unchecked)?.constantState) { 'N' }
-//            else { 'Y' }
-//            todoItem.todoImpo = if (holder.binding.btnTodolistImpo.drawable.constantState == ContextCompat.getDrawable(holder.binding.btnTodolistImpo.context, R.drawable.star_outline)?.constantState) { 'N' }
-//            else { 'Y' }
 
-            var todos = TodoList(todoItem.todoId,todoItem.travId,holder.binding.tdContent.text.toString(),'N','N')
+            var todos = TodoList(todoItem.todoId, todoItem.travId, holder.binding.tdContent.text.toString(), todoItem.todoComplete, todoItem.todoImpo)
 
             // 서버에 데이터 업데이트 요청
             SubClient.retrofit.updateTodoList(todos.todoId, todos).enqueue(object : retrofit2.Callback<TodoList> {
                 override fun onResponse(call: Call<TodoList>, response: Response<TodoList>) {
-                    Log.d("todo update","${response.body()}")
+//                    Log.d("todo update","${response.body()}")
                     response.body()?.let { updateItem -> updateTodoList(updateItem, holder.adapterPosition) }
-
                 }
                 override fun onFailure(call: Call<TodoList>, t: Throwable) {
-                    // 실패 처리
-//                    Log.d("")
                 }
             })
             holder.binding.tdContent.clearFocus()
@@ -112,93 +149,21 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
         holder.binding.btnTodolistDelete.setOnClickListener {
             AlertDialog.Builder(it.context).run {
                 setTitle("삭제하시겠습니까?")
-                setPositiveButton("삭제") { _, _ ->
-                    SubClient.retrofit.deleteByIdTodoList(todoItem.todoId).enqueue(object : retrofit2.Callback<Void> {
-                        override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                            if (response.isSuccessful) {
+                setPositiveButton("삭제", object :DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        SubClient.retrofit.deleteByIdTodoList(todoItem.todoId).enqueue(object :retrofit2.Callback<Void> {
+                            override fun onResponse(call: Call<Void>, response: Response<Void>) {
                                 removeTodoList(holder.adapterPosition)
                             }
-                        }
-                        override fun onFailure(call: Call<Void>, t: Throwable) {
-                            // 실패 처리
-                        }
-                    })
-                }
+                            override fun onFailure(call: Call<Void>, t: Throwable) {
+                            }
+                        })
+                    }
+                })
                 setNegativeButton("닫기", null)
                 show()
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-        ////////////////////////
-
-//        // 아이템 뷰 클릭 시 수정 가능하게 설정
-//        holder.itemView.setOnClickListener {
-//            holder.binding.tdContent.isEnabled = true
-//            holder.binding.tdContent.isFocusableInTouchMode = true
-//            holder.binding.tdContent.requestFocus()
-//        }
-//
-//        // 완료 여부 클릭 이벤트
-//        holder.binding.btnTodoListComplete.setOnClickListener {
-//            todoItem.todoComplete = if (todoItem.todoComplete == 'Y') 'N' else 'Y'
-//            updateUI(holder, todoItem)
-//        }
-//
-//        // 중요도 변경 이벤트
-//        holder.binding.btnTodolistImpo.setOnClickListener {
-//            todoItem.todoImpo = if (todoItem.todoImpo == 'Y') 'N' else 'Y'
-//            updateUI(holder, todoItem)
-//        }
-//
-//        // 저장 버튼 클릭 이벤트
-//        holder.binding.btnTodolistSave.setOnClickListener {
-//            // 수정된 내용을 todoItem에 반영
-//            todoItem.todoContent = holder.binding.tdContent.text.toString()
-//            // 서버에 데이터 업데이트 요청
-//            SubClient.retrofit.updateTodoList(todoItem.todoId, todoItem).enqueue(object : retrofit2.Callback<TodoList> {
-//                override fun onResponse(call: Call<TodoList>, response: Response<TodoList>) {
-//                    if (response.isSuccessful) {
-//                        response.body()?.let {
-//                            updateTodoList(it, holder.adapterPosition)
-//                            holder.binding.tdContent.clearFocus()
-//                            holder.binding.tdContent.isEnabled = false
-//                        }
-//                    }
-//                }
-//                override fun onFailure(call: Call<TodoList>, t: Throwable) {
-//                    // 실패 처리
-//                }
-//            })
-//        }
-//
-//        // 삭제 버튼 클릭 이벤트
-//        holder.binding.btnTodolistDelete.setOnClickListener {
-//            AlertDialog.Builder(it.context).run {
-//                setTitle("삭제하시겠습니까?")
-//                setPositiveButton("삭제") { _, _ ->
-//                    SubClient.retrofit.deleteByIdTodoList(todoItem.todoId).enqueue(object : retrofit2.Callback<Void> {
-//                        override fun onResponse(call: Call<Void>, response: Response<Void>) {
-//                            removeTodoList(holder.adapterPosition)
-//                        }
-//                        override fun onFailure(call: Call<Void>, t: Throwable) {
-//                            // 실패 처리
-//                        }
-//                    })
-//                }
-//                setNegativeButton("닫기", null)
-//                show()
-//            }
-//        }
     }
 
     // 상태에 따라 이미지, 텍스트 스타일, 투명도를 업데이트하는 함수

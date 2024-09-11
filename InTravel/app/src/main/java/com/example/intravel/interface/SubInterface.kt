@@ -27,7 +27,7 @@ interface SubInterface {
 
     // 삭제
     @DELETE("todo/delete/{tdId}")
-    fun deleteByIdTodoList(@Path("tdId") tdId: Long):Call<Void>
+    fun deleteByIdTodoList(@Path("tdId") tdId:Long):Call<Void>
 
 
     // memo

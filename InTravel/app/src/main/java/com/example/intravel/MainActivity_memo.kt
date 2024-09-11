@@ -19,8 +19,6 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
 
-//////// 추후 문제 없을시 삭제가능 (내용 MemoFragment(Fragment 폴더) 로 이동함)
-
 class MainActivity_memo : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +40,8 @@ class MainActivity_memo : AppCompatActivity() {
 
         // 데이터 및 어댑터 생성, 리사이클러뷰 연결
         val memoList = mutableListOf<Memo>()
-        val memoAdapter = MemoAapter(memoList)
+//        val memoAdapter = MemoAapter(memoList)
+        val memoAdapter = MemoAapter(memoList, tStartDate, tEndDate)
         binding.memoRecyclerView.adapter = memoAdapter
         binding.memoRecyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -126,11 +125,11 @@ class MainActivity_memo : AppCompatActivity() {
             override fun onItemClick(memo: Memo, pos: Int) {
                 val memo = memoAdapter.memoList[pos]
                 val intent = Intent(this@MainActivity_memo, MainActivity_memowrite::class.java)
-                intent.putExtra("mId", memo.mId)
-                intent.putExtra("mTitle", memo.mTitle)
-                intent.putExtra("mContent", memo.mContent)
-                // intent.putExtra("mCreateDate", memo.mCreateDate)
+                intent.putExtra("mId", memo.memoId)
+                intent.putExtra("mTitle", memo.memoTitle)
+                intent.putExtra("mContent", memo.memoContent)
                 intent.putExtra("choiceDate", memo.choiceDate)
+                // intent.putExtra("mCreateDate", memo.memoCreateDate)
 
                 intent.putExtra("pos", pos)
                 intent.putExtra("button", "update")

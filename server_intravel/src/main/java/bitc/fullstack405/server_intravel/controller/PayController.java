@@ -15,12 +15,12 @@ public class PayController {
 
     private final PayService payService;
 
-    @GetMapping("/list/{mId}")
+    @GetMapping("/moneyList/{mId}")
     public List<PayEntity> mIdlist(@PathVariable("mId") Long moneyId) {
         return payService.findMidAll(moneyId);
     }
 
-    @GetMapping("/list/{tId}")
+    @GetMapping("/travList/{tId}")
     public List<PayEntity> tIdlist(@PathVariable("tId") Long travId) {
         return payService.findTidAll(travId);
     }

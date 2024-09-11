@@ -85,22 +85,35 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
-        // 위치 권한 확인 및 현재 위치 업데이트
         checkLocationPermission()
 
-        // 카메라 이동이 끝날 때 호출되는 리스너 설정
+        // 현재 줌 레벨을 추적하기 위한 변수
+        var previousZoom = googleMap.cameraPosition.zoom
+
+        // 카메라가 움직일 때 호출되는 리스너
+        googleMap.setOnCameraMoveListener {
+            val currentZoom = googleMap.cameraPosition.zoom
+
+            // 줌 레벨이 변했을 때만 처리
+            if (currentZoom != previousZoom) {
+                previousZoom = currentZoom
+                currentMarker?.let {
+                    val markerPosition = it.position
+                    // 마커 위치를 기준으로 카메라를 이동
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPosition, currentZoom))
+                }
+            }
+        }
+
+        // 카메라 이동이 끝났을 때 호출되는 리스너
         googleMap.setOnCameraIdleListener {
-            // 화면 중앙의 좌표 가져오기
             val centerLatLng = googleMap.cameraPosition.target
             Log.d(TAG, "Camera Idle - Center: $centerLatLng")
 
-            // 기존 마커 제거
+            // 마커를 화면 중앙에 고정하지 않고, 지도 중심에 새로운 마커 추가
             currentMarker?.remove()
-
-            // 화면 중앙에 마커 추가
             currentMarker = setupMarker(LatLngEntity(centerLatLng.latitude, centerLatLng.longitude))
             currentMarker?.showInfoWindow()
-
         }
     }
 

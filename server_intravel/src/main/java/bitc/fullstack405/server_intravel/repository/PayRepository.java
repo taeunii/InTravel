@@ -9,6 +9,8 @@ public interface PayRepository extends JpaRepository<PayEntity, Long> {
 
     List<PayEntity> findByMoneyId(Long moneyId);
 
+    List<PayEntity> findByTravId(Long travId);
+    
     void deleteByMoneyId(Long moneyId);
 
 }

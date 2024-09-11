@@ -16,6 +16,8 @@ public class PayEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long payId;
 
+    private Long travId;
+
     private Long moneyId;
 
     private String payTitle;

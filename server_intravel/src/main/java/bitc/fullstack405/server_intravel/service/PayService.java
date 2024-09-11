@@ -14,8 +14,12 @@ public class PayService {
 
     private final PayRepository payRepository;
 
-    public List<PayEntity> findAll(Long moneyId) {
+    public List<PayEntity> findMidAll(Long moneyId) {
         return payRepository.findByMoneyId(moneyId);
+    }
+
+    public List<PayEntity> findTidAll(Long travId) {
+        return payRepository.findByTravId(travId);
     }
 
     public PayEntity save(Long moneyId, PayEntity payEntity) {

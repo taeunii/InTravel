@@ -22,8 +22,6 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="20dp"
             android:gravity="center|start"
-            android:inputType="textMultiLine"
-            android:minLines="2"
             android:text="버거킹"
             android:textSize="15sp" />
 

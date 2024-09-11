@@ -1,30 +1,24 @@
 package com.example.intravel.Fragment
 
 import android.content.DialogInterface
-import android.content.Intent
+import android.icu.text.DecimalFormat
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.intravel.DetailMainActivity
-import com.example.intravel.MainActivity
-import com.example.intravel.R
-import com.example.intravel.TestActivity
 import com.example.intravel.adapter.MoneyAdapter
 import com.example.intravel.client.SubClient
 import com.example.intravel.data.MoneyData
 import com.example.intravel.data.PayData
 import com.example.intravel.databinding.CustomMoneyBinding
 import com.example.intravel.databinding.FragmentMoneytabBinding
-import com.example.intravel.databinding.FragmentTodoListBinding
 import retrofit2.Call
 import retrofit2.Response
 import java.lang.Long.parseLong
@@ -137,7 +131,8 @@ class MoneyTabFragment : Fragment() {
 
                         setPositiveButton("확인",object: DialogInterface.OnClickListener{
                             override fun onClick(p0: DialogInterface?, p1: Int) {
-                                var m = MoneyData(money.moneyId,
+                                var m = MoneyData(
+                                    money.moneyId,
                                     money.travId,
                                     edtDialog.edtTitle.text.toString(),
                                     parseLong(edtDialog.edtMoney.text.toString()), // long형으로 변환
@@ -179,21 +174,35 @@ class MoneyTabFragment : Fragment() {
             } // onItemClick
         } // ItemClickListener
         
-        // 메인에서 받은 travId로 페이 목록 불러와서 총 지출 계산하면 됨
-//        SubClient.retrofit.findTravIdPayList(tId).enqueue(object :retrofit2.Callback<List<PayData>>{
-//            override fun onResponse(call: Call<List<PayData>>, response: Response<List<PayData>>) {
-//                if(response.body())
-//            }
-//
-//            override fun onFailure(call: Call<List<PayData>>, t: Throwable) {
-//                TODO("Not yet implemented")
-//            }
-//
-//        })
+
+
+
+
+        var totalMinus = 0
+//        // 메인에서 받은 travId로 페이 목록 불러와서 총 지출 계산하면 됨
+        SubClient.retrofit.findTravIdPayList(tId).enqueue(object :retrofit2.Callback<List<PayData>>{
+            override fun onResponse(call: Call<List<PayData>>, response: Response<List<PayData>>) {
+                var payList = response.body() as MutableList<PayData>
+                Log.d("payListResponse","${response.body()}")
+                for(i in payList){
+                    // 지출만 골라내기
+                    if((i.plusAmt)!!.toInt() == 0){
+                        totalMinus += i.minusAmt!!.toInt()
+                    }
+                }
+                // 총지출 데이터 갱신이 안됨 디비에서 데이터 바뀌면 갱신되게 해야함
+                binding.totalPay.text = "총지출 : ${DecimalFormat("#,###").format(totalMinus)}원"
+            }
+
+            override fun onFailure(call: Call<List<PayData>>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
         
         
         
-    }
+    } // onVIewCreated
 
     }
 

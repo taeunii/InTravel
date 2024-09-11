@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
+import android.os.StrictMode
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -98,13 +99,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             if (address != null && address.isNotEmpty()) {
                 val location = address[0]
                 val latLng = LatLng(location.latitude, location.longitude)
-                Log.d("주소 검색 결과: $latLng",toString())
+                Log.d("주소 검색 결과: $latLng", toString())
 
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
 
                 currentMarker?.remove()
                 currentMarker = setupMarker(LatLngEntity(latLng.latitude,latLng.longitude))
                 currentMarker?.showInfoWindow()
+
+
 
             }else {
                 Toast.makeText(this, "해당 주소를 찾을 수 없습니다.", Toast.LENGTH_LONG).show()
@@ -164,6 +167,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
             val address = getAddressFromLatLng(positionLatLng)
             snippet(address)
+            Log.d("address", address)
         }
         return googleMap.addMarker(markerOption)
     }

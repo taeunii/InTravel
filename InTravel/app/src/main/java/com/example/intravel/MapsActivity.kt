@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -35,12 +37,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var currentMarker: Marker? = null
 
+    private lateinit var searchEdit: EditText
+    private lateinit var searchButton: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // View 바인딩 초기화
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 검색창 버튼 초기화
+        searchEdit = findViewById(R.id.searchEdit)
+        searchButton = findViewById(R.id.searchButton)
 
         // MapView 초기화 및 생성
         mapView = binding.mapView
@@ -50,12 +59,64 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         mapView.getMapAsync(this)
+
+        searchButton.setOnClickListener {
+            val searchQuery = searchEdit.text.toString()
+            if (searchQuery.isNotEmpty()) {
+                searchLocationByAddress(searchQuery)
+            }else {
+                Toast.makeText(this,"주소를 입력하세요", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
         // 위치 권한 확인 및 현재 위치 업데이트
         checkLocationPermission()
+
+        // 카메라 이동이 끝날 때 호출되는 리스너 설정
+        googleMap.setOnCameraIdleListener {
+            // 화면 중앙의 좌표 가져오기
+            val centerLatLng = googleMap.cameraPosition.target
+            Log.d(TAG, "Camera Idle - Center: $centerLatLng")
+
+            // 기존 마커 제거
+            currentMarker?.remove()
+
+            // 화면 중앙에 마커 추가
+            currentMarker = setupMarker(LatLngEntity(centerLatLng.latitude, centerLatLng.longitude))
+            currentMarker?.showInfoWindow()
+
+            // 해당 위치의 주소 가져오기
+            val address = getAddressFromLatLng(centerLatLng)
+            Toast.makeText(this, "현재 주소: $address", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun searchLocationByAddress(address: String) {
+        val geocoder = Geocoder(this,Locale.getDefault())
+        try {
+            val address = geocoder.getFromLocationName(address, 1)
+            if (address != null && address.isNotEmpty()) {
+                val location = address[0]
+                val latLng = LatLng(location.latitude, location.longitude)
+                Log.d("주소 검색 결과: $latLng",toString())
+
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+
+                currentMarker?.remove()
+                currentMarker = setupMarker(LatLngEntity(latLng.latitude,latLng.longitude))
+                currentMarker?.showInfoWindow()
+
+//                Toast.makeText(this,"검색된 주소: ${location.getAddressLine(0)}",Toast.LENGTH_SHORT).show()
+            }else {
+                Toast.makeText(this, "해당 주소를 찾을 수 없습니다.", Toast.LENGTH_LONG).show()
+            }
+        }catch (e: Exception) {
+            Log.e(TAG, "주소 검색 중 오류 발생: $address", e)
+            Toast.makeText(this, "주소 검색 중 오류가 발생했습니다.", Toast.LENGTH_LONG).show()
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -65,19 +126,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 val currentLatLng = LatLng(it.latitude, it.longitude)
                 Log.d(TAG, "Current Location: $currentLatLng")
 
-                // 기존 마커 제거
-                currentMarker?.remove()
+                // 카메라를 현재 위치로 이동
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
 
-                // 새 위치에 마커 설정
+                // 마커 추가
+                currentMarker?.remove()
                 currentMarker = setupMarker(LatLngEntity(it.latitude, it.longitude))
                 currentMarker?.showInfoWindow()
 
                 // 위치 정보를 바탕으로 주소 가져오기
-                val address = getAddressFromLatLng(currentLatLng)
-                Toast.makeText(this, "현재 주소: $address", Toast.LENGTH_LONG).show()
-
-                // 카메라를 현재 위치로 이동
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
+//                val address = getAddressFromLatLng(currentLatLng)
+//                Toast.makeText(this, "현재 주소: $address", Toast.LENGTH_LONG).show()
             } ?: run {
                 Log.e(TAG, "Location is null")
             }

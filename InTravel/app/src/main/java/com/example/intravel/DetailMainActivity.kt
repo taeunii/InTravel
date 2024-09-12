@@ -103,5 +103,16 @@ class DetailMainActivity : AppCompatActivity() {
       val intent = Intent(this@DetailMainActivity, MapsActivity::class.java)
       startActivity(intent)
     }
+
+    binding.iconLeft.setOnClickListener {
+      navigateToMainActivity()
+    }
+  }
+
+  // MainActivity로 돌아가는 함수
+  private fun navigateToMainActivity() {
+    val intent = Intent(this, MainActivity::class.java)
+    startActivity(intent)
+    overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
   }
 }

@@ -10,6 +10,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -70,19 +71,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
-
-        StrictMode.setThreadPolicy(
-            StrictMode.ThreadPolicy.Builder()
-                .detectAll()
-                .penaltyLog()
-                .build()
-        )
-        StrictMode.setVmPolicy(
-            StrictMode.VmPolicy.Builder()
-                .detectAll()
-                .penaltyLog()
-                .build()
-        )
+        binding.btnPinAdd.setOnClickListener {
+            AlertDialog.Builder(this).run {
+                setTitle("위치 저장")
+                setPositiveButton("확인", null)
+                setNegativeButton("취소", null)
+                show()
+            }
+        }
 
     }
 

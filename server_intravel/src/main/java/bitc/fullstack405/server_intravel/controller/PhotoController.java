@@ -31,13 +31,14 @@ public class PhotoController {
     return photoService.savePhoto(file, travId);
   }
 
+//  수정, 필요없을 시 삭제
   @PutMapping("/update/{photoId}")
-  public PhotoEntity updatePhoto(@PathVariable Long photoId, @RequestBody PhotoEntity photoEntity) {
+  public PhotoEntity updatePhoto(@PathVariable("photoId") Long photoId, @RequestBody PhotoEntity photoEntity) {
     return photoService.updatePhoto(photoId, photoEntity);
   }
 
   @DeleteMapping("/delete/{photoId}")
-  public void deletePhoto(@PathVariable Long photoId) {
+  public void deletePhoto(@PathVariable("photoId") Long photoId) {
     photoService.deletePhoto(photoId);
   }
 }

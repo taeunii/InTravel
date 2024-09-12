@@ -60,7 +60,17 @@ public class PhotoService {
     return updatePhoto;
   }
 
+  @Transactional
   public void deletePhoto(Long photoId) {
+    PhotoEntity photo = photoRepository.findById(photoId).get();
+
+    String fullPath = photo.getFilePath() + photo.getFileName();
+
+    boolean isFileDeleted = FileUtil.deleteFile(fullPath);
+    if (!isFileDeleted) {
+      throw new IllegalStateException("Failed to delete file: " + fullPath);
+    }
+
     photoRepository.deleteById(photoId);
   }
 }

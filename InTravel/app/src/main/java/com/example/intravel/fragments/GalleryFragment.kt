@@ -1,5 +1,6 @@
 package com.example.intravel.fragments
 
+import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
 import android.net.Uri
@@ -34,6 +35,7 @@ class GalleryFragment : Fragment() {
 //  var tId by Delegates.notNull<Long>()
   var tId: Long = 0
   var photoId: Long = 0
+  private val REQUEST_DELETE_PHOTO = 100
 
   private val requestCameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
     if (success) {
@@ -42,7 +44,6 @@ class GalleryFragment : Fragment() {
       }
     }
   }
-
 
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
@@ -73,20 +74,33 @@ class GalleryFragment : Fragment() {
 
     //    카메라 버튼 클릭
     binding.btnTakePhoto.setOnClickListener {
-      dispatchTakePictureIntent()
+      takePhotoIntent()
+    }
+  }
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+
+    if (requestCode == REQUEST_DELETE_PHOTO && resultCode == Activity.RESULT_OK) {
+      val deletedPhotoId = data?.getLongExtra("deletedPhotoId", 0) ?: 0
+
+      val index = galleryAdapter.photoList.indexOfFirst { it.photoId == deletedPhotoId }
+      if (index != -1) {
+        galleryAdapter.photoList.removeAt(index)
+        galleryAdapter.notifyItemRemoved(index)
+      }
     }
   }
 
-  private fun dispatchTakePictureIntent() {
+  private fun takePhotoIntent() {
     Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-        photoUri = createImageUri()
+        photoUri = createPhotoUri()
         photoUri?.let { uri -> requestCameraLauncher.launch(uri) }
     }
   }
 
   private var photoUri: Uri? = null
 
-  private fun createImageUri(): Uri? {
+  private fun createPhotoUri(): Uri? {
     val contentValues = ContentValues().apply {
       put(MediaStore.Images.Media.DISPLAY_NAME, "photo_${System.currentTimeMillis()}.jpg")
       put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")

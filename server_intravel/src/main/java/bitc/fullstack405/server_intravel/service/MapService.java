@@ -18,6 +18,15 @@ public class MapService {
         return mapRepository.findByTravId(travId);
     }
 
+    public MapEntity findBytIdAndmId(Long travId, Long mapId) {
+        MapEntity mapEntity = mapRepository.findByTravIdAndMapId(travId, mapId);
+
+        if (mapEntity == null) {
+            return null;
+        }
+        return mapEntity;
+    }
+
     public MapEntity save(Long travId, MapEntity mapEntity) {
 
         mapEntity.setTravId(travId);

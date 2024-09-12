@@ -14,4 +14,6 @@ public interface MapRepository extends JpaRepository<MapEntity,Long> {
     List<MapEntity> findByTravId(Long travId);
 
     void deleteByTravId(Long travId);
+
+    MapEntity findByTravIdAndMapId(Long travId, Long mapId);
 }

@@ -18,6 +18,11 @@ public class MapController {
     public List<MapEntity> MapList(@PathVariable("tId") Long travId) {
         return mapService.findAll(travId);
     }
+//    travId기준 맵 1개만 출력이 필요할경우 이거 사용
+    @GetMapping("/mapEach/{tId}/{mId}")
+    public MapEntity Map(@PathVariable("tId") Long travId, @PathVariable("mId") Long mapId) {
+        return mapService.findBytIdAndmId(travId, mapId);
+    }
 
     @PostMapping("/save/{tId}")
     public MapEntity save(@PathVariable("tId") Long travId, @RequestBody MapEntity mapEntity) {

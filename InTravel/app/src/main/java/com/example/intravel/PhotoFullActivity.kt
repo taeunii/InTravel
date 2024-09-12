@@ -44,30 +44,31 @@ class PhotoFullActivity : AppCompatActivity() {
       finish()
     }
 
-    binding.btnDeletePhoto.setOnClickListener {
-      deletePhoto(photoId)
-    }
+//    binding.btnDeletePhoto.setOnClickListener {
+//      deletePhoto(photoId)
+//    }
   }
 
   // 사진 삭제 기능
-  private fun deletePhoto(photoId: Long) {
-    val call = Client.photoRetrofit.deletePhoto(photoId)
-    call.enqueue(object : Callback<Void> {
-      override fun onResponse(call: Call<Void>, response: Response<Void>) {
-        if (response.isSuccessful) {
-          val intent = Intent().apply {
-            putExtra("deletedPhotoId", photoId)
-          }
-          setResult(RESULT_OK, intent)
-          finish()
-        } else {
-          Toast.makeText(this@PhotoFullActivity, "삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
-        }
-      }
-
-      override fun onFailure(call: Call<Void>, t: Throwable) {
-        Toast.makeText(this@PhotoFullActivity, "삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
-      }
-    })
-  }
+//  private fun deletePhoto(photoId: Long) {
+//    val call = Client.photoRetrofit.deletePhoto(photoId)
+//
+//    call.enqueue(object : Callback<Void> {
+//      override fun onResponse(call: Call<Void>, response: Response<Void>) {
+//        if (response.isSuccessful) {
+//          galleryAdapter.notifyDataSetChanged()
+//          val intent = Intent().apply {
+//            putExtra("deletedPhotoId", photoId)}
+//          setResult(RESULT_OK, intent)
+//          finish()
+//        } else {
+//          Toast.makeText(this@PhotoFullActivity, "삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
+//        }
+//      }
+//
+//      override fun onFailure(call: Call<Void>, t: Throwable) {
+//        Toast.makeText(this@PhotoFullActivity, "삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
+//      }
+//    })
+//  }
 }

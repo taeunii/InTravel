@@ -5,24 +5,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Table(name = "pay")
+@Table(name = "map")
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PayEntity {
+public class MapEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long payId;
+    private Long mapId;
 
     private Long travId;
 
-    private Long moneyId;
+    private String latitude;
 
-    private String payTitle;
+    private String longitude;
 
-    private Long plusAmt;
-
-    private Long minusAmt;
+    private String pinName;
 }

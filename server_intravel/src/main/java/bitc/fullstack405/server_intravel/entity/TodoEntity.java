@@ -22,7 +22,4 @@ public class TodoEntity {
   private char todoComplete;
 
   private char todoImpo;
-
-//  @ManyToOne
-//  private TravelEntity travel;
 }

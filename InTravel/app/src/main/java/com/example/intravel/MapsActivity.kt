@@ -24,6 +24,10 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.intravel.databinding.ActivityMapsBinding
 import com.google.android.gms.maps.MapView
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.FetchPlaceRequest
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import java.util.Locale
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -45,6 +49,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Google Places API 초기화
+        if (!Places.isInitialized()) {
+            Places.initialize(applicationContext, "AIzaSyDkoP6r8hnWyrMknlg-3myS0PM5ZSULwfo")
+        }
+
+        // PlacesClient 생성
+        val placesClient = Places.createClient(this)
+
         // View 바인딩 초기화
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -65,7 +77,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         searchButton.setOnClickListener {
             val searchQuery = searchEdit.text.toString()
             if (searchQuery.isNotEmpty()) {
-                searchLocationByAddress(searchQuery)
+//                searchLocationByAddress(searchQuery)
+                searchPlaceByName(searchQuery)
             }else {
                 Toast.makeText(this,"주소를 입력하세요", Toast.LENGTH_SHORT).show()
             }
@@ -84,22 +97,35 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
-        // 위치 권한 확인 및 현재 위치 업데이트
         checkLocationPermission()
 
-        // 카메라 이동이 끝날 때 호출되는 리스너 설정
+        // 현재 줌 레벨을 추적하기 위한 변수
+        var previousZoom = googleMap.cameraPosition.zoom
+
+        // 카메라가 움직일 때 호출되는 리스너
+        googleMap.setOnCameraMoveListener {
+            val currentZoom = googleMap.cameraPosition.zoom
+
+            // 줌 레벨이 변했을 때만 처리
+            if (currentZoom != previousZoom) {
+                previousZoom = currentZoom
+                currentMarker?.let {
+                    val markerPosition = it.position
+                    // 마커 위치를 기준으로 카메라를 이동
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPosition, currentZoom))
+                }
+            }
+        }
+
+        // 카메라 이동이 끝났을 때 호출되는 리스너
         googleMap.setOnCameraIdleListener {
-            // 화면 중앙의 좌표 가져오기
             val centerLatLng = googleMap.cameraPosition.target
             Log.d(TAG, "Camera Idle - Center: $centerLatLng")
 
-            // 기존 마커 제거
+            // 마커를 화면 중앙에 고정하지 않고, 지도 중심에 새로운 마커 추가
             currentMarker?.remove()
-
-            // 화면 중앙에 마커 추가
             currentMarker = setupMarker(LatLngEntity(centerLatLng.latitude, centerLatLng.longitude))
             currentMarker?.showInfoWindow()
-
         }
     }
 
@@ -126,6 +152,40 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }catch (e: Exception) {
             Log.e(TAG, "주소 검색 중 오류 발생: $address", e)
             Toast.makeText(this, "주소 검색 중 오류가 발생했습니다.", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun searchPlaceByName(query: String) {
+        val request = FindAutocompletePredictionsRequest.builder()
+            .setQuery(query)
+            .build()
+
+        val placesClient = Places.createClient(this)
+
+        placesClient.findAutocompletePredictions(request).addOnSuccessListener { response ->
+            val prediction = response.autocompletePredictions.firstOrNull()
+            if (prediction != null) {
+                val placeId = prediction.placeId
+
+                // 장소 ID를 사용하여 세부 정보를 가져옵니다.
+                val placeRequest = FetchPlaceRequest.builder(placeId, listOf(Place.Field.LAT_LNG)).build()
+                placesClient.fetchPlace(placeRequest).addOnSuccessListener { placeResponse ->
+                    val latLng = placeResponse.place.latLng
+                    if (latLng != null) {
+                        // 검색된 장소로 카메라 이동
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+
+                        // 마커 추가
+                        currentMarker?.remove()
+                        currentMarker = setupMarker(LatLngEntity(latLng.latitude, latLng.longitude))
+                        currentMarker?.showInfoWindow()
+                    }
+                }
+            } else {
+                Toast.makeText(this, "해당 장소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }.addOnFailureListener {
+            Toast.makeText(this, "장소 검색 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 

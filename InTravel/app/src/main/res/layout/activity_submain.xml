@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="15dp"
-            android:background="@color/yellow400">
+            android:background="#FBEA04">
 
             <!-- Left Icon -->
             <androidx.appcompat.widget.AppCompatImageButton
@@ -84,35 +84,23 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/frontLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/main_title1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:gravity="center"
-            android:text="D"
-            android:textColor="@android:color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/main_title2"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="90dp"
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/main_title2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="180dp"
             android:gravity="center"
             android:text="+1"
             android:textColor="@android:color/black"
             android:textSize="24sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.275" />
 
         <TextView
             android:id="@+id/main_subtitle"
@@ -121,9 +109,13 @@
             android:gravity="center"
             android:text="2024.00.00"
             android:textColor="@color/gray500"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_title2" />
+            app:layout_constraintTop_toBottomOf="@+id/main_title2"
+            app:layout_constraintVertical_bias="0.2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -132,14 +124,14 @@
         android:id="@+id/compText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
         android:gravity="center"
         android:text="2024.00.00"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
     <!-- TabLayout for navigation between pages -->
 
@@ -148,7 +140,7 @@
         android:id="@+id/tablayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/yellow400"
+        android:background="#FBEA04"
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/yellow200"
         app:tabSelectedTextColor="@color/gray100"

@@ -104,21 +104,25 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
         var eMonth = data.endDate.substring(4,6) // 09
         var eDay = data.endDate.substring(6) // 01
 
+
+        // 카테고리스피너
+        val cateList = mutableListOf("---선택해주세요---","혼자","친구","가족","연인")
+
         if(data.travComplete == 'Y'){
             holder.binding.frontLayout.isVisible = false
             holder.binding.completeLayout.isVisible = true
             //holder.binding.itemTextview.isVisible = false // 장소까지 숨김
             holder.binding.comTitle.text = data.travTitle
             holder.binding.comPeriod.text = "$sYear.$sMonth.$sDay~$eYear.$eMonth.$eDay"
-            holder.binding.comCate.text = "같이 갔던 사람 : ${data.cate}"
+            holder.binding.comCate.text = "같이 갔던 사람 : ${cateList.get((parseInt(data.cate)))}"
 
         }else{
             holder.binding.frontLayout.isVisible = true
             holder.binding.completeLayout.isVisible = false
 
             holder.binding.itemTitle.text = data.travTitle
-            holder.binding.itemCate.text = data.cate
-            holder.binding.itemDday.text = dday
+            holder.binding.itemCate.text = cateList.get((parseInt(data.cate)))
+            holder.binding.itemDday.text = "D $dday"
         }
 
 
@@ -131,9 +135,7 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
 
         // 수정
         // 다이얼로그 창 띄우기
-        // 카테고리스피너
-        val cateList = mutableListOf("---선택해주세요---","혼자","친구","가족","연인")
-        var cateSelected = data.cate
+        var cateSelected = data.cate // "0","1" 이런식으로 인덱스 넘어옴
 
         holder.binding.btnEdt.setOnClickListener{
             val dialogEdit = CustomDdayBinding.inflate(LayoutInflater.from(it.context))
@@ -141,6 +143,7 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
             // 스피너 어댑터
             val cateAdapter = ArrayAdapter(it.context,android.R.layout.simple_list_item_1,cateList)
             dialogEdit.cateSpinner.adapter = cateAdapter
+            dialogEdit.cateSpinner.setSelection(parseInt(cateSelected)) // 디비에 저장된 값으로 선택?
 
             AlertDialog.Builder(it.context).run{
                 setTitle("디데이 수정하기")
@@ -220,7 +223,7 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
 
                 dialogEdit.cateSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
                     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-                        cateSelected = cateList.get(position)
+                        cateSelected = position.toString()
                     }
 
                     override fun onNothingSelected(p0: AdapterView<*>?) {

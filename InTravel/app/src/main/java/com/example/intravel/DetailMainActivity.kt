@@ -21,6 +21,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 
 import androidx.viewpager2.widget.ViewPager2
+import com.example.intravel.Fragment.MoneyTabFragment
 import com.example.intravel.databinding.ActivitySubmainBinding
 import com.example.intravel.databinding.FragmentGalleryBinding
 
@@ -59,7 +60,7 @@ class DetailMainActivity : AppCompatActivity() {
     var tEndDate = intent.getStringExtra("tEndDate")
 
     binding.headerTitle.text = tTitle
-    binding.mainTitle2.text = dday
+    binding.mainTitle2.text = "D $dday"
     binding.mainSubtitle.text = today
 
     var sYear = tStartDate!!.substring(0,4) // 2024
@@ -82,11 +83,7 @@ class DetailMainActivity : AppCompatActivity() {
     detailTabFragmentAdapter = DetailTabFragmentAdapter(this)
     binding.viewpager2.adapter = detailTabFragmentAdapter
 
-    val tabElement: List<String> = mutableListOf("To-Do", "Memo", "Menu", "Gallery")
-
-    fun refresh(){
-      detailTabFragmentAdapter.notifyDataSetChanged()
-    }
+    val tabElement: List<String> = mutableListOf("할일", "메모", "예산", "사진")
 
     try {
       TabLayoutMediator(binding.tablayout, binding.viewpager2) { tab, position ->

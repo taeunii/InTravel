@@ -5,6 +5,7 @@ import android.content.ClipData.Item
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.icu.text.DecimalFormat
 import android.util.Log
@@ -12,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.intravel.DetailMainActivity
 import com.example.intravel.fragments.TodoListFragment
 import com.example.intravel.MainActivity
+import com.example.intravel.R
 import com.example.intravel.client.Client
 import com.example.intravel.client.SubClient
 import com.example.intravel.data.MoneyData
@@ -54,10 +57,11 @@ class MoneyAdapter(var context: Context, var moneyList:MutableList<MoneyData>):R
     var payList = mutableListOf<PayData>()
 
 
-
-
     inner class Holder(val binding: ItemMoneyBinding):RecyclerView.ViewHolder(binding.root) {
 
+        init{
+
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoneyAdapter.Holder {
@@ -65,16 +69,11 @@ class MoneyAdapter(var context: Context, var moneyList:MutableList<MoneyData>):R
     }
 
 
-    interface OnItemClickListener{
-        fun onItemClick(money: MoneyData, position: Int)
-    }
-    var onItemClickListener:OnItemClickListener?=null
-
-
     interface OnItemChangeListener{
         fun onItemChange()
     }
     var onItemChangeListener:OnItemChangeListener?=null
+
 
     override fun onBindViewHolder(holder: MoneyAdapter.Holder, position: Int) {
         var money = moneyList.get(position)
@@ -124,22 +123,88 @@ class MoneyAdapter(var context: Context, var moneyList:MutableList<MoneyData>):R
             }
         })//findAll
 
-        // 밖에 있으면 마지막 페이 데이터가 마지막 머니 항목에 붙고
-//        holder.binding.payRecyclerView.adapter = payAdapter
-//        holder.binding.payRecyclerView.layoutManager = LinearLayoutManager(context)
-
 
         // 머니 항목 클릭하면 페이 목록 온/오프
         holder.itemView.setOnClickListener {
-            onItemClickListener!!.onItemClick(money,position)
+
             if(holder.binding.payRecyclerView.isVisible == true){
                 holder.binding.payRecyclerView.isVisible = false
             }
             else{
                 holder.binding.payRecyclerView.isVisible = true
-
             }
+
         }
+
+        // 롱클릭 수정
+        holder.itemView.setOnLongClickListener {
+            var edtDialog = CustomMoneyBinding.inflate(LayoutInflater.from(it.context))
+            AlertDialog.Builder(it.context).run {
+                setTitle("예산 카테고리 수정하기")
+                setView(edtDialog.root)
+                edtDialog.txt1.text = "수정할 이름을 입력해주세요."
+                edtDialog.edtTitle.setText(money.moneyTitle)
+                edtDialog.txt2.text = "수정할 금액을 입력해주세요."
+                edtDialog.edtMoney.setText(money.expenses.toString())
+
+                setPositiveButton("확인", object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        var m = MoneyData(
+                            money.moneyId,
+                            money.travId,
+                            edtDialog.edtTitle.text.toString(),
+                            parseLong(edtDialog.edtMoney.text.toString()), // long형으로 변환
+                        )
+                        SubClient.retrofit.updateMoney(money.moneyId, m)
+                            .enqueue(object : retrofit2.Callback<MoneyData> {
+                                override fun onResponse(
+                                    call: Call<MoneyData>,
+                                    response: Response<MoneyData>
+                                ) {
+                                    updateMoney(m, position)
+                                    onItemChangeListener!!.onItemChange()
+                                }
+
+                                override fun onFailure(
+                                    call: Call<MoneyData>,
+                                    t: Throwable
+                                ) {
+                                    TODO("Not yet implemented")
+                                }
+                            }) // enqueue
+                    }
+                }) // positive
+
+                // positive 버튼 한개 더 만들어서 삭제로 하면 위치가 똑같고 얘 쓰면 왼쪽 끝에 나옴
+                setNeutralButton("삭제", object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+//                        removeData(holder.adapterPosition)
+
+                        // db 연결버전
+                        SubClient.retrofit.deleteByIdMoney(money.moneyId)
+                            .enqueue(object : retrofit2.Callback<Void> {
+                                override fun onResponse(
+                                    call: Call<Void>,
+                                    response: Response<Void>
+                                ) {
+                                    removeMoney(position)
+                                    onItemChangeListener!!.onItemChange()
+                                }
+
+                                override fun onFailure(call: Call<Void>, t: Throwable) {
+                                    TODO("Not yet implemented")
+                                }
+                            })//enqueu
+                    }//onclick
+                })//Neutral 삭제
+
+                setNegativeButton("취소", null)
+                show()
+            } // dialog
+            true
+        }
+
+
 
         // pay 추가
         holder.binding.btnPayAdd.setOnClickListener {
@@ -174,7 +239,7 @@ class MoneyAdapter(var context: Context, var moneyList:MutableList<MoneyData>):R
                             override fun onResponse(call: Call<PayData>, response: Response<PayData>) {
                                 payAdapter.insertPay(p)
                                 notifyDataSetChanged()
-//                                onItemChangeListener!!.onItemChange()
+                                onItemChangeListener!!.onItemChange()
 
                             }
 
@@ -249,6 +314,7 @@ class MoneyAdapter(var context: Context, var moneyList:MutableList<MoneyData>):R
                                 override fun onResponse(call: Call<PayData>, response: Response<PayData>) {
                                     payAdapter.updatePay(p,position)
                                     notifyDataSetChanged()
+                                    onItemChangeListener!!.onItemChange()
 
                                 }
 
@@ -265,6 +331,7 @@ class MoneyAdapter(var context: Context, var moneyList:MutableList<MoneyData>):R
                                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                                     payAdapter.removePay(position)
                                     notifyDataSetChanged()
+                                    onItemChangeListener!!.onItemChange()
                                 }
                                 override fun onFailure(call: Call<Void>, t: Throwable) {
                                     TODO("Not yet implemented")

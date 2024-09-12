@@ -48,7 +48,7 @@ class GalleryAdapter(var photoList: MutableList<PhotoData>): RecyclerView.Adapte
       Log.d("clickclick","clickclick")
       AlertDialog.Builder(it.context).run{
         setTitle("사진 삭제하시겠습니까")
-        setPositiveButton("예",object: DialogInterface.OnClickListener{
+        setPositiveButton("예",object: DialogInterface.OnClickListener {
           override fun onClick(p0: DialogInterface?, p1: Int) {
             Client.photoRetrofit.deletePhoto(photo.photoId).enqueue(object:retrofit2.Callback<Void>{
               override fun onResponse(call: Call<Void>, response: Response<Void>) {

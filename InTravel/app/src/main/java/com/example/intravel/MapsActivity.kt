@@ -6,8 +6,10 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -43,6 +45,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var searchEdit: EditText
     private lateinit var searchButton: Button
+    private lateinit var addressTextView: TextView
+    private lateinit var addButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +67,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         searchEdit = findViewById(R.id.searchEdit)
         searchButton = findViewById(R.id.searchButton)
 
+        // 주소를 표시할 TextView 초기화
+        addressTextView = findViewById(R.id.addressTextView)
+//        addButton = findViewById(R.id.addButton)
+        addressTextView.visibility = View.GONE
+
+        addButton = findViewById(R.id.addButton)
+        addButton.visibility = View.GONE
+
         // MapView 초기화 및 생성
         mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
@@ -75,10 +87,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         searchButton.setOnClickListener {
             val searchQuery = searchEdit.text.toString()
             if (searchQuery.isNotEmpty()) {
-//                searchLocationByAddress(searchQuery)
                 searchPlaceByName(searchQuery)
-            }else {
-                Toast.makeText(this,"주소를 입력하세요", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "주소를 입력하세요", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -87,58 +98,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         this.googleMap = googleMap
         checkLocationPermission()
 
-        // 현재 줌 레벨을 추적하기 위한 변수
-        var previousZoom = googleMap.cameraPosition.zoom
+        // 지도 클릭 리스너 추가
+        googleMap.setOnMapClickListener { latLng ->
+            // 기존 핀 제거
+            clearMarkers()
 
-        // 카메라가 움직일 때 호출되는 리스너
-        googleMap.setOnCameraMoveListener {
-            val currentZoom = googleMap.cameraPosition.zoom
+            // 새 핀 추가
+            currentMarker = setupMarker(LatLngEntity(latLng.latitude, latLng.longitude))
 
-            // 줌 레벨이 변했을 때만 처리
-            if (currentZoom != previousZoom) {
-                previousZoom = currentZoom
-                currentMarker?.let {
-                    val markerPosition = it.position
-                    // 마커 위치를 기준으로 카메라를 이동
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPosition, currentZoom))
-                }
-            }
+            // 주소 표시
+            displayAddress(latLng)
+
+            // 주소 추가버튼 표시
+            addressTextView.visibility = View.VISIBLE
+            addButton.visibility = View.VISIBLE
         }
 
-        // 카메라 이동이 끝났을 때 호출되는 리스너
-        googleMap.setOnCameraIdleListener {
-            val centerLatLng = googleMap.cameraPosition.target
-            Log.d(TAG, "Camera Idle - Center: $centerLatLng")
-
-            // 마커를 화면 중앙에 고정하지 않고, 지도 중심에 새로운 마커 추가
-            currentMarker?.remove()
-            currentMarker = setupMarker(LatLngEntity(centerLatLng.latitude, centerLatLng.longitude))
-            currentMarker?.showInfoWindow()
-        }
-    }
-
-    private fun searchLocationByAddress(address: String) {
-        val geocoder = Geocoder(this,Locale.getDefault())
-        try {
-            val address = geocoder.getFromLocationName(address, 1)
-            if (address != null && address.isNotEmpty()) {
-                val location = address[0]
-                val latLng = LatLng(location.latitude, location.longitude)
-                Log.d("주소 검색 결과: $latLng",toString())
-
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
-
-                currentMarker?.remove()
-                currentMarker = setupMarker(LatLngEntity(latLng.latitude,latLng.longitude))
-                currentMarker?.showInfoWindow()
-
-            }else {
-                Toast.makeText(this, "해당 주소를 찾을 수 없습니다.", Toast.LENGTH_LONG).show()
-            }
-        }catch (e: Exception) {
-            Log.e(TAG, "주소 검색 중 오류 발생: $address", e)
-            Toast.makeText(this, "주소 검색 중 오류가 발생했습니다.", Toast.LENGTH_LONG).show()
-        }
     }
 
     private fun searchPlaceByName(query: String) {
@@ -162,9 +137,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
 
                         // 마커 추가
-                        currentMarker?.remove()
+                        clearMarkers()
                         currentMarker = setupMarker(LatLngEntity(latLng.latitude, latLng.longitude))
                         currentMarker?.showInfoWindow()
+
+                        // 주소 표시
+                        displayAddress(latLng)
+
+                        addressTextView.visibility = View.VISIBLE
+                        addButton.visibility = View.VISIBLE
                     }
                 }
             } else {
@@ -186,9 +167,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
 
                 // 마커 추가
-                currentMarker?.remove()
+                clearMarkers()
                 currentMarker = setupMarker(LatLngEntity(it.latitude, it.longitude))
                 currentMarker?.showInfoWindow()
+
+                // 주소 표시
+                displayAddress(currentLatLng)
             } ?: run {
                 Log.e(TAG, "Location is null")
             }
@@ -217,13 +201,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun setupMarker(locationLatLngEntity: LatLngEntity): Marker? {
-        val positionLatLng = LatLng(locationLatLngEntity.latitude!!, locationLatLngEntity.longitude!!)
+        val positionLatLng = LatLng(locationLatLngEntity.latitude?: return null, locationLatLngEntity.longitude?: return null)
         val markerOption = MarkerOptions().apply {
             position(positionLatLng)
-            title("현재 위치")
-
-            val address = getAddressFromLatLng(positionLatLng)
-            snippet(address)
+            title("선택된 위치")
         }
         return googleMap.addMarker(markerOption)
     }
@@ -240,6 +221,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         } catch (e: Exception) {
             "주소를 가져오는 중 오류가 발생했습니다."
         }
+    }
+
+    private fun displayAddress(latLng: LatLng) {
+        val address = getAddressFromLatLng(latLng)
+        addressTextView.text = address
+    }
+
+    private fun clearMarkers() {
+        currentMarker?.remove()
+        currentMarker = null
     }
 
     override fun onStart() {

@@ -1,5 +1,6 @@
 package com.example.intravel.Fragment
 
+import android.content.Context
 import android.content.DialogInterface
 import android.icu.text.DecimalFormat
 import android.os.Bundle
@@ -13,10 +14,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.intravel.DetailMainActivity
 import com.example.intravel.adapter.MoneyAdapter
 import com.example.intravel.client.SubClient
 import com.example.intravel.data.MoneyData
 import com.example.intravel.data.PayData
+import com.example.intravel.databinding.ActivitySubmainBinding
 import com.example.intravel.databinding.CustomMoneyBinding
 import com.example.intravel.databinding.FragmentMoneytabBinding
 import retrofit2.Call
@@ -27,7 +30,6 @@ import java.lang.Long.parseLong
 class MoneyTabFragment : Fragment() {
 
     private lateinit var binding: FragmentMoneytabBinding
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,6 +37,11 @@ class MoneyTabFragment : Fragment() {
 
         binding = FragmentMoneytabBinding.inflate(inflater, container, false)
         return binding.root
+
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
 
     }
 
@@ -46,7 +53,7 @@ class MoneyTabFragment : Fragment() {
 //            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 //            insets
 //        }
-        var payList = mutableListOf<PayData>()
+
 
         // 데이터 생성
         var moneyList = mutableListOf<MoneyData>()
@@ -173,16 +180,18 @@ class MoneyTabFragment : Fragment() {
                 }// btnMoneyEdt
             } // onItemClick
         } // ItemClickListener
-        
 
 
 
 
+        var payList = mutableListOf<PayData>()
         var totalMinus = 0
 //        // 메인에서 받은 travId로 페이 목록 불러와서 총 지출 계산하면 됨
+
+
         SubClient.retrofit.findTravIdPayList(tId).enqueue(object :retrofit2.Callback<List<PayData>>{
             override fun onResponse(call: Call<List<PayData>>, response: Response<List<PayData>>) {
-                var payList = response.body() as MutableList<PayData>
+                payList = response.body() as MutableList<PayData>
                 Log.d("payListResponse","${response.body()}")
                 for(i in payList){
                     // 지출만 골라내기
@@ -193,18 +202,40 @@ class MoneyTabFragment : Fragment() {
                 // 총지출 데이터 갱신이 안됨 디비에서 데이터 바뀌면 갱신되게 해야함
                 binding.totalPay.text = "총지출 : ${DecimalFormat("#,###").format(totalMinus)}원"
             }
-
             override fun onFailure(call: Call<List<PayData>>, t: Throwable) {
                 TODO("Not yet implemented")
             }
-
         })
-        
-        
-        
+
+
+
+
+
+        // 디비에 있는 페이데이터가 갱신이 되면?
+        // 머니 어댑터에 있는 지출 목록이 업데이트 되면 ?
+        // 프레그먼트 떼엇다가 붙이면 갱신되나
+        // 화면 이동하고 오면 되어있음
+//        moneyAdapter.onItemChangeListener = object:MoneyAdapter.OnItemChangeListener{
+//            override fun onItemChange() {
+//                Log.d("onItemChange","onItemChange")
+//
+//            }
+//        }
+//
+//        refreshFragment(this,getFragmentManager())
+
     } // onVIewCreated
 
-    }
+//    fun refreshFragment(fragment: Fragment, fragmentManager: FragmentManager?) {
+//        var ft: FragmentTransaction = childFragmentManager.beginTransaction()
+//        ft.detach(fragment).attach(fragment).commit()
+//    }
+
+//    fun refreshFragment(fragment: Fragment, fragmentManager: FragmentManager) {
+//        var ft: FragmentTransaction = fragmentManager.beginTransaction()
+//        ft.detach(fragment).attach(fragment).commit()
+//    }
+}
 
 
 

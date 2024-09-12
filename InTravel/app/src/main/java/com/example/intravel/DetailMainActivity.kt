@@ -11,7 +11,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
+import androidx.viewpager2.widget.ViewPager2
 import com.example.intravel.adapter.DetaiTabFragmentAdapter
+import com.example.intravel.adapter.DetailViewPagerAdapter
 
 
 import com.example.intravel.databinding.ActivitySubmainBinding
@@ -23,7 +25,7 @@ class DetailMainActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivitySubmainBinding
 //  private lateinit var viewPager2Adapter: MyFragmentAdapter
-
+  lateinit var viewPager2Adapter: DetaiTabFragmentAdapter
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
@@ -68,8 +70,24 @@ class DetailMainActivity : AppCompatActivity() {
 
 
     // MyFragmentAdapter 설정
-    val viewPager2Adapter = DetaiTabFragmentAdapter(this)
+    viewPager2Adapter = DetaiTabFragmentAdapter(this)
     binding.viewpager2.adapter = viewPager2Adapter
+
+// 뷰페이저 이동 시 데이터 갱신 시도
+//      val pageCallBack = object:ViewPager2.OnPageChangeCallback(){
+//        override fun onPageSelected(position: Int) {
+//          super.onPageSelected(position)
+//          val fragment = viewPager2Adapter.fragments.get(position)
+//          fragment.onResume()
+//        }
+//      }
+//
+//      binding.viewpager2.registerOnPageChangeCallback(pageCallBack)
+
+    fun refresh(){
+      viewPager2Adapter.notifyDataSetChanged()
+    }
+
 
     val tabElement: List<String> = mutableListOf("To-Do", "Memo", "Menu")
 

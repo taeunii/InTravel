@@ -174,7 +174,7 @@ class MoneyAdapter(var context: Context, var moneyList:MutableList<MoneyData>):R
                             override fun onResponse(call: Call<PayData>, response: Response<PayData>) {
                                 payAdapter.insertPay(p)
                                 notifyDataSetChanged()
-//                                onItemChangeListener!!.onItemChange()
+                                onItemChangeListener!!.onItemChange()
 
                             }
 
@@ -249,6 +249,7 @@ class MoneyAdapter(var context: Context, var moneyList:MutableList<MoneyData>):R
                                 override fun onResponse(call: Call<PayData>, response: Response<PayData>) {
                                     payAdapter.updatePay(p,position)
                                     notifyDataSetChanged()
+                                    onItemChangeListener!!.onItemChange()
 
                                 }
 
@@ -265,6 +266,7 @@ class MoneyAdapter(var context: Context, var moneyList:MutableList<MoneyData>):R
                                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                                     payAdapter.removePay(position)
                                     notifyDataSetChanged()
+                                    onItemChangeListener!!.onItemChange()
                                 }
                                 override fun onFailure(call: Call<Void>, t: Throwable) {
                                     TODO("Not yet implemented")

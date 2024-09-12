@@ -122,7 +122,7 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
 
             holder.binding.itemTitle.text = data.travTitle
             holder.binding.itemCate.text = cateList.get((parseInt(data.cate)))
-            holder.binding.itemDday.text = dday
+            holder.binding.itemDday.text = "D $dday"
         }
 
 

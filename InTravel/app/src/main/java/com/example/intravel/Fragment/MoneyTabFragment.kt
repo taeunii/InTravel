@@ -10,13 +10,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.intravel.DetailMainActivity
+import com.example.intravel.MainActivity
+import com.example.intravel.R
 import com.example.intravel.adapter.MoneyAdapter
+import com.example.intravel.adapter.PayAdapter
 import com.example.intravel.client.SubClient
 import com.example.intravel.data.MoneyData
 import com.example.intravel.data.PayData
@@ -24,6 +28,7 @@ import com.example.intravel.data.TravelData
 import com.example.intravel.databinding.ActivitySubmainBinding
 import com.example.intravel.databinding.CustomMoneyBinding
 import com.example.intravel.databinding.FragmentMoneytabBinding
+import com.example.intravel.databinding.ItemMoneyBinding
 import retrofit2.Call
 import retrofit2.Response
 import java.lang.Long.parseLong
@@ -121,84 +126,6 @@ class MoneyTabFragment : Fragment() {
         } // btnMoneyAdd
 
 
-        // 머니 카드뷰가 클릭되면 수정 버튼 보이고 해당 카드뷰만 수정할 수 있도록 함
-        moneyAdapter.onItemClickListener = object : MoneyAdapter.OnItemClickListener {
-            override fun onItemClick(money: MoneyData, position: Int) {
-
-                // on/off
-                if (binding.btnMoneyEdt.isVisible == true) {
-                    binding.btnMoneyEdt.isVisible = false
-                } else {
-                    binding.btnMoneyEdt.isVisible = true
-                }
-
-                binding.btnMoneyEdt.setOnClickListener {
-                    var edtDialog = CustomMoneyBinding.inflate(LayoutInflater.from(it.context))
-                    AlertDialog.Builder(it.context).run {
-                        setTitle("예산 카테고리 수정하기")
-                        setView(edtDialog.root)
-                        edtDialog.txt1.text = "수정할 이름을 입력해주세요."
-                        edtDialog.edtTitle.setText(money.moneyTitle)
-                        edtDialog.txt2.text = "수정할 금액을 입력해주세요."
-                        edtDialog.edtMoney.setText(money.expenses.toString())
-
-                        setPositiveButton("확인", object : DialogInterface.OnClickListener {
-                            override fun onClick(p0: DialogInterface?, p1: Int) {
-                                var m = MoneyData(
-                                    money.moneyId,
-                                    money.travId,
-                                    edtDialog.edtTitle.text.toString(),
-                                    parseLong(edtDialog.edtMoney.text.toString()), // long형으로 변환
-                                )
-                                SubClient.retrofit.updateMoney(money.moneyId, m)
-                                    .enqueue(object : retrofit2.Callback<MoneyData> {
-                                        override fun onResponse(
-                                            call: Call<MoneyData>,
-                                            response: Response<MoneyData>
-                                        ) {
-                                            moneyAdapter.updateMoney(m, position)
-                                        }
-
-                                        override fun onFailure(
-                                            call: Call<MoneyData>,
-                                            t: Throwable
-                                        ) {
-                                            TODO("Not yet implemented")
-                                        }
-                                    }) // enqueue
-                            }
-                        }) // positive
-
-                        // positive 버튼 한개 더 만들어서 삭제로 하면 위치가 똑같고 얘 쓰면 왼쪽 끝에 나옴
-                        setNeutralButton("삭제", object : DialogInterface.OnClickListener {
-                            override fun onClick(p0: DialogInterface?, p1: Int) {
-//                        removeData(holder.adapterPosition)
-
-                                // db 연결버전
-                                SubClient.retrofit.deleteByIdMoney(money.moneyId)
-                                    .enqueue(object : retrofit2.Callback<Void> {
-                                        override fun onResponse(
-                                            call: Call<Void>,
-                                            response: Response<Void>
-                                        ) {
-                                            moneyAdapter.removeMoney(position)
-                                        }
-
-                                        override fun onFailure(call: Call<Void>, t: Throwable) {
-                                            TODO("Not yet implemented")
-                                        }
-                                    })//enqueu
-                            }//onclick
-                        })//Neutral 삭제
-
-                        setNegativeButton("취소", null)
-                        show()
-                    } // dialog
-                }// btnMoneyEdt
-            } // onItemClick
-        } // ItemClickListener
-
-
         var payList = mutableListOf<PayData>()
 
 //        // 메인에서 받은 travId로 페이 목록 불러와서 총 지출 계산하면 됨
@@ -251,16 +178,12 @@ class MoneyTabFragment : Fragment() {
 
         }
     }
-        // 디비에 있는 페이데이터가 갱신이 되면?
-        // 머니 어댑터에 있는 지출 목록이 업데이트 되면 ?
-        // 프레그먼트 떼엇다가 붙이면 갱신되나
-        // 화면 이동하고 오면 되어있음
 
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-
-
+//        var intent = Intent(context, MainActivity::class.java)
+//        startActivity(intent)
     }
 
 }

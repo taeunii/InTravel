@@ -51,7 +51,7 @@ class DetailMainActivity : AppCompatActivity() {
     var tEndDate = intent.getStringExtra("tEndDate")
 
     binding.headerTitle.text = tTitle
-    binding.mainTitle2.text = dday
+    binding.mainTitle2.text = "D $dday"
     binding.mainSubtitle.text = today
 
     var sYear = tStartDate!!.substring(0,4) // 2024

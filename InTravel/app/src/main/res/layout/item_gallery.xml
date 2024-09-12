@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
@@ -8,10 +8,7 @@
 
     <ImageView
         android:id="@+id/galleryIv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxWidth="150dp"
-        android:maxHeight="150dp"
-        android:padding="5dp"/>
+        android:layout_height="150dp"
+        android:layout_width="150dp"/>
 
-</GridLayout>
+</LinearLayout>

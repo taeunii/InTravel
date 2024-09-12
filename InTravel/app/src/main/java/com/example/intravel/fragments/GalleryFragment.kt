@@ -2,23 +2,17 @@ package com.example.intravel.fragments
 
 import android.content.ContentValues
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.intravel.R
 import com.example.intravel.adapter.GalleryAdapter
 import com.example.intravel.client.Client
 import com.example.intravel.data.PhotoData
@@ -29,18 +23,17 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.http.Multipart
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
-import kotlin.properties.Delegates
 
 class GalleryFragment : Fragment() {
 
   lateinit var binding: FragmentGalleryBinding
   lateinit var galleryAdapter: GalleryAdapter
   lateinit var filePath: String
-  var tId by Delegates.notNull<Long>()
+//  val tId = activity?.intent?.getLongExtra("tId", 0)?: 0
+//  var tId by Delegates.notNull<Long>()
+  var tId: Long = 0
+  var photoId: Long = 0
 
   private val requestCameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
     if (success) {
@@ -76,7 +69,7 @@ class GalleryFragment : Fragment() {
     binding.galleryRV.adapter = galleryAdapter
     binding.galleryRV.layoutManager = GridLayoutManager(requireContext(), 3)
 
-//    loadPhotoList()
+    loadPhotoList()
 
     //    카메라 버튼 클릭
     binding.btnTakePhoto.setOnClickListener {
@@ -110,7 +103,10 @@ class GalleryFragment : Fragment() {
     call.enqueue(object : Callback<PhotoData> {
       override fun onResponse(call: Call<PhotoData>, response: Response<PhotoData>) {
         if (response.isSuccessful) {
-//          성공
+          response.body()?.let { newPhoto ->
+            galleryAdapter.photoList.add(newPhoto)
+            galleryAdapter.notifyDataSetChanged()
+          }
         }
         else {
 //          실패
@@ -158,7 +154,12 @@ class GalleryFragment : Fragment() {
     })
   }
 
+//  override fun onAttach(context: Context) {
+//    super.onAttach(context)
+//    var intent = Intent(this.context, PhotoFullActivity::class.java)
+//
+//    intent.putExtra("photoId", photoId)
+//
+//    startActivity(intent)
+//  }
 }
-
-
-

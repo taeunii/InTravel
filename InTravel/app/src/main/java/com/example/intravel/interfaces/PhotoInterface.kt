@@ -14,7 +14,6 @@ import retrofit2.http.Path
 
 interface PhotoInterface {
 
-  @Multipart
   @GET("/photo/list/{tId}")
   fun findPhotoList(@Path("tId") tId:Long): Call<List<PhotoData>>
 

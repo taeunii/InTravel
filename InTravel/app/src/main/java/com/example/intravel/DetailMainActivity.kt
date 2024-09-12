@@ -108,7 +108,7 @@ class DetailMainActivity : AppCompatActivity() {
     }
 
     binding.iconLeft.setOnClickListener {
-      navigateToMainActivity()
+      finish()
     }
   }
 

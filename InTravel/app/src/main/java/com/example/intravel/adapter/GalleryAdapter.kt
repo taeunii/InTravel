@@ -1,5 +1,7 @@
 package com.example.intravel.adapter
 
+import android.app.Activity
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +22,7 @@ class GalleryAdapter(var photoList: MutableList<PhotoData>): RecyclerView.Adapte
     val photo = photoList[position]
 
     Glide.with(holder.binding.root.context)
-      .load(photo.filePath+photo.fileName)
+      .load("http://10.100.105.208:8811/photos/" + photo.fileName)
       .into(holder.binding.galleryIv)
   }
 

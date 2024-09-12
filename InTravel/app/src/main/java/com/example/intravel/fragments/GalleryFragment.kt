@@ -6,14 +6,17 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.intravel.PhotoFullActivity
 import com.example.intravel.adapter.GalleryAdapter
 import com.example.intravel.client.Client
 import com.example.intravel.data.PhotoData
@@ -30,12 +33,7 @@ class GalleryFragment : Fragment() {
 
   lateinit var binding: FragmentGalleryBinding
   lateinit var galleryAdapter: GalleryAdapter
-  lateinit var filePath: String
-//  val tId = activity?.intent?.getLongExtra("tId", 0)?: 0
-//  var tId by Delegates.notNull<Long>()
   var tId: Long = 0
-  var photoId: Long = 0
-  private val REQUEST_DELETE_PHOTO = 100
 
   private val requestCameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
     if (success) {
@@ -76,20 +74,8 @@ class GalleryFragment : Fragment() {
     binding.btnTakePhoto.setOnClickListener {
       takePhotoIntent()
     }
-  }
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    super.onActivityResult(requestCode, resultCode, data)
 
-    if (requestCode == REQUEST_DELETE_PHOTO && resultCode == Activity.RESULT_OK) {
-      val deletedPhotoId = data?.getLongExtra("deletedPhotoId", 0) ?: 0
-
-      val index = galleryAdapter.photoList.indexOfFirst { it.photoId == deletedPhotoId }
-      if (index != -1) {
-        galleryAdapter.photoList.removeAt(index)
-        galleryAdapter.notifyItemRemoved(index)
-      }
-    }
-  }
+  } // viewCreate
 
   private fun takePhotoIntent() {
     Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
@@ -167,13 +153,4 @@ class GalleryFragment : Fragment() {
       }
     })
   }
-
-//  override fun onAttach(context: Context) {
-//    super.onAttach(context)
-//    var intent = Intent(this.context, PhotoFullActivity::class.java)
-//
-//    intent.putExtra("photoId", photoId)
-//
-//    startActivity(intent)
-//  }
 }

@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.intravel.PhotoFullActivity
@@ -38,6 +40,7 @@ class GalleryAdapter(var photoList: MutableList<PhotoData>): RecyclerView.Adapte
       intent.putExtra("photoId", photo.photoId)
       (holder.binding.root.context as Activity).startActivityForResult(intent, REQUEST_DELETE_PHOTO)
     }
+
   }
 
   override fun getItemCount(): Int {

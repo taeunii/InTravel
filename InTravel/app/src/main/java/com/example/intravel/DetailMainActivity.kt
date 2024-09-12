@@ -20,7 +20,7 @@ import com.example.intravel.adapter.DetailTabFragmentAdapter
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 
-
+import androidx.viewpager2.widget.ViewPager2
 import com.example.intravel.databinding.ActivitySubmainBinding
 import com.example.intravel.databinding.FragmentGalleryBinding
 
@@ -34,7 +34,7 @@ class DetailMainActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivitySubmainBinding
 //  private lateinit var viewPager2Adapter: MyFragmentAdapter
-
+  lateinit var detailTabFragmentAdapter: DetailTabFragmentAdapter
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
@@ -79,19 +79,22 @@ class DetailMainActivity : AppCompatActivity() {
 
 
     // MyFragmentAdapter 설정
-    val detailTabFragmentAdapter = DetailTabFragmentAdapter(this)
+    detailTabFragmentAdapter = DetailTabFragmentAdapter(this)
     binding.viewpager2.adapter = detailTabFragmentAdapter
 
-    val tabElement: List<String> = mutableListOf("To-Do", "Memo", "Money", "Gallery")
+    val tabElement: List<String> = mutableListOf("To-Do", "Memo", "Menu", "Gallery")
 
+    fun refresh(){
+      detailTabFragmentAdapter.notifyDataSetChanged()
+    }
 
     try {
       TabLayoutMediator(binding.tablayout, binding.viewpager2) { tab, position ->
         val textView = TextView(this@DetailMainActivity)
         textView.text = tabElement[position]
+        tab.customView = textView
         textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
         textView.setTypeface(textView.typeface, Typeface.BOLD)
-        tab.customView = textView
 //        tab.text. = View.TEXT_ALIGNMENT_CENTER
       }.attach()
     } catch (e: Exception) {

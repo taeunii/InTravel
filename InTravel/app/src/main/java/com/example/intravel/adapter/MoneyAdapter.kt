@@ -51,13 +51,10 @@ class MoneyAdapter(var context: Context, var moneyList:MutableList<MoneyData>):R
         notifyDataSetChanged()
     }
 
-//    var payList = mutableListOf<PayData>(
-//        PayData(0,9,"아이스크림",0,3000),
-//        PayData(0,10,"몽쉘",0,5000),
-//        PayData(0,11,"몽쉘",0,5000),
-//        )
     var payList = mutableListOf<PayData>()
-//    var payAdapter = PayAdapter(context,payList)
+
+
+
 
     inner class Holder(val binding: ItemMoneyBinding):RecyclerView.ViewHolder(binding.root) {
 
@@ -67,17 +64,24 @@ class MoneyAdapter(var context: Context, var moneyList:MutableList<MoneyData>):R
         return Holder(ItemMoneyBinding.inflate(LayoutInflater.from(parent.context),parent,false))
     }
 
+
     interface OnItemClickListener{
         fun onItemClick(money: MoneyData, position: Int)
     }
     var onItemClickListener:OnItemClickListener?=null
 
 
+    interface OnItemChangeListener{
+        fun onItemChange()
+    }
+    var onItemChangeListener:OnItemChangeListener?=null
+
     override fun onBindViewHolder(holder: MoneyAdapter.Holder, position: Int) {
         var money = moneyList.get(position)
         holder.binding.moneyTitle.text = money.moneyTitle
         holder.binding.mDefaultMoney.text = "예산 : ${DecimalFormat("#,###").format(money.expenses)}원"
         holder.binding.mMinus.text = "지출 : 90.000원"
+
 
 
         var payAdapter = PayAdapter(context,payList) // 뷰바인더마다 어댑터 새로 생성해서 붙어야함 ;
@@ -99,6 +103,7 @@ class MoneyAdapter(var context: Context, var moneyList:MutableList<MoneyData>):R
                 sumPlus = payAdapter.sumPlus(response.body()as MutableList<PayData>)
                 sumMinus = payAdapter.sumMinus(response.body()as MutableList<PayData>)
                 expenses = (money.expenses+sumMinus+sumPlus).toInt()
+
 
                 // 계산된 예산 붙이기
                 holder.binding.mDefaultMoney.text = "예산 : ${DecimalFormat("#,###").format(expenses)}원"
@@ -158,6 +163,7 @@ class MoneyAdapter(var context: Context, var moneyList:MutableList<MoneyData>):R
 
 
                         var p = PayData(0,
+                            money.travId,
                             money.moneyId,
                             payAddDialog.edtPayTitle.text.toString(),
                             parseLong(plus) ,
@@ -168,6 +174,8 @@ class MoneyAdapter(var context: Context, var moneyList:MutableList<MoneyData>):R
                             override fun onResponse(call: Call<PayData>, response: Response<PayData>) {
                                 payAdapter.insertPay(p)
                                 notifyDataSetChanged()
+//                                onItemChangeListener!!.onItemChange()
+
                             }
 
                             override fun onFailure(call: Call<PayData>, t: Throwable) {
@@ -230,6 +238,7 @@ class MoneyAdapter(var context: Context, var moneyList:MutableList<MoneyData>):R
                             }
 
                             var p = PayData(0,
+                                pay.travId,
                                 pay.moneyId,
                                 payEdtDialog.edtPayTitle.text.toString(),
                                 parseLong(plus) ,
@@ -240,6 +249,7 @@ class MoneyAdapter(var context: Context, var moneyList:MutableList<MoneyData>):R
                                 override fun onResponse(call: Call<PayData>, response: Response<PayData>) {
                                     payAdapter.updatePay(p,position)
                                     notifyDataSetChanged()
+
                                 }
 
                                 override fun onFailure(call: Call<PayData>, t: Throwable) {

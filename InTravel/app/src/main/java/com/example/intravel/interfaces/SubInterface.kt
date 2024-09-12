@@ -70,10 +70,10 @@ interface SubInterface {
 
     // Pay
     // 전체보기
-    @GET("pay/list/{mId}")
+    @GET("pay/moneyList/{mId}")
     fun findAllPayList(@Path("mId")moneyId: Long):Call<List<PayData>>
 
-    @GET("pay/list/{tId}")
+    @GET("pay/travList/{tId}")
     fun findTravIdPayList(@Path("tId") travId: Long):Call<List<PayData>>
 
     // 추가

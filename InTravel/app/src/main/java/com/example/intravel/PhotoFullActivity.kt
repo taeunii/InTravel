@@ -2,14 +2,12 @@ package com.example.intravel
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
-import com.example.intravel.adapter.MoneyAdapter
 import com.example.intravel.client.Client
 import com.example.intravel.databinding.ActivityPhotoFullBinding
 import retrofit2.Call
@@ -45,31 +43,5 @@ class PhotoFullActivity : AppCompatActivity() {
     binding.btnBack.setOnClickListener {
       finish()
     }
-
-    binding.btnDeletePhoto.setOnClickListener {
-      deletePhoto(photoId)
-    }
-  }
-
-  private fun deletePhoto(photoId: Long) {
-    val call = Client.photoRetrofit.deletePhoto(photoId)
-    call.enqueue(object : Callback<Void> {
-      override fun onResponse(call: Call<Void>, response: Response<Void>) {
-        if (response.isSuccessful) {
-          val intent = Intent().apply {
-            putExtra("deletedPhotoId", photoId)
-          }
-          setResult(RESULT_OK, intent)
-          finish()
-        }
-        else {
-          Toast.makeText(this@PhotoFullActivity, "삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
-        }
-      }
-
-      override fun onFailure(call: Call<Void>, t: Throwable) {
-        Toast.makeText(this@PhotoFullActivity, "삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
-      }
-    })
   }
 }

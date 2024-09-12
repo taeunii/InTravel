@@ -33,6 +33,7 @@ class GalleryFragment : Fragment() {
 
   lateinit var binding: FragmentGalleryBinding
   lateinit var galleryAdapter: GalleryAdapter
+  private lateinit var deletePhotoLauncher: ActivityResultLauncher<Intent>
   var tId: Long = 0
 
   private val requestCameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
@@ -73,6 +74,19 @@ class GalleryFragment : Fragment() {
     //    카메라 버튼 클릭
     binding.btnTakePhoto.setOnClickListener {
       takePhotoIntent()
+    }
+
+    deletePhotoLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+      if (result.resultCode == Activity.RESULT_OK) {
+        val deletedPhotoId = result.data?.getLongExtra("deletedPhotoId", 0) ?: 0
+
+        // 삭제된 사진의 ID를 기반으로 리스트에서 항목 제거
+        val index = galleryAdapter.photoList.indexOfFirst { it.photoId == deletedPhotoId }
+        if (index != -1) {
+          galleryAdapter.removePhoto
+
+        }
+      }
     }
 
   } // viewCreate
@@ -153,4 +167,6 @@ class GalleryFragment : Fragment() {
       }
     })
   }
+
+
 }

@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.example.intravel.PhotoFullActivity
 import com.example.intravel.client.Client
 import com.example.intravel.data.PhotoData
+import com.example.intravel.databinding.CustomPhotoBinding
 import com.example.intravel.databinding.ItemGalleryBinding
 import retrofit2.Call
 import retrofit2.Response
@@ -22,6 +23,7 @@ import retrofit2.Response
 class GalleryAdapter(var photoList: MutableList<PhotoData>): RecyclerView.Adapter<GalleryAdapter.Holder>() {
 
   private val REQUEST_DELETE_PHOTO = 100
+  var position1 = 0
 
   fun removeData(position: Int){
     photoList.removeAt(position)
@@ -45,37 +47,52 @@ class GalleryAdapter(var photoList: MutableList<PhotoData>): RecyclerView.Adapte
       .into(holder.binding.galleryIv)
 
     holder.itemView.setOnClickListener {
+      var dialogPhoto = CustomPhotoBinding.inflate(LayoutInflater.from(it.context))
+
       Log.d("clickclick","clickclick")
-      AlertDialog.Builder(it.context).run{
-        setTitle("사진 삭제하시겠습니까")
-        setPositiveButton("예",object: DialogInterface.OnClickListener {
-          override fun onClick(p0: DialogInterface?, p1: Int) {
-            Client.photoRetrofit.deletePhoto(photo.photoId).enqueue(object:retrofit2.Callback<Void>{
-              override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                removeData(holder.adapterPosition)
-              }
 
-              override fun onFailure(call: Call<Void>, t: Throwable) {
-                TODO("Not yet implemented")
-              }
+      Glide.with(it.context)
+        .load(url + photo.fileName)
+        .into(dialogPhoto.photo)
 
-            })
-          }
+//      AlertDialog.Builder(it.context).run{
+////        setTitle("사진 크게보기!")
+//        setView(dialogPhoto.root)
+//
+//        setPositiveButton("삭제하기",object: DialogInterface.OnClickListener{
+//          override fun onClick(p0: DialogInterface?, p1: Int) {
+//            Client.photoRetrofit.deletePhoto(photo.photoId).enqueue(object:retrofit2.Callback<Void>{
+//              override fun onResponse(call: Call<Void>, response: Response<Void>) {
+//                removeData(holder.adapterPosition)
+//              }
+//              override fun onFailure(call: Call<Void>, t: Throwable) {
+//                TODO("Not yet implemented")
+//              }
+//            })
+//          }
+//        })
+//        setNegativeButton("닫기",null)
+//        show()
+//      }
+      holder.binding.galleryIv.setOnClickListener {
+        val intent = Intent(holder.binding.root.context, PhotoFullActivity::class.java)
+        intent.putExtra("url", url)
+        intent.putExtra("fileName", photo.fileName)
+        intent.putExtra("photoId", photo.photoId)
+        intent.putExtra("position", position)
+        position1 = position
+        (holder.binding.root.context as Activity).startActivityForResult(intent, REQUEST_DELETE_PHOTO)
+//        removeData(holder.adapterPosition)
 
-        })
-        setNegativeButton("아니요",null)
-        show()
       }
-
-//      val intent = Intent(holder.binding.root.context, PhotoFullActivity::class.java)
-//      intent.putExtra("url", url)
-//      intent.putExtra("fileName", photo.fileName)
-//      intent.putExtra("photoId", photo.photoId)
-//      (holder.binding.root.context as Activity).startActivityForResult(intent, REQUEST_DELETE_PHOTO)
     }
   }
 
   override fun getItemCount(): Int {
     return photoList.size
+  }
+
+  val removePhoto = {
+    removeData(position1)
   }
 }

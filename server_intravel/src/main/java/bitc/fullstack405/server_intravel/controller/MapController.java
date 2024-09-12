@@ -15,7 +15,7 @@ public class MapController {
     private final MapService mapService;
 
     @GetMapping("/list/{tId}")
-    public List<MapEntity> MapList(@PathVariable("tId") Long travId) {
+    public List<MapEntity> mapList(@PathVariable("tId") Long travId) {
         return mapService.findAll(travId);
     }
 

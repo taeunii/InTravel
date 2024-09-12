@@ -259,7 +259,8 @@ class MainActivity : AppCompatActivity() {
 
         dialogInsert.cateSpinner.onItemSelectedListener = object:AdapterView.OnItemSelectedListener{
           override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-            cateSelected = cateList.get(position)
+            // 선택값을 리스트의 문자열 말고 포지션 값으로 저장
+            cateSelected = position.toString()
           }
 
           override fun onNothingSelected(p0: AdapterView<*>?) {

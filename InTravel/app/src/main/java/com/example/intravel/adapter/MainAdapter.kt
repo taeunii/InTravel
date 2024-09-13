@@ -290,8 +290,8 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
             // 여행 완료 됐는지 묻는 창
             AlertDialog.Builder(holder.itemView.context).run{
                 setTitle("여행 완료 여부")
-                setMessage("${data.travTitle}이 완료된 여행이 맞나요?")
-                setPositiveButton("예",object:DialogInterface.OnClickListener{
+                setMessage("[${data.travTitle}]이 완료된 여행이 맞나요?\n취소를 누르시면 마감일이 하루 연장됩니다.")
+                setPositiveButton("확인",object:DialogInterface.OnClickListener{
                     override fun onClick(p0: DialogInterface?, p1: Int) {
 
                         val d = TravelData( // 수정된 데이터 생성
@@ -317,7 +317,33 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
                     }
 
                 })
-                setNegativeButton("아니오",null)
+                // 취소 누르면 마감일 하루 +1
+                setNegativeButton("취소",object:DialogInterface.OnClickListener{
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        var cancleEndDate = (endDate+1).toString()
+                        val d = TravelData( // 수정된 데이터 생성
+                            data.travId,
+                            data.travTitle,
+                            data.createDate,
+                            data.startDate,
+                            cancleEndDate,
+                            cateSelected,
+                            'N')
+
+                        Client.retrofit.update(d.travId, d).enqueue(object:retrofit2.Callback<TravelData>{
+                            override fun onResponse(call: Call<TravelData>,response: Response<TravelData>) {
+                                response.body()?.let { updateData(it, position) }
+
+                            }
+
+                            override fun onFailure(call: Call<TravelData>, t: Throwable) {
+                                TODO("Not yet implemented")
+                            }
+
+                        })
+                    }
+
+                })
                 show()
 
             }

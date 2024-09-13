@@ -17,13 +17,22 @@ import com.example.intravel.MainActivity
 import com.example.intravel.R
 import com.example.intravel.client.SubClient
 import com.example.intravel.data.TodoList
+import com.example.intravel.data.TravelData
 import com.example.intravel.databinding.ItemTodolistBinding
 import retrofit2.Call
 import retrofit2.Response
+import java.util.Collections
 
 class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<TodoListAdapter.TodoHolder>() {
 
-    class TodoHolder(val binding: ItemTodolistBinding):RecyclerView.ViewHolder(binding.root)
+    inner class TodoHolder(val binding: ItemTodolistBinding):RecyclerView.ViewHolder(binding.root){
+
+        init{
+
+        }
+
+
+    }
 
     // 추가
     fun addTodoList(todoItem: TodoList) {
@@ -33,21 +42,35 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
 
     // 수정
     fun updateTodoList(todoItem: TodoList, position: Int) {
-        // 기존 항목을 제거
-        todoList.removeAt(position)
-
-        // 완료 여부에 따라 새 위치 결정
-        val newPosition = if (todoItem.todoComplete == 'Y') {
-            todoList.size  // 완료된 항목을 리스트의 맨 아래로 이동
-        }
-        else {
-            // 완료되지 않은 항목을 `todoId` 순서에 맞게 재배치
-            todoList.indexOfFirst { it.todoId > todoItem.todoId }.takeIf { it >= 0 } ?: todoList.size
-        }
+//        // 기존 항목을 제거
+//        todoList.removeAt(position)
+//
+//        // 완료 여부에 따라 새 위치 결정
+//        val newPosition = if (todoItem.todoComplete == 'Y') {
+//            todoList.size  // 완료된 항목을 리스트의 맨 아래로 이동
+//        }
+//        else {
+//            // 완료되지 않은 항목을 `todoId` 순서에 맞게 재배치
+//            todoList.indexOfFirst { it.todoId > todoItem.todoId }.takeIf { it >= 0 } ?: todoList.size
+//        }
 
         // 새 위치에 항목 추가
-        todoList.add(newPosition, todoItem)
-        notifyDataSetChanged()  // RecyclerView에 변경 사항 알림
+//        todoList.add(newPosition, todoItem)
+
+//        var posZeroItem = todoList.get(0)
+
+//        todoList[position] = todoItem
+        if(todoItem.todoImpo == 'Y'){
+//            todoList.add(0,todoItem)
+//            todoList.removeAt(position+1)
+            Collections.swap(todoList,position,0)
+            notifyItemMoved(position, 0)
+        }
+        else{
+            todoList[position] = todoItem
+            notifyDataSetChanged()
+        }
+          // RecyclerView에 변경 사항 알림
     }
 
     // 삭제
@@ -55,6 +78,12 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
         todoList.removeAt(position)
         notifyDataSetChanged()
     }
+
+
+    interface OnItemClickListener{
+        fun onItemClick()
+    }
+    var onItemClickListener:OnItemClickListener?=null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoHolder {
         return TodoHolder(ItemTodolistBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -96,6 +125,7 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
             SubClient.retrofit.updateTodoList(todos.todoId, todos).enqueue(object : retrofit2.Callback<TodoList> {
                 override fun onResponse(call: Call<TodoList>, response: Response<TodoList>) {
                     response.body()?.let { updateItem -> updateTodoList(updateItem, holder.adapterPosition) }
+                    onItemClickListener!!.onItemClick()
                 }
                 override fun onFailure(call: Call<TodoList>, t: Throwable) {
                 }
@@ -131,12 +161,14 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
         holder.binding.btnTodolistSave.setOnClickListener {
 
             var todos = TodoList(todoItem.todoId, todoItem.travId, holder.binding.tdContent.text.toString(), todoItem.todoComplete, todoItem.todoImpo)
-
             // 서버에 데이터 업데이트 요청
             SubClient.retrofit.updateTodoList(todos.todoId, todos).enqueue(object : retrofit2.Callback<TodoList> {
                 override fun onResponse(call: Call<TodoList>, response: Response<TodoList>) {
 //                    Log.d("todo update","${response.body()}")
-                    response.body()?.let { updateItem -> updateTodoList(updateItem, holder.adapterPosition) }
+                    response.body()?.let { updateItem ->
+                        updateTodoList(updateItem, holder.adapterPosition) }
+
+
                 }
                 override fun onFailure(call: Call<TodoList>, t: Throwable) {
                 }

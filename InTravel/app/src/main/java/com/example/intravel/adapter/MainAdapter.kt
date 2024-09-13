@@ -1,6 +1,7 @@
 package com.example.intravel.adapter
 
 import android.content.DialogInterface
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -108,7 +109,9 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
         // 카테고리스피너
         val cateList = mutableListOf("---선택해주세요---","혼자","친구","가족","연인")
 
+        // 완료된 여행
         if(data.travComplete == 'Y'){
+            holder.binding.itemMainBox.setBackgroundColor(Color.parseColor("#41FBEA04")) // 완료항목 색 옅게
             holder.binding.frontLayout.isVisible = false
             holder.binding.completeLayout.isVisible = true
             //holder.binding.itemTextview.isVisible = false // 장소까지 숨김
@@ -116,10 +119,12 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
             holder.binding.comPeriod.text = "$sYear.$sMonth.$sDay~$eYear.$eMonth.$eDay"
             holder.binding.comCate.text = "같이 갔던 사람 : ${cateList.get((parseInt(data.cate)))}"
 
-        }else{
+        }
+        // 진행중인 여행
+        else{
+            holder.binding.itemMainBox.setBackgroundColor(Color.parseColor("#FBEA04"))
             holder.binding.frontLayout.isVisible = true
             holder.binding.completeLayout.isVisible = false
-
             holder.binding.itemTitle.text = data.travTitle
             holder.binding.itemCate.text = cateList.get((parseInt(data.cate)))
             holder.binding.itemDday.text = "D $dday"
@@ -290,8 +295,8 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
             // 여행 완료 됐는지 묻는 창
             AlertDialog.Builder(holder.itemView.context).run{
                 setTitle("여행 완료 여부")
-                setMessage("${data.travTitle}이 완료된 여행이 맞나요?")
-                setPositiveButton("예",object:DialogInterface.OnClickListener{
+                setMessage("[${data.travTitle}]이 완료된 여행이 맞나요?\n취소를 누르시면 마감일이 하루 연장됩니다.")
+                setPositiveButton("확인",object:DialogInterface.OnClickListener{
                     override fun onClick(p0: DialogInterface?, p1: Int) {
 
                         val d = TravelData( // 수정된 데이터 생성
@@ -317,7 +322,33 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
                     }
 
                 })
-                setNegativeButton("아니오",null)
+                // 취소 누르면 마감일 하루 +1
+                setNegativeButton("취소",object:DialogInterface.OnClickListener{
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        var cancleEndDate = (endDate+1).toString()
+                        val d = TravelData( // 수정된 데이터 생성
+                            data.travId,
+                            data.travTitle,
+                            data.createDate,
+                            data.startDate,
+                            cancleEndDate,
+                            cateSelected,
+                            'N')
+
+                        Client.retrofit.update(d.travId, d).enqueue(object:retrofit2.Callback<TravelData>{
+                            override fun onResponse(call: Call<TravelData>,response: Response<TravelData>) {
+                                response.body()?.let { updateData(it, position) }
+
+                            }
+
+                            override fun onFailure(call: Call<TravelData>, t: Throwable) {
+                                TODO("Not yet implemented")
+                            }
+
+                        })
+                    }
+
+                })
                 show()
 
             }

@@ -3,7 +3,7 @@
     <item android:drawable="@android:color/white" />
     <item>
         <bitmap
-            android:src="@drawable/logo"
+            android:src="@drawable/logo_clean"
             android:gravity="center"/> <!-- 자신의 만든 로딩 화면 이미지 경로를 넣습니다 -->
     </item>
 </layer-list>

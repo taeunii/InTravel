@@ -83,7 +83,7 @@ class DetailMainActivity : AppCompatActivity() {
     detailTabFragmentAdapter = DetailTabFragmentAdapter(this)
     binding.viewpager2.adapter = detailTabFragmentAdapter
 
-    val tabElement: List<String> = mutableListOf("할일", "메모", "예산", "사진")
+    val tabElement: List<String> = mutableListOf("할일", "메모", "가계부", "사진")
 
     try {
       TabLayoutMediator(binding.tablayout, binding.viewpager2) { tab, position ->

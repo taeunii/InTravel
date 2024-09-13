@@ -1,24 +1,16 @@
 package com.example.intravel
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.example.intravel.client.Client
-import com.example.intravel.data.PhotoData
 import com.example.intravel.databinding.ActivityPhotoFullBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class PhotoFullActivity : AppCompatActivity() {
   private lateinit var binding: ActivityPhotoFullBinding
   private var photoId: Long = 0
-  private var position: Int = 0
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -28,7 +20,7 @@ class PhotoFullActivity : AppCompatActivity() {
     setContentView(binding.root)
 
 //    ViewCompat 쓰니까 오류남
-//    ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+//    ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
 //      val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 //      v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 //      insets
@@ -37,7 +29,6 @@ class PhotoFullActivity : AppCompatActivity() {
     val fileName = intent.getStringExtra("fileName") ?: ""
     val url = intent.getStringExtra("url") ?: ""
     photoId = intent.getLongExtra("photoId", 0)
-    position = intent.getIntExtra("position", 0)
 
     Glide.with(this)
       .load(url + fileName)
@@ -46,20 +37,17 @@ class PhotoFullActivity : AppCompatActivity() {
     binding.btnBack.setOnClickListener {
       finish()
     }
-    binding.btnDeletePhoto.setOnClickListener {
-      Client.photoRetrofit.deletePhoto(photoId).enqueue(object : Callback<Void> {
-        override fun onResponse(call: Call<Void>, response: Response<Void>) {
-          val result = RESULT_OK
-          intent.putExtra("result", result)
-          intent.putExtra("position", position)
-          finish()
-        }
-
-        override fun onFailure(call: Call<Void>, t: Throwable) {
-          TODO("Not yet implemented")
-        }
-
-      })
-    }
+//    binding.btnDeletePhoto.setOnClickListener {
+//      Client.photoRetrofit.deletePhoto(photoId).enqueue(object : Callback<Void> {
+//        override fun onResponse(call: Call<Void>, response: Response<Void>) {
+//          setResult(RESULT_OK)
+//          finish()
+//        }
+//
+//        override fun onFailure(call: Call<Void>, t: Throwable) {
+//          Toast.makeText(this@PhotoFullActivity, "사진 삭제 중 오류 발생", Toast.LENGTH_SHORT).show()
+//        }
+//      })
+//    }
   }
 }

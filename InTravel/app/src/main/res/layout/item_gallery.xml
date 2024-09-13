@@ -6,9 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/galleryIv"
-        android:layout_height="150dp"
-        android:layout_width="150dp"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/square_background_border_black"
+        android:layout_margin="5dp"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/galleryIv"
+            android:layout_height="125dp"
+            android:layout_width="125dp"
+            android:layout_margin="1dp"
+            android:background="#F6F4DD"/>
+    </LinearLayout>
+
+
 
 </LinearLayout>

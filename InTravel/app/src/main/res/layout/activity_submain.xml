@@ -141,6 +141,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FBEA04"
+        app:tabBackground="@drawable/tab_background"
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/yellow200"
         app:tabSelectedTextColor="@color/gray100"

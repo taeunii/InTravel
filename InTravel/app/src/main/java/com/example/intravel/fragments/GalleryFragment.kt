@@ -1,22 +1,19 @@
 package com.example.intravel.fragments
 
-import android.app.Activity
+import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.intravel.PhotoFullActivity
 import com.example.intravel.adapter.GalleryAdapter
 import com.example.intravel.client.Client
 import com.example.intravel.data.PhotoData
@@ -33,13 +30,12 @@ class GalleryFragment : Fragment() {
 
   lateinit var binding: FragmentGalleryBinding
   lateinit var galleryAdapter: GalleryAdapter
-  private lateinit var deletePhotoLauncher: ActivityResultLauncher<Intent>
   var tId: Long = 0
 
   private val requestCameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
     if (success) {
       photoUri?.let {
-        uploadPhoto(it)
+        showPhotoUploadDialog(it)
       }
     }
   }
@@ -51,6 +47,7 @@ class GalleryFragment : Fragment() {
     binding = FragmentGalleryBinding.inflate(inflater, container, false)
     return binding.root
   }
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
@@ -60,41 +57,25 @@ class GalleryFragment : Fragment() {
       insets
     }
 
-    tId = activity?.intent?.getLongExtra("tId", 0)?: 0
-
+    tId = activity?.intent?.getLongExtra("tId", 0) ?: 0
 
     val photoList = mutableListOf<PhotoData>()
-
     galleryAdapter = GalleryAdapter(photoList)
     binding.galleryRV.adapter = galleryAdapter
     binding.galleryRV.layoutManager = GridLayoutManager(requireContext(), 3)
 
     loadPhotoList()
 
-    //    카메라 버튼 클릭
+    // 카메라 버튼 클릭
     binding.btnTakePhoto.setOnClickListener {
       takePhotoIntent()
     }
-
-    deletePhotoLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-      if (result.resultCode == Activity.RESULT_OK) {
-        val deletedPhotoId = result.data?.getLongExtra("deletedPhotoId", 0) ?: 0
-
-        // 삭제된 사진의 ID를 기반으로 리스트에서 항목 제거
-        val index = galleryAdapter.photoList.indexOfFirst { it.photoId == deletedPhotoId }
-        if (index != -1) {
-          galleryAdapter.removePhoto
-
-        }
-      }
-    }
-
   } // viewCreate
 
   private fun takePhotoIntent() {
     Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-        photoUri = createPhotoUri()
-        photoUri?.let { uri -> requestCameraLauncher.launch(uri) }
+      photoUri = createPhotoUri()
+      photoUri?.let { uri -> requestCameraLauncher.launch(uri) }
     }
   }
 
@@ -106,6 +87,21 @@ class GalleryFragment : Fragment() {
       put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
     }
     return requireActivity().contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+  }
+
+  private fun showPhotoUploadDialog(photoUri: Uri) {
+    // AlertDialog 생성
+    val builder = AlertDialog.Builder(requireContext())
+    builder.setTitle("사진 업로드")
+    builder.setMessage("촬영한 사진을 저장하시겠습니까?")
+    builder.setPositiveButton("확인") { dialog, _ ->
+      uploadPhoto(photoUri)
+      dialog.dismiss()
+    }
+    builder.setNegativeButton("취소") { dialog, _ ->
+      dialog.dismiss()
+    }
+    builder.create().show()
   }
 
   private fun uploadPhoto(photoUri: Uri) {
@@ -121,16 +117,14 @@ class GalleryFragment : Fragment() {
             galleryAdapter.photoList.add(newPhoto)
             galleryAdapter.notifyDataSetChanged()
           }
-        }
-        else {
-//          실패
+        } else {
+          // 실패 처리
         }
       }
 
       override fun onFailure(call: Call<PhotoData>, t: Throwable) {
-//        에러
+        // 에러 처리
       }
-
     })
   }
 
@@ -148,7 +142,7 @@ class GalleryFragment : Fragment() {
 
   private fun loadPhotoList() {
     val call = Client.photoRetrofit.findPhotoList(tId)
-    call.enqueue(object: Callback<List<PhotoData>> {
+    call.enqueue(object : Callback<List<PhotoData>> {
       override fun onResponse(call: Call<List<PhotoData>>, response: Response<List<PhotoData>>) {
         if (response.isSuccessful) {
           response.body()?.let {
@@ -156,17 +150,14 @@ class GalleryFragment : Fragment() {
             galleryAdapter.photoList.addAll(it)
             galleryAdapter.notifyDataSetChanged()
           }
-        }
-        else {
-//          실패
+        } else {
+          // 실패 처리
         }
       }
 
       override fun onFailure(call: Call<List<PhotoData>>, t: Throwable) {
-//        에러
+        // 에러 처리
       }
     })
   }
-
-
 }

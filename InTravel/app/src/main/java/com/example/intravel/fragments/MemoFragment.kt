@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.intravel.adapter.MemoAapter
 import com.example.intravel.client.SubClient
@@ -50,6 +51,7 @@ class MemoFragment : Fragment() {
         val tId = activity?.intent?.getLongExtra("tId", 0) ?: 0
         val tStartDate = activity?.intent?.getStringExtra("tStartDate")
         val tEndDate = activity?.intent?.getStringExtra("tEndDate")
+        val tComplete = activity?.intent?.getCharExtra("travComplete",'N')
 
         // StartDate와 EndDate를 Date 객체로 변환
         val startDate: Date = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).parse(tStartDate) ?: Date()
@@ -59,7 +61,7 @@ class MemoFragment : Fragment() {
 
         // 데이터 및 어댑터 생성, 리사이클러뷰 연결
         val memoList = mutableListOf<Memo>()
-        memoAdapter = MemoAapter(memoList, tStartDate, tEndDate)
+        memoAdapter = MemoAapter(memoList, tStartDate, tEndDate, tComplete)
         binding.memoRecyclerView.adapter = memoAdapter
         binding.memoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -76,6 +78,16 @@ class MemoFragment : Fragment() {
             }
         })  //findAllMemo
 
+
+        // 완료일 지나면 작성 못하게
+        // complete Y 이면 비활성화
+
+        if(tComplete == 'Y'){
+            binding.btnMemoAdd.isVisible = false
+        }
+        else{
+            binding.btnMemoAdd.isEnabled = true
+        }
         // 메모 추가 버튼 (다이얼로그 창)
         binding.btnMemoAdd.setOnClickListener {
             val addDialog = CustomMemowriteBinding.inflate(layoutInflater)

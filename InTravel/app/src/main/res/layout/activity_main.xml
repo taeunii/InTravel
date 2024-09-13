@@ -12,7 +12,7 @@
   <androidx.constraintlayout.widget.ConstraintLayout
       android:id="@+id/constraintLayout"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="60dp"
       android:background="#FBEA04"
       android:padding="15dp"
       app:layout_constraintEnd_toEndOf="parent"
@@ -27,9 +27,9 @@
         android:id="@+id/imageView"
         android:layout_width="108dp"
         android:layout_height="30dp"
-        android:layout_marginTop="4dp"
-        android:src="@drawable/logo"
+        android:src="@drawable/logo_clean"
         android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -126,7 +126,6 @@
       android:layout_marginStart="28dp"
       android:layout_marginTop="24dp"
       android:layout_marginEnd="28dp"
-      android:layout_marginBottom="70dp"
       android:maxHeight="355dp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"

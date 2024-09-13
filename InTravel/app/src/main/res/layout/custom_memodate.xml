@@ -10,8 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"/>
+        android:layout_marginBottom="10dp"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="선택한 날짜"
+        android:textSize="20sp"
+        />
     <TextView
         android:id="@+id/choiceDate"
         android:layout_width="match_parent"
@@ -19,9 +26,18 @@
         android:hint="YYYY.MM.DD"
         android:textAlignment="center"
         android:textSize="20sp"
-        android:layout_marginBottom="30dp" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp" />
 
-<!--    <LinearLayout-->
+    <View
+        android:layout_width="170dp"
+        android:layout_height="2dp"
+        android:layout_gravity="center"
+        android:background="#9B9B9B"
+        android:layout_marginBottom="30dp"/>
+
+
+    <!--    <LinearLayout-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content"-->
 <!--        android:orientation="horizontal"-->

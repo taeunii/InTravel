@@ -15,6 +15,7 @@ import com.example.intravel.databinding.FragmentTodoListBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.Collections
 
 class TodoListFragment : Fragment() {
 
@@ -49,21 +50,96 @@ class TodoListFragment : Fragment() {
         // 서버에서 todoList 가져오기
         SubClient.retrofit.findAllTodoList(tId).enqueue(object : Callback<List<TodoList>> {
             override fun onResponse(call: Call<List<TodoList>>, response: Response<List<TodoList>>) {
+
                 response.body()?.let { todos ->
                     // 완료 여부에 따라 정렬 (완료된 항목을 맨 아래로 이동)
-                    val sortedTodos = todos.sortedWith(compareBy({ it.todoComplete == 'Y' }, { it.todoId }))
+                    val test1 = todos.sortedWith(compareBy({it.todoComplete == 'Y'}, {it.todoId}))
+
+                    var test2 = mutableListOf<TodoList>()
+                    
+
+                    for (item in test1) {
+                        if (item.todoImpo == 'Y' && item.todoComplete=='N') {
+                            test2.add(item)
+                        }
+                    }
+
+                    for (item in test1) {
+                        if (item.todoImpo == 'N' && item.todoComplete=='N') {
+                            test2.add(item)
+                        }
+                    }
+
+                    for (item in test1) {
+                        if (item.todoImpo == 'Y'&& item.todoComplete=='Y') {
+                            test2.add(item)
+                        }
+                    }
+
+                    for (item in test1) {
+                        if (item.todoImpo == 'N'&& item.todoComplete=='Y') {
+                            test2.add(item)
+                        }
+                    }
+
 
                     // 어댑터에 정렬된 리스트 설정
-                    todoListAdapter.todoList = sortedTodos.toMutableList()
+                    todoListAdapter.todoList = test2.toMutableList()
                     todoListAdapter.notifyDataSetChanged()
 
-//                    todoListAdapter.todoList = it.toMutableList()
-//                    todoListAdapter.notifyDataSetChanged()
                 }
             }
             override fun onFailure(call: Call<List<TodoList>>, t: Throwable) {
             }
         })  //findAllTodoList
+
+        // 데이터 업데이트되면 정렬 순서 맞춰서 화면 갱신
+        todoListAdapter.onItemClickListener = object:TodoListAdapter.OnItemClickListener{
+            override fun onItemClick() {
+                SubClient.retrofit.findAllTodoList(tId).enqueue(object : Callback<List<TodoList>> {
+                    override fun onResponse(call: Call<List<TodoList>>, response: Response<List<TodoList>>) {
+
+                        response.body()?.let { todos ->
+                            // 완료 여부에 따라 정렬 (완료된 항목을 맨 아래로 이동)
+                            val test1 = todos.sortedWith(compareBy({it.todoComplete == 'Y'}, {it.todoId}))
+
+                            var test2 = mutableListOf<TodoList>()
+
+                            for (item in test1) {
+                                if (item.todoImpo == 'Y' && item.todoComplete=='N') {
+                                    test2.add(item)
+                                }
+                            }
+
+                            for (item in test1) {
+                                if (item.todoImpo == 'N' && item.todoComplete=='N') {
+                                    test2.add(item)
+                                }
+                            }
+
+                            for (item in test1) {
+                                if (item.todoImpo == 'Y'&& item.todoComplete=='Y') {
+                                    test2.add(item)
+                                }
+                            }
+
+                            for (item in test1) {
+                                if (item.todoImpo == 'N'&& item.todoComplete=='Y') {
+                                    test2.add(item)
+                                }
+                            }
+
+
+                            // 어댑터에 정렬된 리스트 설정
+                            todoListAdapter.todoList = test2.toMutableList()
+                            todoListAdapter.notifyDataSetChanged()
+                        }
+                    }
+                    override fun onFailure(call: Call<List<TodoList>>, t: Throwable) {
+                    }
+                })  //findAllTodoList
+            }
+        }
 
         // 새로운 TodoList 추가 버튼 이벤트 처리
         binding.btnTodoListAdd.setOnClickListener {
@@ -72,7 +148,8 @@ class TodoListFragment : Fragment() {
             // 서버에 새로운 TodoList 추가
             SubClient.retrofit.insertTodoList(tId, newTodo).enqueue(object : Callback<TodoList> {
                 override fun onResponse(call: Call<TodoList>, response: Response<TodoList>) {
-                    response.body()?.let { item -> todoListAdapter.addTodoList(item)}
+                    response.body()?.let { item ->
+                        todoListAdapter.addTodoList(item)}
                     }
                 override fun onFailure(call: Call<TodoList>, t: Throwable) {
                 }

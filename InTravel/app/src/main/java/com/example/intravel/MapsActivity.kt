@@ -73,9 +73,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var tId: Long = 0
 
-//    // 마커 색상
-//    private var selectedColorResId: Int = R.drawable.dot_yellow // 기본 색상
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -133,7 +130,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Intent로부터 tId를 추출
         tId = intent.getLongExtra("tId", 0)
 
-        // 핀 위치 지정 후 + 버튼 클릭 시 이벤트 처리
+        // 핀 위치 지정 후 추가 버튼 클릭 시 이벤트 처리
         binding.btnPinAdd.setOnClickListener {
             val currentLatLng = currentMarker?.position ?: return@setOnClickListener    // 현재 클릭한 위치 가져오기
 
@@ -196,7 +193,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             // 기존 핀 제거
             clearMarkers()
             // 새 핀 추가
-//            currentMarker = setupMarker(LatLngEntity(latLng.latitude, latLng.longitude), selectedColorResId)
             currentMarker = setupMarker(LatLngEntity(latLng.latitude, latLng.longitude))
 
             // 주소 표시
@@ -224,11 +220,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         for (marker in markers) {
                             val latLng =
                                 LatLng(marker.latitude.toDouble(), marker.longitude.toDouble())
-//                            val resizedBitmap = resizeBitmap(selectedColorResId, 100, 100)
                             val markerOptions = MarkerOptions()
                                 .position(latLng)
-                                .title(marker.pinName)
-//                                .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap))
 
                             val googleMapMarker = googleMap.addMarker(markerOptions)
 
@@ -255,10 +248,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         googleMap.setOnMarkerClickListener { marker ->
             val mapItem = markersMap[marker]
 
-            mapItemForFunc = mapItem!!
+            // mapItem이 null인 경우 처리 (아무 동작하지 않음)
+            if (mapItem == null) {
+                return@setOnMarkerClickListener true // true를 반환하여 기본 동작을 막음
+            }
+
+            mapItemForFunc = mapItem
 
             binding.addressTextView.text = getAddressFromLatLng(marker.position)
-            binding.pinNameTextView.setText(mapItem!!.pinName)
+            binding.pinNameTextView.setText(mapItem.pinName)
 
             // 버튼의 가시성 설정
             if (mapItemForFunc.pinName == null) {
@@ -300,6 +298,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         SubClient.retrofit.updateMap(mapItemForFunc.mapId, updatedMapItem).enqueue(object : retrofit2.Callback<Maps> {
                             override fun onResponse(call: Call<Maps>, response: Response<Maps>) {
                                 binding.pinNameTextView.text = updatedMapItem.pinName
+                                // 수정된 마커 데이터를 mapItemForFunc에 업데이트
+                                mapItemForFunc.pinName = updatePinName
                             }
                             override fun onFailure(call: Call<Maps>, t: Throwable) {}
                         })
@@ -370,7 +370,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                         // 마커 추가
                         clearMarkers()
-//                        currentMarker = setupMarker(LatLngEntity(latLng.latitude, latLng.longitude), selectedColorResId)
                         currentMarker = setupMarker(LatLngEntity(latLng.latitude, latLng.longitude))
                         currentMarker?.showInfoWindow()
 
@@ -416,26 +415,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                REQUEST_LOCATION_PERMISSION
-            )
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_PERMISSION)
         } else {
             updateCurrentLocation()
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray){
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -446,28 +433,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-//    // 마커 위치, 모양
-//    private fun setupMarker(locationLatLngEntity: LatLngEntity, colorResId: Int): Marker? {
-//        val positionLatLng = LatLng(
-//            locationLatLngEntity.latitude ?: return null,
-//            locationLatLngEntity.longitude ?: return null
-//        )
-//
-//        val resizedBitmap = resizeBitmap(colorResId, 100, 100)
-//
-//        val markerOption = MarkerOptions().apply {
-//            position(positionLatLng)
-//            icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap))
-//        }
-//        return googleMap.addMarker(markerOption)
-//    }
-
     // 마커 위치, 모양
     private fun setupMarker(locationLatLngEntity: LatLngEntity): Marker? {
-        val positionLatLng = LatLng(
-            locationLatLngEntity.latitude ?: return null,
-            locationLatLngEntity.longitude ?: return null
-        )
+        val positionLatLng = LatLng(locationLatLngEntity.latitude ?: return null, locationLatLngEntity.longitude ?: return null)
 
         val markerOption = MarkerOptions().apply {
             position(positionLatLng)
@@ -552,23 +520,4 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         var latitude: Double?,
         var longitude: Double?
     )
-
-    // 마커 관련된 함수
-//    // Bitmap 크기 조정 함수
-//    private fun resizeBitmap(resourceId: Int, width: Int, height: Int): Bitmap {
-//        val originalBitmap = BitmapFactory.decodeResource(resources, resourceId)
-//        return Bitmap.createScaledBitmap(originalBitmap, width, height, false) // 크기 조정
-//    }
-//
-//    // VectorDrawable을 Bitmap으로 변환하고 크기 조정
-//    private fun resizeVectorDrawable(vectorResId: Int, width: Int, height: Int): Bitmap {
-//        val vectorDrawable = ContextCompat.getDrawable(this, vectorResId) as VectorDrawable
-//        val bitmap = Bitmap.createBitmap(vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
-//        val canvas = Canvas(bitmap)
-//        vectorDrawable.setBounds(0, 0, canvas.width, canvas.height)
-//        vectorDrawable.draw(canvas)
-//
-//        // 크기 조정
-//        return Bitmap.createScaledBitmap(bitmap, width, height, false)
-//    }
 }

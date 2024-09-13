@@ -55,36 +55,36 @@ class GalleryAdapter(var photoList: MutableList<PhotoData>): RecyclerView.Adapte
         .load(url + photo.fileName)
         .into(dialogPhoto.photo)
 
-//      AlertDialog.Builder(it.context).run{
-////        setTitle("사진 크게보기!")
-//        setView(dialogPhoto.root)
-//
-//        setPositiveButton("삭제하기",object: DialogInterface.OnClickListener{
-//          override fun onClick(p0: DialogInterface?, p1: Int) {
-//            Client.photoRetrofit.deletePhoto(photo.photoId).enqueue(object:retrofit2.Callback<Void>{
-//              override fun onResponse(call: Call<Void>, response: Response<Void>) {
-//                removeData(holder.adapterPosition)
-//              }
-//              override fun onFailure(call: Call<Void>, t: Throwable) {
-//                TODO("Not yet implemented")
-//              }
-//            })
-//          }
-//        })
-//        setNegativeButton("닫기",null)
-//        show()
-//      }
-      holder.binding.galleryIv.setOnClickListener {
-        val intent = Intent(holder.binding.root.context, PhotoFullActivity::class.java)
-        intent.putExtra("url", url)
-        intent.putExtra("fileName", photo.fileName)
-        intent.putExtra("photoId", photo.photoId)
-        intent.putExtra("position", position)
-        position1 = position
-        (holder.binding.root.context as Activity).startActivityForResult(intent, REQUEST_DELETE_PHOTO)
-//        removeData(holder.adapterPosition)
+      AlertDialog.Builder(it.context).run{
+//        setTitle("사진 크게보기!")
+        setView(dialogPhoto.root)
 
+        setPositiveButton("삭제하기",object: DialogInterface.OnClickListener{
+          override fun onClick(p0: DialogInterface?, p1: Int) {
+            Client.photoRetrofit.deletePhoto(photo.photoId).enqueue(object:retrofit2.Callback<Void>{
+              override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                removeData(holder.adapterPosition)
+              }
+              override fun onFailure(call: Call<Void>, t: Throwable) {
+                TODO("Not yet implemented")
+              }
+            })
+          }
+        })
+        setNegativeButton("닫기",null)
+        show()
       }
+//      holder.binding.galleryIv.setOnClickListener {
+//        val intent = Intent(holder.binding.root.context, PhotoFullActivity::class.java)
+//        intent.putExtra("url", url)
+//        intent.putExtra("fileName", photo.fileName)
+//        intent.putExtra("photoId", photo.photoId)
+//        intent.putExtra("position", position)
+//        position1 = position
+//        (holder.binding.root.context as Activity).startActivityForResult(intent, REQUEST_DELETE_PHOTO)
+////        removeData(holder.adapterPosition)
+//
+//      }
     }
   }
 

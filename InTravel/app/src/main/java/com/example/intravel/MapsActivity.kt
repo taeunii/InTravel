@@ -10,6 +10,7 @@ import android.graphics.Canvas
 import android.graphics.drawable.VectorDrawable
 import android.location.Geocoder
 import android.os.Bundle
+import android.os.StrictMode
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -96,6 +97,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // 주소를 표시할 TextView 초기화
         addressTextView = findViewById(R.id.addressTextView)
+//        addButton = findViewById(R.id.addButton)
         addressTextView.visibility = View.GONE
         // pinName을 표시할 TextView 초기화
         pinNameTextView = findViewById(R.id.pinNameTextView)
@@ -121,6 +123,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         searchButton.setOnClickListener {
             val searchQuery = searchEdit.text.toString()
             if (searchQuery.isNotEmpty()) {
+//                searchLocationByAddress(searchQuery)
                 searchPlaceByName(searchQuery)
             } else {
                 Toast.makeText(this, "주소를 입력하세요", Toast.LENGTH_SHORT).show()

@@ -23,4 +23,6 @@ public class MapEntity {
     private String longitude;
 
     private String pinName;
+
+    private String pinColor;
 }

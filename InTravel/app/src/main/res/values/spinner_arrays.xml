@@ -6,4 +6,15 @@
         <item>가족</item>
         <item>연인</item>
     </string-array>
+
+    <string-array name="pin_colors">
+        <item>Red</item>
+        <item>Orange</item>
+        <item>Yellow</item>
+        <item>Green</item>
+        <item>Cyan</item>
+        <item>Blue</item>
+        <item>Purple</item>
+        <item>Magenta</item>
+    </string-array>
 </resources>

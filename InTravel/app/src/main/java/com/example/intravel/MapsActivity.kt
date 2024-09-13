@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.example.intravel.databinding.ActivityMapsBinding
 import com.example.intravel.databinding.CustomMapBinding
 import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.libraries.places.api.Places
@@ -138,6 +139,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val addDialog = CustomMapBinding.inflate(layoutInflater)
 
             AlertDialog.Builder(this).run {
+                setTitle("해당 위치의 저장")
                 setView(addDialog.root)
                 setPositiveButton("확인", object : DialogInterface.OnClickListener {
                     override fun onClick(p0: DialogInterface?, p1: Int) {
@@ -145,8 +147,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         val latitude = currentLatLng.latitude.toString()
                         val longitude = currentLatLng.longitude.toString()
 
+                        // 사용자가 선택한 색상 가져오기
+                        val selectedColor = addDialog.spinnerPinColor.selectedItem.toString()
+
                         // 핀 정보 데이터베이스 저장
-                        val mapItem = Maps(0, tId, latitude, longitude, edtPinName)
+                        val mapItem = Maps(0, tId, latitude, longitude, edtPinName, selectedColor)
 
                         SubClient.retrofit.insertMap(tId, mapItem).enqueue(object : retrofit2.Callback<Maps> {
                             override fun onResponse(call: Call<Maps>, response: Response<Maps>) {
@@ -155,8 +160,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 //                                val resizedBitmap = resizeBitmap(selectedColorResId, 100, 100)
                                 val markerOptions = MarkerOptions()
                                     .position(latLng)
-                                    .title(edtPinName)
-//                                    .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap))
+                                    .icon(getMarkerIconByColor(selectedColor)) // 색상에 따른 아이콘 설정
                                 val marker = googleMap.addMarker(markerOptions)
 
                                 markersMap[marker] = mapItem
@@ -222,6 +226,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                 LatLng(marker.latitude.toDouble(), marker.longitude.toDouble())
                             val markerOptions = MarkerOptions()
                                 .position(latLng)
+                                .icon(getMarkerIconByColor(marker.pinColor))
 
                             val googleMapMarker = googleMap.addMarker(markerOptions)
 
@@ -274,10 +279,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             true
         }   //setOnMarkerClickListener
 
-        // 수정 버튼 클릭 시 저장된 내용(pinName) 수정
+        // 수정 버튼 클릭 시 저장된 내용(pinName, pinColor) 수정
         binding.btnPinUpdate.setOnClickListener {
             val updateDialog = CustomMapBinding.inflate(layoutInflater)
             updateDialog.edtPinName.setText(mapItemForFunc.pinName) // 기존 데이터 표시
+
+            // Spinner에서 기존 색상을 선택하도록 설정
+            val pinColors = resources.getStringArray(R.array.pin_colors)
+            val colorIndex = pinColors.indexOf(mapItemForFunc.pinColor)
+            if (colorIndex != -1) {
+                updateDialog.spinnerPinColor.setSelection(colorIndex)
+            }
 
             AlertDialog.Builder(this).run {
                 setView(updateDialog.root)
@@ -286,20 +298,36 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         val updatePinName = updateDialog.edtPinName.text.toString()
                         val latitude = mapItemForFunc.latitude
                         val longitude = mapItemForFunc.longitude
+                        val updatedColor = updateDialog.spinnerPinColor.selectedItem.toString()
 
                         val updatedMapItem = Maps(
                             mapItemForFunc.mapId,
                             mapItemForFunc.travId,
                             latitude,
                             longitude,
-                            updatePinName
+                            updatePinName,
+                            updatedColor // 색상 정보 추가
                         )
 
                         SubClient.retrofit.updateMap(mapItemForFunc.mapId, updatedMapItem).enqueue(object : retrofit2.Callback<Maps> {
                             override fun onResponse(call: Call<Maps>, response: Response<Maps>) {
+                                // UI에 수정된 핀 이름 및 색상 반영
                                 binding.pinNameTextView.text = updatedMapItem.pinName
-                                // 수정된 마커 데이터를 mapItemForFunc에 업데이트
                                 mapItemForFunc.pinName = updatePinName
+                                mapItemForFunc.pinColor = updatedColor
+
+                                // 기존 마커 제거 후, 새로운 색상으로 마커 다시 추가
+                                val marker = markersMap.entries.find { it.value.mapId == mapItemForFunc.mapId }?.key
+                                marker?.remove()
+
+                                val newMarkerOptions = MarkerOptions()
+                                    .position(LatLng(latitude.toDouble(), longitude.toDouble()))
+                                    .icon(getMarkerIconByColor(updatedColor)) // 수정된 색상 적용
+                                val newMarker = googleMap.addMarker(newMarkerOptions)
+
+                                // 마커와 데이터를 다시 매핑
+                                markersMap[newMarker] = updatedMapItem
+                                Log.d("updateMapItem", "$updatedMapItem")
                             }
                             override fun onFailure(call: Call<Maps>, t: Throwable) {}
                         })
@@ -400,7 +428,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 // 마커 추가
                 clearMarkers()
-//                currentMarker = setupMarker(LatLngEntity(it.latitude, it.longitude), selectedColorResId)
                 currentMarker = setupMarker(LatLngEntity(it.latitude, it.longitude))
                 currentMarker?.showInfoWindow()
 
@@ -433,13 +460,49 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    // 마커 아이콘에 사용할 BitmapDescriptor 생성 함수
+    private fun getResizedBitmapDescriptor(resId: Int, width: Int, height: Int): BitmapDescriptor {
+        // 리소스로부터 Drawable을 가져옴
+        val drawable = ContextCompat.getDrawable(this, resId)
+        drawable?.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+
+        // 원본 크기의 Bitmap을 생성
+        val bitmap = Bitmap.createBitmap(drawable!!.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        drawable.draw(canvas)
+
+        // 원하는 크기로 Bitmap을 조정
+        val resizedBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false)
+
+        // Bitmap을 BitmapDescriptor로 변환하여 반환
+        return BitmapDescriptorFactory.fromBitmap(resizedBitmap)
+    }
+
+    private fun getMarkerIconByColor(color: String): BitmapDescriptor {
+        return when (color) {
+            "Red" -> getResizedBitmapDescriptor(R.drawable.dot_red, 100, 100)
+            "Orange" -> getResizedBitmapDescriptor(R.drawable.dot_orange, 100, 100)
+            "Yellow" -> getResizedBitmapDescriptor(R.drawable.dot_yellow, 100, 100)
+            "Green" -> getResizedBitmapDescriptor(R.drawable.dot_green, 100, 100)
+            "Cyan" -> getResizedBitmapDescriptor(R.drawable.dot_cyan, 100, 100)
+            "Blue" -> getResizedBitmapDescriptor(R.drawable.dot_blue, 100, 100)
+            "Purple" -> getResizedBitmapDescriptor(R.drawable.dot_purple, 100, 100)
+            "Magenta" -> getResizedBitmapDescriptor(R.drawable.dot_magenta, 100, 100)
+            else -> getResizedBitmapDescriptor(R.drawable.dot_yellow, 100, 100) // 기본 값
+        }
+    }
+
     // 마커 위치, 모양
     private fun setupMarker(locationLatLngEntity: LatLngEntity): Marker? {
         val positionLatLng = LatLng(locationLatLngEntity.latitude ?: return null, locationLatLngEntity.longitude ?: return null)
 
+        // 커스텀 마커 아이콘 적용
         val markerOption = MarkerOptions().apply {
             position(positionLatLng)
+            // dot_yellow.png 리소스를 마커 아이콘으로 설정
+            icon(getResizedBitmapDescriptor(R.drawable.dot_yellow, 100, 100))
         }
+
         return googleMap.addMarker(markerOption)
     }
 

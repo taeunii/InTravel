@@ -41,6 +41,7 @@ public class MapService {
         updateMap.setLatitude(mapEntity.getLatitude());
         updateMap.setLongitude(mapEntity.getLongitude());
         updateMap.setPinName(mapEntity.getPinName());
+        updateMap.setPinColor(mapEntity.getPinColor());
 
         return mapRepository.save(updateMap);
     }

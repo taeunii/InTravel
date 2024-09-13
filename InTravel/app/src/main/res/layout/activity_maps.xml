@@ -63,15 +63,15 @@
         android:text="주소가 여기에 표시됩니다."
         android:textColor="@android:color/black"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/pinNameEditText"
+        app:layout_constraintBottom_toTopOf="@+id/pinNameTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mapView"
         android:visibility="gone"/> <!-- Initially hidden -->
 
-    <EditText
-        android:id="@+id/pinNameEditText"
+    <TextView
+        android:id="@+id/pinNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -134,32 +134,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btnPinRemove"
         android:visibility="gone"/>
-
-    <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--        android:id="@+id/btnPinRemove"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginEnd="16dp"-->
-<!--        android:layout_marginBottom="16dp"-->
-<!--        android:clickable="true"-->
-<!--        android:visibility="gone"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/btnPinAdd"-->
-<!--        app:layout_constraintEnd_toEndOf="@+id/mapView"-->
-<!--        android:backgroundTint="@color/yellow400"-->
-<!--        app:srcCompat="@drawable/remove" />-->
-
-<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--        android:id="@+id/btnPinUpdate"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginEnd="16dp"-->
-<!--        android:layout_marginBottom="16dp"-->
-<!--        android:clickable="true"-->
-<!--        android:visibility="gone"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/btnPinRemove"-->
-<!--        app:layout_constraintEnd_toEndOf="@+id/mapView"-->
-<!--        app:srcCompat="@drawable/baseline_edit_24"-->
-<!--        android:backgroundTint="@color/yellow400"-->
-<!--        tools:layout_editor_absoluteY="510dp" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,7 +10,6 @@ import android.graphics.Canvas
 import android.graphics.drawable.VectorDrawable
 import android.location.Geocoder
 import android.os.Bundle
-import android.os.StrictMode
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -66,13 +65,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var searchEdit: EditText
     private lateinit var searchButton: Button
     private lateinit var addressTextView: TextView
-    private lateinit var pinNameEditText: EditText
+    private lateinit var pinNameTextView: TextView
     private lateinit var addButton: Button
     private lateinit var updateButton: Button
     private lateinit var removeButton: Button
 
-
     private var tId: Long = 0
+
+//    // 마커 색상
+//    private var selectedColorResId: Int = R.drawable.dot_yellow // 기본 색상
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,17 +96,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // 주소를 표시할 TextView 초기화
         addressTextView = findViewById(R.id.addressTextView)
-//        addButton = findViewById(R.id.addButton)
         addressTextView.visibility = View.GONE
         // pinName을 표시할 TextView 초기화
-        pinNameEditText = findViewById(R.id.pinNameEditText)
-        pinNameEditText.visibility = View.GONE
+        pinNameTextView = findViewById(R.id.pinNameTextView)
+        pinNameTextView.visibility = View.GONE
 
+        // 추가, 수정, 삭제 버튼 초기화
         addButton = findViewById(R.id.btnPinAdd)
-        updateButton = findViewById(R.id.btnPinUpdate)
-        removeButton = findViewById(R.id.btnPinRemove)
         addButton.visibility = View.GONE
+        updateButton = findViewById(R.id.btnPinUpdate)
         updateButton.visibility = View.GONE
+        removeButton = findViewById(R.id.btnPinRemove)
         removeButton.visibility = View.GONE
 
         // MapView 초기화 및 생성
@@ -120,7 +121,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         searchButton.setOnClickListener {
             val searchQuery = searchEdit.text.toString()
             if (searchQuery.isNotEmpty()) {
-//                searchLocationByAddress(searchQuery)
                 searchPlaceByName(searchQuery)
             } else {
                 Toast.makeText(this, "주소를 입력하세요", Toast.LENGTH_SHORT).show()
@@ -148,43 +148,38 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         // 핀 정보 데이터베이스 저장
                         val mapItem = Maps(0, tId, latitude, longitude, edtPinName)
 
-                        SubClient.retrofit.insertMap(tId, mapItem)
-                            .enqueue(object : retrofit2.Callback<Maps> {
-                                override fun onResponse(
-                                    call: Call<Maps>,
-                                    response: Response<Maps>
-                                ) {
-                                    // 지도에 핀 추가
-                                    val latLng = LatLng(latitude.toDouble(), longitude.toDouble())
-                                    val resizedBitmap = resizeBitmap(R.drawable.dot, 100, 100)
-                                    val markerOptions = MarkerOptions()
-                                        .position(latLng)
-                                        .title(edtPinName)
-                                        .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap))
-                                    val marker = googleMap.addMarker(markerOptions)
+                        SubClient.retrofit.insertMap(tId, mapItem).enqueue(object : retrofit2.Callback<Maps> {
+                            override fun onResponse(call: Call<Maps>, response: Response<Maps>) {
+                                // 지도에 핀 추가
+                                val latLng = LatLng(latitude.toDouble(), longitude.toDouble())
+//                                val resizedBitmap = resizeBitmap(selectedColorResId, 100, 100)
+                                val markerOptions = MarkerOptions()
+                                    .position(latLng)
+                                    .title(edtPinName)
+//                                    .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap))
+                                val marker = googleMap.addMarker(markerOptions)
 
-                                    markersMap[marker] = mapItem
+                                markersMap[marker] = mapItem
 
-                                    // 핀이 추가된 위치로 카메라 이동
-                                    googleMap.moveCamera(
-                                        CameraUpdateFactory.newLatLngZoom(
-                                            latLng,
-                                            15f
-                                        )
+                                // 핀이 추가된 위치로 카메라 이동
+                                googleMap.moveCamera(
+                                    CameraUpdateFactory.newLatLngZoom(
+                                        latLng,
+                                        15f
                                     )
+                                )
 
-                                    addressTextView.visibility = View.GONE
-                                    pinNameEditText.visibility = View.GONE
-                                    addButton.visibility = View.GONE
-                                }
-                                override fun onFailure(call: Call<Maps>, t: Throwable) {
-                                }
-                            })  //insertMap
+                                addressTextView.visibility = View.GONE
+                                pinNameTextView.visibility = View.GONE
+                                addButton.visibility = View.GONE
+                            }
+                            override fun onFailure(call: Call<Maps>, t: Throwable) {
+                            }
+                        })  //insertMap
                     }
                 })
-                    .setNegativeButton("취소", null)
-                    .show()
-
+                .setNegativeButton("취소", null)
+                .show()
             }   //AlertDialog
         }   //btnPinAdd
     }
@@ -198,14 +193,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             // 기존 핀 제거
             clearMarkers()
             // 새 핀 추가
+//            currentMarker = setupMarker(LatLngEntity(latLng.latitude, latLng.longitude), selectedColorResId)
             currentMarker = setupMarker(LatLngEntity(latLng.latitude, latLng.longitude))
 
             // 주소 표시
             displayAddress(latLng)
 
-            // 주소 추가버튼 표시
+            // 하단에 주소 및 추가버튼 생김
             addressTextView.visibility = View.VISIBLE
-            pinNameEditText.visibility = View.GONE
+            pinNameTextView.visibility = View.GONE
             updateConstraintsForPinName(true)
             addButton.visibility = View.VISIBLE
             updateButton.visibility = View.GONE
@@ -225,11 +221,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         for (marker in markers) {
                             val latLng =
                                 LatLng(marker.latitude.toDouble(), marker.longitude.toDouble())
-                            val resizedBitmap = resizeBitmap(R.drawable.dot, 100, 100)
+//                            val resizedBitmap = resizeBitmap(selectedColorResId, 100, 100)
                             val markerOptions = MarkerOptions()
                                 .position(latLng)
                                 .title(marker.pinName)
-                                .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap))
+//                                .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap))
 
                             val googleMapMarker = googleMap.addMarker(markerOptions)
 
@@ -259,20 +255,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             mapItemForFunc = mapItem!!
 
             binding.addressTextView.text = getAddressFromLatLng(marker.position)
-            binding.pinNameEditText.setText(mapItem!!.pinName)
-
-            // 핀 이름을 클릭하여 수정 가능하도록 설정
-            binding.pinNameEditText.isEnabled = true
-            binding.pinNameEditText.isFocusableInTouchMode = true
-            binding.pinNameEditText.isFocusable = true
+            binding.pinNameTextView.setText(mapItem!!.pinName)
 
             // 버튼의 가시성 설정
             if (mapItemForFunc.pinName == null) {
-                pinNameEditText.visibility = View.GONE
+                pinNameTextView.visibility = View.GONE
             }
             else {
                 addressTextView.visibility = View.VISIBLE
-                pinNameEditText.visibility = View.VISIBLE
+                pinNameTextView.visibility = View.VISIBLE
 
                 updateConstraintsForPinName(false)
                 addButton.visibility = View.GONE
@@ -284,24 +275,36 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // 수정 버튼 클릭 시 저장된 내용(pinName) 수정
         binding.btnPinUpdate.setOnClickListener {
-            val updatedPinName = binding.pinNameEditText.text.toString()
+            val updateDialog = CustomMapBinding.inflate(layoutInflater)
+            updateDialog.edtPinName.setText(mapItemForFunc.pinName) // 기존 데이터 표시
 
-            val updatedMapItem = Maps(
-                mapItemForFunc.mapId,
-                mapItemForFunc.travId,
-                mapItemForFunc.latitude,
-                mapItemForFunc.longitude,
-                updatedPinName
-            )
+            AlertDialog.Builder(this).run {
+                setView(updateDialog.root)
+                setPositiveButton("수정", object :DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        val updatePinName = updateDialog.edtPinName.text.toString()
+                        val latitude = mapItemForFunc.latitude
+                        val longitude = mapItemForFunc.longitude
 
-            SubClient.retrofit.updateMap(mapItemForFunc.mapId, updatedMapItem).enqueue(object : retrofit2.Callback<Maps> {
-                override fun onResponse(call: Call<Maps>, response: Response<Maps>) {
-                    binding.pinNameEditText.isEnabled = false
-                    binding.pinNameEditText.isFocusableInTouchMode = false
-                    binding.pinNameEditText.isFocusable = false
-                }
-                override fun onFailure(call: Call<Maps>, t: Throwable) {}
-            })
+                        val updatedMapItem = Maps(
+                            mapItemForFunc.mapId,
+                            mapItemForFunc.travId,
+                            latitude,
+                            longitude,
+                            updatePinName
+                        )
+
+                        SubClient.retrofit.updateMap(mapItemForFunc.mapId, updatedMapItem).enqueue(object : retrofit2.Callback<Maps> {
+                            override fun onResponse(call: Call<Maps>, response: Response<Maps>) {
+                                binding.pinNameTextView.text = updatedMapItem.pinName
+                            }
+                            override fun onFailure(call: Call<Maps>, t: Throwable) {}
+                        })
+                    }
+                })
+                setNegativeButton("취소", null)
+                show()
+            }
         }
 
         // 삭제 버튼 클릭 시 다이얼로그 창 열림
@@ -325,7 +328,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                     markersMap.entries.removeIf { it.value.mapId == mapItemForFunc.mapId }
 
                                     addressTextView.visibility = View.GONE
-                                    pinNameEditText.visibility = View.GONE
+                                    pinNameTextView.visibility = View.GONE
                                     updateButton.visibility = View.GONE
                                     removeButton.visibility = View.GONE
                                 }
@@ -364,6 +367,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                         // 마커 추가
                         clearMarkers()
+//                        currentMarker = setupMarker(LatLngEntity(latLng.latitude, latLng.longitude), selectedColorResId)
                         currentMarker = setupMarker(LatLngEntity(latLng.latitude, latLng.longitude))
                         currentMarker?.showInfoWindow()
 
@@ -394,6 +398,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 // 마커 추가
                 clearMarkers()
+//                currentMarker = setupMarker(LatLngEntity(it.latitude, it.longitude), selectedColorResId)
                 currentMarker = setupMarker(LatLngEntity(it.latitude, it.longitude))
                 currentMarker?.showInfoWindow()
 
@@ -438,6 +443,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+//    // 마커 위치, 모양
+//    private fun setupMarker(locationLatLngEntity: LatLngEntity, colorResId: Int): Marker? {
+//        val positionLatLng = LatLng(
+//            locationLatLngEntity.latitude ?: return null,
+//            locationLatLngEntity.longitude ?: return null
+//        )
+//
+//        val resizedBitmap = resizeBitmap(colorResId, 100, 100)
+//
+//        val markerOption = MarkerOptions().apply {
+//            position(positionLatLng)
+//            icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap))
+//        }
+//        return googleMap.addMarker(markerOption)
+//    }
+
     // 마커 위치, 모양
     private fun setupMarker(locationLatLngEntity: LatLngEntity): Marker? {
         val positionLatLng = LatLng(
@@ -445,17 +466,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             locationLatLngEntity.longitude ?: return null
         )
 
-        val resizedBitmap = resizeBitmap(R.drawable.dot, 100, 100)
-
         val markerOption = MarkerOptions().apply {
             position(positionLatLng)
-//            title("선택된 위치")
-
-            icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap))
         }
         return googleMap.addMarker(markerOption)
     }
 
+    // 위도 경도에 따른 주소 받아오기
     private fun getAddressFromLatLng(latLng: LatLng): String {
         val geocoder = Geocoder(this, Locale.getDefault())
         return try {
@@ -477,11 +494,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         constraintSet.clone(constraintLayout) // 현재 제약 조건을 복제합니다.
 
         if (isAddButtonVisible) {
-            // 추가 버튼이 보이는 경우, pinNameEditView의 제약 조건을 btnPinAdd 위로 설정
-            constraintSet.connect(R.id.pinNameEditText, ConstraintSet.BOTTOM, R.id.btnPinAdd, ConstraintSet.TOP)
+            // 추가 버튼이 보이는 경우, pinNameTextView의 제약 조건을 btnPinAdd 위로 설정
+            constraintSet.connect(R.id.pinNameTextView, ConstraintSet.BOTTOM, R.id.btnPinAdd, ConstraintSet.TOP)
         } else {
-            // 삭제 및 수정 버튼이 보이는 경우, pinNameEditView의 제약 조건을 btnPinUpdate 위로 설정
-            constraintSet.connect(R.id.pinNameEditText, ConstraintSet.BOTTOM, R.id.btnPinUpdate, ConstraintSet.TOP)
+            // 삭제 및 수정 버튼이 보이는 경우, pinNameTextView의 제약 조건을 btnPinUpdate 위로 설정
+            constraintSet.connect(R.id.pinNameTextView, ConstraintSet.BOTTOM, R.id.btnPinUpdate, ConstraintSet.TOP)
         }
 
         // 변경된 제약 조건 적용
@@ -533,21 +550,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         var longitude: Double?
     )
 
-    // Bitmap 크기 조정 함수
-    private fun resizeBitmap(resourceId: Int, width: Int, height: Int): Bitmap {
-        val originalBitmap = BitmapFactory.decodeResource(resources, resourceId)
-        return Bitmap.createScaledBitmap(originalBitmap, width, height, false) // 크기 조정
-    }
-
-    // VectorDrawable을 Bitmap으로 변환하고 크기 조정
-    private fun resizeVectorDrawable(vectorResId: Int, width: Int, height: Int): Bitmap {
-        val vectorDrawable = ContextCompat.getDrawable(this, vectorResId) as VectorDrawable
-        val bitmap = Bitmap.createBitmap(vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        vectorDrawable.setBounds(0, 0, canvas.width, canvas.height)
-        vectorDrawable.draw(canvas)
-
-        // 크기 조정
-        return Bitmap.createScaledBitmap(bitmap, width, height, false)
-    }
+    // 마커 관련된 함수
+//    // Bitmap 크기 조정 함수
+//    private fun resizeBitmap(resourceId: Int, width: Int, height: Int): Bitmap {
+//        val originalBitmap = BitmapFactory.decodeResource(resources, resourceId)
+//        return Bitmap.createScaledBitmap(originalBitmap, width, height, false) // 크기 조정
+//    }
+//
+//    // VectorDrawable을 Bitmap으로 변환하고 크기 조정
+//    private fun resizeVectorDrawable(vectorResId: Int, width: Int, height: Int): Bitmap {
+//        val vectorDrawable = ContextCompat.getDrawable(this, vectorResId) as VectorDrawable
+//        val bitmap = Bitmap.createBitmap(vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+//        val canvas = Canvas(bitmap)
+//        vectorDrawable.setBounds(0, 0, canvas.width, canvas.height)
+//        vectorDrawable.draw(canvas)
+//
+//        // 크기 조정
+//        return Bitmap.createScaledBitmap(bitmap, width, height, false)
+//    }
 }

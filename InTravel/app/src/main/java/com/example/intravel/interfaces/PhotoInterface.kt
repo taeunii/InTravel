@@ -21,6 +21,7 @@ interface PhotoInterface {
   @POST("/photo/save/{tId}")
   fun savePhoto(@Path("tId") tId: Long, @Part photo: MultipartBody.Part): Call<PhotoData>
 
+//  아마 안쓸듯?
   @PUT("/photo/update/{photoId}")
   fun updatePhoto(@Path("photoId") photoId: Long, @Body photoData: PhotoData): Call<PhotoData>
 

@@ -3,6 +3,8 @@ package com.example.intravel.fragments
 import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -10,6 +12,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -25,6 +28,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.io.OutputStream
 
 class GalleryFragment : Fragment() {
 
@@ -35,8 +39,14 @@ class GalleryFragment : Fragment() {
   private val requestCameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
     if (success) {
       photoUri?.let {
-        showPhotoUploadDialog(it)
+        photoSaveDialog(it)
       }
+    }
+  }
+
+  private val requestGalleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+    uri?.let {
+      galleryPhotoSaveDialog(it)
     }
   }
 
@@ -64,13 +74,23 @@ class GalleryFragment : Fragment() {
     binding.galleryRV.adapter = galleryAdapter
     binding.galleryRV.layoutManager = GridLayoutManager(requireContext(), 3)
 
+//    사진 로딩
     loadPhotoList()
 
-    // 카메라 버튼 클릭
+//     카메라 버튼 클릭
     binding.btnTakePhoto.setOnClickListener {
       takePhotoIntent()
     }
+
+//    갤러리 버튼 클릭
+    binding.btnPhoneGallery.setOnClickListener {
+      selectPhotoFromGallery()
+    }
   } // viewCreate
+
+  private fun selectPhotoFromGallery() {
+    requestGalleryLauncher.launch("image/*")
+  }
 
   private fun takePhotoIntent() {
     Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
@@ -89,10 +109,23 @@ class GalleryFragment : Fragment() {
     return requireActivity().contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
   }
 
-  private fun showPhotoUploadDialog(photoUri: Uri) {
-    // AlertDialog 생성
+  private fun galleryPhotoSaveDialog(photoUri: Uri) {
     val builder = AlertDialog.Builder(requireContext())
-    builder.setTitle("사진 업로드")
+    builder.setTitle("갤러리 사진 업로드")
+    builder.setMessage("선택한 사진을 저장하시겠습니까?")
+    builder.setPositiveButton("확인") { dialog, _ ->
+      uploadPhoto(photoUri)
+      dialog.dismiss()
+    }
+    builder.setNegativeButton("취소") { dialog, _ ->
+      dialog.dismiss()
+    }
+    builder.create().show()
+  }
+
+  private fun photoSaveDialog(photoUri: Uri) {
+    val builder = AlertDialog.Builder(requireContext())
+    builder.setTitle("촬영한 사진 업로드")
     builder.setMessage("촬영한 사진을 저장하시겠습니까?")
     builder.setPositiveButton("확인") { dialog, _ ->
       uploadPhoto(photoUri)
@@ -117,7 +150,8 @@ class GalleryFragment : Fragment() {
             galleryAdapter.photoList.add(newPhoto)
             galleryAdapter.notifyDataSetChanged()
           }
-        } else {
+        }
+        else {
           // 실패 처리
         }
       }
@@ -150,7 +184,8 @@ class GalleryFragment : Fragment() {
             galleryAdapter.photoList.addAll(it)
             galleryAdapter.notifyDataSetChanged()
           }
-        } else {
+        }
+        else {
           // 실패 처리
         }
       }

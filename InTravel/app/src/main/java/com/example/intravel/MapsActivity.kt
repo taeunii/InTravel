@@ -10,11 +10,11 @@ import android.graphics.Canvas
 import android.graphics.drawable.VectorDrawable
 import android.location.Geocoder
 import android.os.Bundle
-import android.os.StrictMode
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -71,8 +71,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var updateButton: Button
     private lateinit var removeButton: Button
 
-
     private var tId: Long = 0
+
+    // 마커 색상
+    private var selectedColorResId: Int = R.drawable.dot_yellow // 기본 색상
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,10 +104,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         pinNameEditText.visibility = View.GONE
 
         addButton = findViewById(R.id.btnPinAdd)
-        updateButton = findViewById(R.id.btnPinUpdate)
-        removeButton = findViewById(R.id.btnPinRemove)
         addButton.visibility = View.GONE
+        updateButton = findViewById(R.id.btnPinUpdate)
         updateButton.visibility = View.GONE
+        removeButton = findViewById(R.id.btnPinRemove)
         removeButton.visibility = View.GONE
 
         // MapView 초기화 및 생성
@@ -130,6 +132,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Intent로부터 tId를 추출
         tId = intent.getLongExtra("tId", 0)
 
+        // 마커 색상 버튼 클릭 시
+        binding.choicePinColorRed.setOnClickListener { selectedColorResId = R.drawable.dot_red }
+        binding.choicePinColorOrange.setOnClickListener { selectedColorResId = R.drawable.dot_orange }
+        binding.choicePinColorYellow.setOnClickListener { selectedColorResId = R.drawable.dot_yellow }
+        binding.choicePinColorGreen.setOnClickListener { selectedColorResId = R.drawable.dot_green }
+        binding.choicePinColorCyan.setOnClickListener { selectedColorResId = R.drawable.dot_cyan }
+        binding.choicePinColorBlue.setOnClickListener { selectedColorResId = R.drawable.dot_blue }
+        binding.choicePinColorPurple.setOnClickListener { selectedColorResId = R.drawable.dot_purple }
+        binding.choicePinColorMagenta.setOnClickListener { selectedColorResId = R.drawable.dot_magenta }
+
         // 핀 위치 지정 후 + 버튼 클릭 시 이벤트 처리
         binding.btnPinAdd.setOnClickListener {
             val currentLatLng = currentMarker?.position ?: return@setOnClickListener    // 현재 클릭한 위치 가져오기
@@ -146,7 +158,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         val longitude = currentLatLng.longitude.toString()
 
                         // 핀 정보 데이터베이스 저장
-                        val mapItem = Maps(0, tId, latitude, longitude, edtPinName)
+                        val mapItem = Maps(0, tId, latitude, longitude, edtPinName, selectedColorResId)
 
                         SubClient.retrofit.insertMap(tId, mapItem)
                             .enqueue(object : retrofit2.Callback<Maps> {
@@ -156,7 +168,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                 ) {
                                     // 지도에 핀 추가
                                     val latLng = LatLng(latitude.toDouble(), longitude.toDouble())
-                                    val resizedBitmap = resizeBitmap(R.drawable.dot, 100, 100)
+                                    val resizedBitmap = resizeBitmap(selectedColorResId, 100, 100)
                                     val markerOptions = MarkerOptions()
                                         .position(latLng)
                                         .title(edtPinName)
@@ -198,7 +210,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             // 기존 핀 제거
             clearMarkers()
             // 새 핀 추가
-            currentMarker = setupMarker(LatLngEntity(latLng.latitude, latLng.longitude))
+            currentMarker = setupMarker(LatLngEntity(latLng.latitude, latLng.longitude), selectedColorResId)
 
             // 주소 표시
             displayAddress(latLng)
@@ -225,7 +237,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         for (marker in markers) {
                             val latLng =
                                 LatLng(marker.latitude.toDouble(), marker.longitude.toDouble())
-                            val resizedBitmap = resizeBitmap(R.drawable.dot, 100, 100)
+                            val resizedBitmap = resizeBitmap(selectedColorResId, 100, 100)
                             val markerOptions = MarkerOptions()
                                 .position(latLng)
                                 .title(marker.pinName)
@@ -291,7 +303,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 mapItemForFunc.travId,
                 mapItemForFunc.latitude,
                 mapItemForFunc.longitude,
-                updatedPinName
+                updatedPinName,
+                mapItemForFunc.pinColor
             )
 
             SubClient.retrofit.updateMap(mapItemForFunc.mapId, updatedMapItem).enqueue(object : retrofit2.Callback<Maps> {
@@ -364,7 +377,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                         // 마커 추가
                         clearMarkers()
-                        currentMarker = setupMarker(LatLngEntity(latLng.latitude, latLng.longitude))
+                        currentMarker = setupMarker(LatLngEntity(latLng.latitude, latLng.longitude), selectedColorResId)
                         currentMarker?.showInfoWindow()
 
                         // 주소 표시
@@ -394,7 +407,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 // 마커 추가
                 clearMarkers()
-                currentMarker = setupMarker(LatLngEntity(it.latitude, it.longitude))
+                currentMarker = setupMarker(LatLngEntity(it.latitude, it.longitude), selectedColorResId)
                 currentMarker?.showInfoWindow()
 
                 // 주소 표시
@@ -439,23 +452,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     // 마커 위치, 모양
-    private fun setupMarker(locationLatLngEntity: LatLngEntity): Marker? {
+    private fun setupMarker(locationLatLngEntity: LatLngEntity, colorResId: Int): Marker? {
         val positionLatLng = LatLng(
             locationLatLngEntity.latitude ?: return null,
             locationLatLngEntity.longitude ?: return null
         )
 
-        val resizedBitmap = resizeBitmap(R.drawable.dot, 100, 100)
+        val resizedBitmap = resizeBitmap(colorResId, 100, 100)
 
         val markerOption = MarkerOptions().apply {
             position(positionLatLng)
-//            title("선택된 위치")
-
             icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap))
         }
         return googleMap.addMarker(markerOption)
     }
 
+    // 위도 경도에 따른 주소 받아오기
     private fun getAddressFromLatLng(latLng: LatLng): String {
         val geocoder = Geocoder(this, Locale.getDefault())
         return try {

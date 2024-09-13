@@ -2,7 +2,6 @@ package com.example.intravel
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -13,11 +12,9 @@ import android.location.Geocoder
 import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -28,7 +25,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.intravel.client.SubClient
 import com.example.intravel.data.Maps
-import com.example.intravel.data.PhotoData
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -193,7 +189,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }   //btnPinAdd
     }
 
-
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
         checkLocationPermission()
@@ -345,7 +340,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }   //AlertDialog
         }   //btnPinRemove
     }
-
 
     private fun searchPlaceByName(query: String) {
         val request = FindAutocompletePredictionsRequest.builder()

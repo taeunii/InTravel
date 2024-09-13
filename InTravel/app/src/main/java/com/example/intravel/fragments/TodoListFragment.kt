@@ -56,7 +56,7 @@ class TodoListFragment : Fragment() {
                     val test1 = todos.sortedWith(compareBy({it.todoComplete == 'Y'}, {it.todoId}))
 
                     var test2 = mutableListOf<TodoList>()
-                    
+
 
                     for (item in test1) {
                         if (item.todoImpo == 'Y' && item.todoComplete=='N') {

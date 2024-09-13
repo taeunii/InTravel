@@ -1,6 +1,7 @@
 package com.example.intravel.adapter
 
 import android.content.DialogInterface
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -108,7 +109,9 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
         // 카테고리스피너
         val cateList = mutableListOf("---선택해주세요---","혼자","친구","가족","연인")
 
+        // 완료된 여행
         if(data.travComplete == 'Y'){
+            holder.binding.itemMainBox.setBackgroundColor(Color.parseColor("#41FBEA04")) // 완료항목 색 옅게
             holder.binding.frontLayout.isVisible = false
             holder.binding.completeLayout.isVisible = true
             //holder.binding.itemTextview.isVisible = false // 장소까지 숨김
@@ -116,10 +119,12 @@ class MainAdapter(var mainList: MutableList<TravelData>):RecyclerView.Adapter<Ma
             holder.binding.comPeriod.text = "$sYear.$sMonth.$sDay~$eYear.$eMonth.$eDay"
             holder.binding.comCate.text = "같이 갔던 사람 : ${cateList.get((parseInt(data.cate)))}"
 
-        }else{
+        }
+        // 진행중인 여행
+        else{
+            holder.binding.itemMainBox.setBackgroundColor(Color.parseColor("#FBEA04"))
             holder.binding.frontLayout.isVisible = true
             holder.binding.completeLayout.isVisible = false
-
             holder.binding.itemTitle.text = data.travTitle
             holder.binding.itemCate.text = cateList.get((parseInt(data.cate)))
             holder.binding.itemDday.text = "D $dday"

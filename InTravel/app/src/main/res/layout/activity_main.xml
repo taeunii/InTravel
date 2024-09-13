@@ -20,17 +20,6 @@
       app:layout_constraintTop_toTopOf="parent">
 
     <!-- Left Icon -->
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/icon_left"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
-        android:scaleType="centerInside"
-        android:src="@drawable/home"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.666" />
 
     <!-- Right Icon -->
 
@@ -150,19 +139,17 @@
       android:id="@+id/btnAdd"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginStart="28dp"
-      android:layout_marginTop="16dp"
-      android:layout_marginEnd="28dp"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/recyclerView_main"
       android:layout_alignParentLeft="true"
-      android:layout_marginLeft="12dp"
       android:layout_alignParentTop="true"
+      android:layout_marginStart="28dp"
+      android:layout_marginTop="10dp"
+      android:layout_marginEnd="28dp"
+      android:background="#FDF79B"
       android:text="+"
       android:textSize="30sp"
-      android:background="#FDF79B"
-      />
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/recyclerView_main" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

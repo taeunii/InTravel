@@ -6,8 +6,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object SubClient {
     val retrofit:SubInterface = Retrofit.Builder()
-//        .baseUrl("http://10.100.105.216:8811/")
-        .baseUrl("http://192.168.219.108:8811/")   // 추후 삭제예정
+        .baseUrl("http://10.100.105.216:8811/")
+//        .baseUrl("http://192.168.219.108:8811/")   // 추후 삭제예정
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(SubInterface::class.java)

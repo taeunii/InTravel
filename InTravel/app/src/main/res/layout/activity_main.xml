@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/main"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="-9dp">
 
   <!-- ConstraintLayout for Icon and Title -->
   <androidx.constraintlayout.widget.ConstraintLayout
@@ -52,9 +54,22 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="80dp"
+      android:fontFamily="@font/pretendard_semibold"
       android:text="오늘 날짜"
-      android:textSize="20sp"
+      android:textSize="25sp"
       app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+      android:id="@+id/titleToday"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="96dp"
+      android:layout_marginTop="112dp"
+      android:fontFamily="@font/pretendard_semibold"
+      android:text="2024.09.13."
+      android:textSize="27sp"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
@@ -63,24 +78,14 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="10dp"
-      android:layout_marginTop="128dp"
+      android:layout_marginTop="112dp"
       android:layout_marginEnd="84dp"
+      android:fontFamily="@font/pretendard_semibold"
       android:text="월요일"
-      android:textSize="23sp"
+      android:textSize="27sp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toEndOf="@+id/titleToday"
-      app:layout_constraintTop_toTopOf="parent" />
-
-  <TextView
-      android:id="@+id/titleToday"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="96dp"
-      android:layout_marginTop="128dp"
-      android:text="2024.09.13."
-      android:textSize="25sp"
-      app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
   <androidx.appcompat.widget.AppCompatButton
@@ -88,9 +93,10 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="24dp"
-      android:layout_marginTop="24dp"
+      android:layout_marginTop="16dp"
       android:layout_marginEnd="24dp"
       android:background="@drawable/rectangle_5"
+      android:fontFamily="@font/pretendard_medium"
       android:text="진행중"
       app:layout_constraintEnd_toStartOf="@+id/btnEnd"
       app:layout_constraintHorizontal_bias="0.0"
@@ -102,8 +108,9 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="24dp"
-      android:layout_marginTop="24dp"
+      android:layout_marginTop="16dp"
       android:background="@drawable/rectangle_5"
+      android:fontFamily="@font/pretendard_medium"
       android:text="전체보기"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/titleToday" />
@@ -112,9 +119,10 @@
       android:id="@+id/btnEnd"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="24dp"
+      android:layout_marginTop="16dp"
       android:layout_marginEnd="28dp"
       android:background="@drawable/rectangle_5"
+      android:fontFamily="@font/pretendard_medium"
       android:text="완료"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/titleToday" />
@@ -122,11 +130,12 @@
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/recyclerView_main"
       android:layout_width="0dp"
-      android:layout_height="wrap_content"
+      android:layout_height="0dp"
       android:layout_marginStart="28dp"
       android:layout_marginTop="24dp"
       android:layout_marginEnd="28dp"
-      android:maxHeight="355dp"
+      android:layout_marginBottom="70dp"
+      android:maxHeight="300dp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.0"

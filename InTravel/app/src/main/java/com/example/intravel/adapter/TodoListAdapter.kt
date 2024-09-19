@@ -36,6 +36,7 @@ class TodoListAdapter(var todoList: MutableList<TodoList>):RecyclerView.Adapter<
 
     // 추가
     fun addTodoList(todoItem: TodoList) {
+        onItemClickListener!!.onItemClick()
         todoList.add(todoItem)
         notifyDataSetChanged()
     }

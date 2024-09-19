@@ -32,7 +32,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            android:fontFamily="@font/pretendard_semibold"/>
 
         <TextView
             android:id="@+id/textView"
@@ -45,7 +46,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/itemTitle"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            android:fontFamily="@font/pretendard_light"/>
 
         <TextView
             android:id="@+id/itemCate"
@@ -58,7 +60,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.964" />
+            app:layout_constraintVertical_bias="0.964"
+            android:fontFamily="@font/pretendard_light"/>
 
         <TextView
             android:id="@+id/itemDday"
@@ -73,7 +76,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.849"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:fontFamily="@font/pretendard_semibold"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -94,21 +98,24 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:textSize="20sp"
-            android:maxLines="2"/>
+            android:maxLines="2"
+            android:fontFamily="@font/pretendard_semibold"/>
 
         <TextView
             android:id="@+id/comPeriod"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:fontFamily="@font/pretendard_semibold"/>
 
         <TextView
             android:id="@+id/comCate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            android:fontFamily="@font/pretendard_light"/>
 
     </LinearLayout>
 

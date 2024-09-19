@@ -68,9 +68,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var searchButton: Button
     private lateinit var addressTextView: TextView
     private lateinit var pinNameTextView: TextView
-    private lateinit var addButton: Button
-    private lateinit var updateButton: Button
-    private lateinit var removeButton: Button
+    private lateinit var btnPinAdd: Button
+    private lateinit var btnPinUpdate: Button
+    private lateinit var btnPinRemove: Button
 
     private var tId: Long = 0
 
@@ -102,12 +102,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         pinNameTextView.visibility = View.GONE
 
         // 추가, 수정, 삭제 버튼 초기화
-        addButton = findViewById(R.id.btnPinAdd)
-        addButton.visibility = View.GONE
-        updateButton = findViewById(R.id.btnPinUpdate)
-        updateButton.visibility = View.GONE
-        removeButton = findViewById(R.id.btnPinRemove)
-        removeButton.visibility = View.GONE
+        btnPinAdd = findViewById(R.id.btnPinAdd)
+        btnPinAdd.visibility = View.GONE
+        btnPinUpdate = findViewById(R.id.btnPinUpdate)
+        btnPinUpdate.visibility = View.GONE
+        btnPinRemove = findViewById(R.id.btnPinRemove)
+        btnPinRemove.visibility = View.GONE
 
         // MapView 초기화 및 생성
         mapView = binding.mapView
@@ -131,6 +131,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Intent로부터 tId를 추출
         tId = intent.getLongExtra("tId", 0)
 
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+
         // 핀 위치 지정 후 추가 버튼 클릭 시 이벤트 처리
         binding.btnPinAdd.setOnClickListener {
             val currentLatLng = currentMarker?.position ?: return@setOnClickListener    // 현재 클릭한 위치 가져오기
@@ -139,7 +143,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val addDialog = CustomMapBinding.inflate(layoutInflater)
 
             AlertDialog.Builder(this).run {
-                setTitle("해당 위치의 저장")
+                setTitle("해당 위치 저장")
                 setView(addDialog.root)
                 setPositiveButton("확인", object : DialogInterface.OnClickListener {
                     override fun onClick(p0: DialogInterface?, p1: Int) {
@@ -172,9 +176,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                     )
                                 )
 
+                                // 추가 후 바로 수정시 해당 mapId 서버에서 받아야 함
+                                val newMapItem = response.body()
+                                val mapId = newMapItem?.mapId ?: 0
+
+                                if (mapId != 0.toLong()) {
+                                    // 성공적으로 서버에서 mapId를 받음
+                                    mapItem.mapId = mapId
+
+                                    // 이제 수정 작업을 진행 가능
+                                    updateData()
+                                }
+                                
                                 addressTextView.visibility = View.GONE
                                 pinNameTextView.visibility = View.GONE
-                                addButton.visibility = View.GONE
+                                btnPinAdd.visibility = View.GONE
                             }
                             override fun onFailure(call: Call<Maps>, t: Throwable) {
                             }
@@ -185,6 +201,70 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .show()
             }   //AlertDialog
         }   //btnPinAdd
+    }
+
+    // 수정 버튼 클릭 시 저장된 내용(pinName, pinColor) 수정
+    private fun updateData() {
+        binding.btnPinUpdate.setOnClickListener {
+            val updateDialog = CustomMapBinding.inflate(layoutInflater)
+            updateDialog.edtPinName.setText(mapItemForFunc.pinName) // 기존 데이터 표시
+
+            // Spinner에서 기존 색상을 선택하도록 설정
+            val pinColors = resources.getStringArray(R.array.pin_colors)
+            val colorIndex = pinColors.indexOf(mapItemForFunc.pinColor)
+            if (colorIndex != -1) {
+                updateDialog.spinnerPinColor.setSelection(colorIndex)
+            }
+
+            AlertDialog.Builder(this).run {
+                setView(updateDialog.root)
+                setPositiveButton("수정", object :DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        val updatePinName = updateDialog.edtPinName.text.toString()
+                        val latitude = mapItemForFunc.latitude
+                        val longitude = mapItemForFunc.longitude
+                        val updatedColor = updateDialog.spinnerPinColor.selectedItem.toString()
+
+                        val updatedMapItem = Maps(
+                            mapItemForFunc.mapId,
+                            mapItemForFunc.travId,
+                            latitude,
+                            longitude,
+                            updatePinName,
+                            updatedColor // 색상 정보 추가
+                        )
+
+                        SubClient.retrofit.updateMap(mapItemForFunc.mapId, updatedMapItem).enqueue(object : retrofit2.Callback<Maps> {
+                            override fun onResponse(call: Call<Maps>, response: Response<Maps>) {
+                                // UI에 수정된 핀 이름 및 색상 반영
+                                binding.pinNameTextView.text = updatedMapItem.pinName
+                                mapItemForFunc.pinName = updatePinName
+                                mapItemForFunc.pinColor = updatedColor
+
+                                // 기존 마커 제거 후, 새로운 색상으로 마커 다시 추가
+                                val marker = markersMap.entries.find { it.value.mapId == mapItemForFunc.mapId }?.key
+                                marker?.remove()
+
+                                val newMarkerOptions = MarkerOptions()
+                                    .position(LatLng(latitude.toDouble(), longitude.toDouble()))
+                                    .icon(getMarkerIconByColor(updatedColor)) // 수정된 색상 적용
+                                val newMarker = googleMap.addMarker(newMarkerOptions)
+
+                                // 마커와 데이터를 다시 매핑
+                                markersMap[newMarker] = updatedMapItem
+                                Log.d("updateMapItem", "$updatedMapItem")
+
+                                // 기존 데이터는 제거
+                                markersMap.entries.removeIf { it.value.mapId == mapItemForFunc.mapId && it.key != newMarker }
+                            }
+                            override fun onFailure(call: Call<Maps>, t: Throwable) {}
+                        })
+                    }
+                })
+                setNegativeButton("취소", null)
+                show()
+            }
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -205,9 +285,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             addressTextView.visibility = View.VISIBLE
             pinNameTextView.visibility = View.GONE
             updateConstraintsForPinName(true)
-            addButton.visibility = View.VISIBLE
-            updateButton.visibility = View.GONE
-            removeButton.visibility = View.GONE
+            btnPinAdd.visibility = View.VISIBLE
+            btnPinUpdate.visibility = View.GONE
+            btnPinRemove.visibility = View.GONE
         }
 
         // 모든 마커 불러오기
@@ -271,71 +351,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 pinNameTextView.visibility = View.VISIBLE
 
                 updateConstraintsForPinName(false)
-                addButton.visibility = View.GONE
-                updateButton.visibility = View.VISIBLE
-                removeButton.visibility = View.VISIBLE
+                btnPinAdd.visibility = View.GONE
+                btnPinUpdate.visibility = View.VISIBLE
+                btnPinRemove.visibility = View.VISIBLE
             }
             true
         }   //setOnMarkerClickListener
 
         // 수정 버튼 클릭 시 저장된 내용(pinName, pinColor) 수정
-        binding.btnPinUpdate.setOnClickListener {
-            val updateDialog = CustomMapBinding.inflate(layoutInflater)
-            updateDialog.edtPinName.setText(mapItemForFunc.pinName) // 기존 데이터 표시
-
-            // Spinner에서 기존 색상을 선택하도록 설정
-            val pinColors = resources.getStringArray(R.array.pin_colors)
-            val colorIndex = pinColors.indexOf(mapItemForFunc.pinColor)
-            if (colorIndex != -1) {
-                updateDialog.spinnerPinColor.setSelection(colorIndex)
-            }
-
-            AlertDialog.Builder(this).run {
-                setView(updateDialog.root)
-                setPositiveButton("수정", object :DialogInterface.OnClickListener {
-                    override fun onClick(p0: DialogInterface?, p1: Int) {
-                        val updatePinName = updateDialog.edtPinName.text.toString()
-                        val latitude = mapItemForFunc.latitude
-                        val longitude = mapItemForFunc.longitude
-                        val updatedColor = updateDialog.spinnerPinColor.selectedItem.toString()
-
-                        val updatedMapItem = Maps(
-                            mapItemForFunc.mapId,
-                            mapItemForFunc.travId,
-                            latitude,
-                            longitude,
-                            updatePinName,
-                            updatedColor // 색상 정보 추가
-                        )
-
-                        SubClient.retrofit.updateMap(mapItemForFunc.mapId, updatedMapItem).enqueue(object : retrofit2.Callback<Maps> {
-                            override fun onResponse(call: Call<Maps>, response: Response<Maps>) {
-                                // UI에 수정된 핀 이름 및 색상 반영
-                                binding.pinNameTextView.text = updatedMapItem.pinName
-                                mapItemForFunc.pinName = updatePinName
-                                mapItemForFunc.pinColor = updatedColor
-
-                                // 기존 마커 제거 후, 새로운 색상으로 마커 다시 추가
-                                val marker = markersMap.entries.find { it.value.mapId == mapItemForFunc.mapId }?.key
-                                marker?.remove()
-
-                                val newMarkerOptions = MarkerOptions()
-                                    .position(LatLng(latitude.toDouble(), longitude.toDouble()))
-                                    .icon(getMarkerIconByColor(updatedColor)) // 수정된 색상 적용
-                                val newMarker = googleMap.addMarker(newMarkerOptions)
-
-                                // 마커와 데이터를 다시 매핑
-                                markersMap[newMarker] = updatedMapItem
-                                Log.d("updateMapItem", "$updatedMapItem")
-                            }
-                            override fun onFailure(call: Call<Maps>, t: Throwable) {}
-                        })
-                    }
-                })
-                setNegativeButton("취소", null)
-                show()
-            }
-        }
+        updateData()
 
         // 삭제 버튼 클릭 시 다이얼로그 창 열림
         binding.btnPinRemove.setOnClickListener {
@@ -343,26 +367,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 setTitle("삭제하시겠습니까?")
                 setPositiveButton("삭제", object : DialogInterface.OnClickListener {
                     override fun onClick(p0: DialogInterface?, p1: Int) {
-                        SubClient.retrofit.deleteByIdMap(mapItemForFunc.mapId)
-                            .enqueue(object : retrofit2.Callback<Void> {
-                                override fun onResponse(
-                                    call: Call<Void>,
-                                    response: Response<Void>
-                                ) {
+                        SubClient.retrofit.deleteByIdMap(mapItemForFunc.mapId).enqueue(object : retrofit2.Callback<Void> {
+                                override fun onResponse(call: Call<Void>, response: Response<Void>) {
                                     // 화면에서 핀 삭제
-                                    val markerToRemove =
-                                        markersMap.entries.find { it.value.mapId == mapItemForFunc.mapId }?.key
-                                    markerToRemove?.remove()
+                                    val marker = markersMap.entries.find { it.value.mapId == mapItemForFunc.mapId }?.key
+                                    marker?.remove()
 
                                     // 맵에서 마커와 관련된 데이터 제거
                                     markersMap.entries.removeIf { it.value.mapId == mapItemForFunc.mapId }
 
                                     addressTextView.visibility = View.GONE
                                     pinNameTextView.visibility = View.GONE
-                                    updateButton.visibility = View.GONE
-                                    removeButton.visibility = View.GONE
+                                    btnPinUpdate.visibility = View.GONE
+                                    btnPinRemove.visibility = View.GONE
                                 }
-
                                 override fun onFailure(call: Call<Void>, t: Throwable) {
                                 }
                             })
@@ -404,7 +422,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         displayAddress(latLng)
 
                         addressTextView.visibility = View.VISIBLE
-                        addButton.visibility = View.VISIBLE
+                        btnPinAdd.visibility = View.VISIBLE
                     }
                 }
             } else {

@@ -1,5 +1,6 @@
-package com.example.intravel.interfaces
+package com.example.intravel.`interface`
 
+import com.example.intravel.data.Maps
 import com.example.intravel.data.Memo
 import com.example.intravel.data.MoneyData
 import com.example.intravel.data.PayData
@@ -87,4 +88,21 @@ interface SubInterface {
     // 삭제
     @DELETE("pay/delete/{pId}")
     fun deleteByIdPay(@Path("pId") payId: Long):Call<Void>
+
+  // maps (map 이라고 하면 기존에 설정된 map이랑 충돌생김)
+  // 전체보기
+  @GET("map/list/{tId}")
+  fun findAllMap(@Path("tId") travId:Long): Call<List<Maps>>
+
+  // 추가
+  @POST("map/save/{tId}")
+  fun insertMap(@Path("tId") travId:Long, @Body map: Maps):Call<Maps>
+
+  // 수정
+  @PUT("map/update/{mId}")
+  fun updateMap(@Path("mId") mId:Long, @Body map: Maps):Call<Maps>
+
+  // 삭제
+  @DELETE("map/delete/{mId}")
+  fun deleteByIdMap(@Path("mId") mId: Long):Call<Void>
 }

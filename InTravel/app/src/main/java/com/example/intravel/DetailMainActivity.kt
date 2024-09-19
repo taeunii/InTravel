@@ -100,8 +100,8 @@ class DetailMainActivity : AppCompatActivity() {
 
     // 우측 상단 지도 모양 클릭 시 맵 화면으로 이동
     binding.iconRight.setOnClickListener {
-      val intent = Intent(this@DetailMainActivity, MapsActivity::class.java)
-      startActivity(intent)
+      val tId:Long = tId
+      startMapsActivity(tId)
     }
 
     binding.iconLeft.setOnClickListener {
@@ -114,5 +114,13 @@ class DetailMainActivity : AppCompatActivity() {
     val intent = Intent(this, MainActivity::class.java)
     startActivity(intent)
     overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+  }
+
+  // 맵 화면으로 tId 데이터 보내기
+  fun startMapsActivity(tId: Long) {
+    val intent = Intent(this, MapsActivity::class.java)
+    intent.putExtra("tId", tId) // Long 타입으로 추가
+    startActivity(intent)
+    overridePendingTransition(R.anim.rightin_activity, R.anim.not_move_activity)
   }
 }

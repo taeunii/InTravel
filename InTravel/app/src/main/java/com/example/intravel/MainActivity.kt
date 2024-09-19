@@ -127,7 +127,10 @@ class MainActivity : AppCompatActivity() {
       Client.retrofit.findAll().enqueue(object:retrofit2.Callback<List<TravelData>>{
         override fun onResponse(call: Call<List<TravelData>>, response: Response<List<TravelData>>) {
 //          mainAdapter.mainList.clear()
-          mainAdapter.mainList = response.body() as MutableList<TravelData>
+          val mainItem = response.body() as MutableList<TravelData>
+          val test1 = mainItem.sortedWith(compareBy({it.travComplete == 'Y'}, {it.travId}))
+
+          mainAdapter.mainList = test1.toMutableList()
           mainAdapter.notifyDataSetChanged()
         }
 

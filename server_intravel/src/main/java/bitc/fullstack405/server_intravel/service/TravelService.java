@@ -25,6 +25,7 @@ public class TravelService {
     private final MemoRepository memoRepository;
     private final MoneyRepository moneyRepository;
     private final PayRepository payRepository;
+    private final MapRepository mapRepository;
 
     @Transactional
     public List<TravelEntity> findAll() {
@@ -83,6 +84,7 @@ public class TravelService {
     public void delete(Long travId) {
         todoRepository.deleteByTravId(travId);
         memoRepository.deleteByTravId(travId);
+        mapRepository.deleteByTravId(travId);
 
 //        삭제할 pay 테이블의 moneyId 구하기
         List<MoneyEntity> moneyEntityList = moneyRepository.findByTravId(travId);

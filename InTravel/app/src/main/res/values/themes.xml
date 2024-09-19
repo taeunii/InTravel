@@ -11,11 +11,11 @@
 
 <!--    상세화면 상태 표시줄(상단), 내비게이션바(하단) 색상 변경-->
     <!-- Customize your theme here -->
-    <item name="colorPrimary">@color/yellow400</item>
-    <item name="colorPrimaryDark">@color/yellow400</item>
-    <item name="colorAccent">@color/yellow400</item>
+    <item name="colorPrimary">#fbea04</item>
+    <item name="colorPrimaryDark">#fbea04</item>
+    <item name="colorAccent">#fbea04</item>
     <!-- 상태 표시줄 색상 -->
-    <item name="android:statusBarColor">@color/yellow400</item>
+    <item name="android:statusBarColor">#fbea04</item>
     <!-- 내비게이션 바 색상 -->
     <item name="android:navigationBarColor">#f8f8f8</item>
   </style>

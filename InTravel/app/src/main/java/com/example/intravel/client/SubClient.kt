@@ -1,6 +1,6 @@
 package com.example.intravel.client
 
-import com.example.intravel.interfaces.SubInterface
+import com.example.intravel.`interface`.SubInterface
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
